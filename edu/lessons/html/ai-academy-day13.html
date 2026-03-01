@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <script src="/auth-guard.js"></script>
+    <meta name="course-day" content="13">
+    <script src="/unlock-guard.js"></script>
+    <noscript><meta http-equiv="refresh" content="0;url=/login"></noscript>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Academy 2026 — Day 13: Architecture — Where Policy as Code Lives</title>
+<style>
+  /* ── Fonts ── */
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  /* ── CSS Custom Properties ── */
+  :root {
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --gradient-1: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --gradient-2: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
+    --gradient-green: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    --gradient-3: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.2);
+    --max-width: 960px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Dark Theme ── */
+  [data-theme="dark"] {
+    --bg-primary: #0f1117;
+    --bg-secondary: #1a1d2e;
+    --bg-tertiary: #232640;
+    --bg-code: #1e2030;
+    --text-primary: #e8eaf0;
+    --text-secondary: #a0a4b8;
+    --text-muted: #6b7084;
+    --border-color: #2d3154;
+    --border-hover: #3d4268;
+    --accent-blue: #60a5fa;
+    --accent-purple: #a78bfa;
+    --accent-cyan: #22d3ee;
+    --accent-green: #34d399;
+    --accent-yellow: #fbbf24;
+    --accent-red: #f87171;
+    --accent-orange: #fb923c;
+    --info-bg: rgba(34,211,238,0.08);
+    --info-border: rgba(34,211,238,0.3);
+    --warning-bg: rgba(251,191,36,0.08);
+    --warning-border: rgba(251,191,36,0.3);
+    --card-hover: #262a45;
+    --bg-card: #1e2138;
+    --border: #2d3154;
+    --nav-bg: rgba(15,17,23,0.92);
+    --code-header-bg: #262a45;
+  }
+
+  /* ── Light Theme ── */
+  [data-theme="light"] {
+    --bg-primary: #f8f9fc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #eef0f6;
+    --bg-code: #f3f4f8;
+    --text-primary: #1a1d2e;
+    --text-secondary: #4a4e68;
+    --text-muted: #8889a0;
+    --border-color: #d8dbe8;
+    --border-hover: #b8bcd0;
+    --accent-blue: #3b82f6;
+    --accent-purple: #8b5cf6;
+    --accent-cyan: #0891b2;
+    --accent-green: #059669;
+    --accent-yellow: #d97706;
+    --accent-red: #dc2626;
+    --accent-orange: #ea580c;
+    --info-bg: rgba(8,145,178,0.06);
+    --info-border: rgba(8,145,178,0.25);
+    --warning-bg: rgba(217,119,6,0.06);
+    --warning-border: rgba(217,119,6,0.25);
+    --bg-card: #ffffff;
+    --border: #d8dbe8;
+    --card-hover: #f0f2f8;
+    --nav-bg: rgba(248,249,252,0.92);
+    --code-header-bg: #e4e6ee;
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── Body ── */
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.7;
+    transition: background var(--transition), color var(--transition);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  nav .nav-brand {
+    font-weight: 700;
+    font-size: 0.92rem;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  nav .nav-links {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  nav .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+  nav .nav-links a:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+
+  /* ── Theme Toggle ── */
+  .theme-toggle { display: flex; align-items: center; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 100px; padding: 0.3rem; margin-left: 8px; }
+  .in-iframe .theme-toggle { display: none !important; }
+  .theme-toggle-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; border: none; background: transparent; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
+  .theme-toggle-btn.active { background: var(--accent-cyan); color: white; }
+
+  /* ── Main ── */
+  main {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 80px 24px 60px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 56px 0 40px;
+  }
+  .hero-label {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5.5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+  }
+  .time-box {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .time-box .time-slot {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+  }
+  .time-box .time-slot strong {
+    color: var(--accent-cyan);
+    font-weight: 700;
+  }
+
+  /* ── Sections ── */
+  section {
+    margin-bottom: 48px;
+  }
+  section h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-primary);
+    transition: border-color var(--transition);
+  }
+  section h2 .section-number {
+    color: var(--accent-cyan);
+    margin-right: 8px;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+  }
+  section h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 24px 0 10px;
+    color: var(--text-primary);
+  }
+  p {
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+  }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 3px solid var(--accent-cyan);
+    background: var(--info-bg);
+    padding: 14px 18px;
+    margin: 16px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-style: italic;
+    color: var(--text-primary);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: var(--bg-code);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+    transition: border-color var(--transition), background var(--transition);
+  }
+  .code-header {
+    background: var(--code-header-bg);
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all var(--transition);
+  }
+  .code-header .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .code-header .dot-red { background: #f87171; }
+  .code-header .dot-yellow { background: #fbbf24; }
+  .code-header .dot-green { background: #34d399; }
+  .code-header .code-title { margin-left: 8px; }
+  .code-body {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+  }
+  .code-body pre { margin: 0; white-space: pre; }
+
+  /* ── Syntax highlighting ── */
+  .code-comment { color: var(--text-muted); font-style: italic; }
+  .code-keyword { color: var(--accent-purple); font-weight: 600; }
+  .code-string { color: var(--accent-green); }
+  .code-property { color: var(--accent-cyan); }
+  .code-value { color: var(--accent-orange); }
+  .code-tag { color: var(--accent-blue); }
+  .code-folder { color: var(--accent-yellow); }
+  .code-file { color: var(--text-secondary); }
+  .code-comment-accent { color: var(--accent-cyan); font-weight: 600; }
+
+  /* ── How-to-use banner ── */
+  .how-to-use {
+    background: linear-gradient(135deg, rgba(34,211,238,0.1) 0%, rgba(96,165,250,0.1) 100%);
+    border: 2px solid rgba(34,211,238,0.35);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin: 0 0 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .how-to-use::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-cyan);
+  }
+  .how-to-use h3 {
+    color: var(--accent-cyan);
+    font-size: 0.95rem;
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .how-to-use-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .how-to-use-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .how-to-use-item .item-time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    white-space: nowrap;
+    min-width: 4.5rem;
+  }
+
+  /* ── Mission Briefing ── */
+  .mission-brief {
+    background: var(--bg-card);
+    border: 2px solid var(--accent-orange);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .mission-brief::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gradient-3);
+  }
+  .mission-brief .mb-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .mission-brief .mb-icon { font-size: 1.3rem; }
+  .mission-brief .mb-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-orange);
+  }
+  .mission-brief .mb-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* ── Exercise Block ── */
+  .exercise-block {
+    background: var(--bg-card);
+    border: 2px solid var(--accent-green);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .exercise-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gradient-green);
+  }
+  .exercise-block .exercise-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .exercise-block .exercise-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: var(--radius-sm);
+    font-size: 1.2rem;
+  }
+  .exercise-block .exercise-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-green);
+  }
+  .exercise-block .exercise-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .exercise-block .exercise-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .exercise-block .exercise-meta span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .exercise-block .exercise-steps {
+    list-style: none;
+    padding: 0;
+    counter-reset: exercise-step;
+  }
+  .exercise-block .exercise-steps > li {
+    counter-increment: exercise-step;
+    position: relative;
+    padding: 0.65rem 0 0.65rem 2.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+  .exercise-block .exercise-steps > li:last-child { border-bottom: none; }
+  .exercise-block .exercise-steps > li::before {
+    content: counter(exercise-step);
+    position: absolute;
+    left: 0; top: 0.65rem;
+    width: 24px; height: 24px;
+    background: var(--accent-green);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Done-When Checklist ── */
+  .done-when {
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  .done-when .dw-label {
+    font-weight: 700;
+    color: var(--accent-green);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+  }
+  .done-when ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .done-when li {
+    color: var(--text-secondary);
+    padding: 0.2rem 0;
+  }
+  .done-when li::before {
+    content: '☐ ';
+    color: var(--accent-green);
+  }
+
+  /* ── Checkpoint (mandatory post) ── */
+  .checkpoint-mandatory {
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-blue);
+    border-left: 6px solid var(--accent-blue);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .checkpoint-mandatory .cp-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .checkpoint-mandatory .cp-icon { font-size: 1.1rem; }
+  .checkpoint-mandatory .cp-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-blue);
+  }
+  .checkpoint-mandatory .cp-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  .checkpoint-mandatory .cp-format {
+    font-family: var(--font-mono);
+    font-size: 0.84rem;
+    color: var(--accent-cyan);
+    background: var(--bg-code);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-sm);
+    margin: 0.75rem 0;
+    line-height: 1.6;
+  }
+  .checkpoint-mandatory .cp-examples {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+  .checkpoint-mandatory .cp-examples strong {
+    color: var(--text-primary);
+  }
+
+  /* ── Reference Table ── */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    display: block;
+  }
+  .ref-table thead th {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 700;
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+    font-size: 0.8rem;
+    transition: all var(--transition);
+  }
+  .ref-table tbody td {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    vertical-align: top;
+    transition: all var(--transition);
+  }
+  .ref-table tbody tr:hover td {
+    background: var(--card-hover);
+  }
+  .ref-table .role-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .badge-fde { background: rgba(96,165,250,0.12); color: var(--accent-blue); }
+  .badge-se { background: rgba(251,146,60,0.12); color: var(--accent-orange); }
+  .badge-ds { background: rgba(52,211,153,0.12); color: var(--accent-green); }
+  .badge-da { background: rgba(251,191,36,0.12); color: var(--accent-yellow); }
+  .badge-pm { background: rgba(248,113,113,0.12); color: var(--accent-red); }
+  .badge-fe { background: rgba(167,139,250,0.12); color: var(--accent-purple); }
+  .badge-sec { background: rgba(34,211,238,0.12); color: var(--accent-cyan); }
+
+  /* ── Info & Warning Boxes ── */
+  .info-box, .warning-box {
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    transition: all var(--transition);
+  }
+  .info-box {
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    color: var(--text-primary);
+  }
+  .info-box .box-label {
+    font-weight: 700;
+    color: var(--accent-cyan);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .warning-box {
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    color: var(--text-primary);
+  }
+  .warning-box .box-label {
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .danger-box {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.2);
+    border-left: 4px solid var(--accent-red);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    transition: all var(--transition);
+  }
+  .danger-box .box-label {
+    font-weight: 700;
+    color: var(--accent-red);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  /* ── Quick Tip ── */
+  .quick-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    background: rgba(139, 92, 246, 0.08);
+    border-left: 4px solid var(--accent-purple);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .quick-tip .tip-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+  .quick-tip strong { color: var(--text-primary); }
+
+  /* ── Reference Library Expandable ── */
+  .ref-library {
+    margin-top: 3rem;
+    border-top: 2px solid var(--border-color);
+    padding-top: 2rem;
+  }
+  .ref-library h2 {
+    border-bottom: none;
+    padding-bottom: 0;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+  }
+  .ref-library-intro {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .ref-expand {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin: 0.75rem 0;
+    background: var(--bg-secondary);
+    transition: border-color var(--transition);
+  }
+  .ref-expand:hover {
+    border-color: var(--border-hover);
+  }
+  .ref-expand > summary {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    user-select: none;
+  }
+  .ref-expand > summary::-webkit-details-marker { display: none; }
+  .ref-expand > summary::before {
+    content: '▶';
+    font-size: 0.55rem;
+    transition: transform 0.2s;
+    color: var(--accent-cyan);
+    flex-shrink: 0;
+  }
+  .ref-expand[open] > summary::before { transform: rotate(90deg); }
+  .ref-expand .ref-body {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .ref-expand .ref-body p { font-size: 0.92rem; }
+
+  /* ── Policy Rule Cards ── */
+  .policy-rules {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .policy-rule-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-cyan);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 16px;
+    transition: all var(--transition);
+  }
+  .policy-rule-card:hover {
+    border-left-color: var(--accent-blue);
+    background: var(--card-hover);
+  }
+  .policy-rule-card .rule-condition {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .policy-rule-card .rule-if { color: var(--accent-purple); }
+  .policy-rule-card .rule-then { color: var(--accent-cyan); }
+  .policy-rule-card .rule-action {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+  }
+  .rule-action.action-block { background: rgba(248,113,113,0.12); color: var(--accent-red); border: 1px solid rgba(248,113,113,0.3); }
+  .rule-action.action-redirect { background: rgba(251,191,36,0.12); color: var(--accent-yellow); border: 1px solid rgba(251,191,36,0.3); }
+  .rule-action.action-escalate { background: rgba(251,146,60,0.12); color: var(--accent-orange); border: 1px solid rgba(251,146,60,0.3); }
+
+  /* ── Pipeline Steps ── */
+  .pipeline-steps {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    margin: 16px 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .pipeline-step {
+    flex: 1;
+    min-width: 100px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 12px 10px;
+    text-align: center;
+    position: relative;
+    transition: all var(--transition);
+  }
+  .pipeline-step:first-child { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+  .pipeline-step:last-child { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  .pipeline-step + .pipeline-step { border-left: none; }
+  .pipeline-step .step-label { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+  .pipeline-step .step-detail { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
+  .pipeline-step.step-highlight {
+    background: rgba(34,211,238,0.08);
+    border-color: var(--accent-cyan);
+    border-width: 2px;
+  }
+  .pipeline-step.step-highlight .step-label { color: var(--accent-cyan); }
+  .pipeline-step::after {
+    content: '\2192';
+    position: absolute;
+    right: -9px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 1rem;
+    z-index: 1;
+  }
+  .pipeline-step:last-child::after { content: none; }
+
+  /* ── Before/After ── */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .before-after .before-panel, .before-after .after-panel {
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+  .before-after .before-panel { background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); }
+  .before-after .after-panel { background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); }
+  .before-after .panel-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.6rem;
+  }
+  .before-after .before-panel .panel-label { color: var(--accent-red); }
+  .before-after .after-panel .panel-label { color: var(--accent-green); }
+  .before-after .panel-content { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+
+  /* ── Key Message ── */
+  .key-message {
+    background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(59,130,246,0.12) 100%);
+    border: 2px solid rgba(139,92,246,0.35);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    text-align: center;
+    position: relative;
+  }
+  .key-message::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-1);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .key-message p {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .key-message .attribution {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+  }
+
+  /* ── Next Preview ── */
+  .next-preview {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(6,182,212,0.08) 100%);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .next-preview .next-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .next-preview .next-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-green);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .next-preview .next-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .next-preview .next-desc { font-size: 0.88rem; color: var(--text-secondary); margin: 0; }
+
+  /* ── Instructor Note ── */
+  .instructor-note {
+    border: 2px dashed var(--accent-purple);
+    border-radius: var(--radius-md);
+    margin: 1rem 0;
+    background: rgba(139, 92, 246, 0.05);
+  }
+  .instructor-note summary {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent-purple);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .instructor-note summary::-webkit-details-marker { display: none; }
+  .instructor-note summary::before { content: '\01F393'; }
+  .instructor-note summary::after { content: '\25B8'; margin-left: auto; transition: transform 0.2s; }
+  .instructor-note[open] summary::after { transform: rotate(90deg); }
+  .instructor-note .instructor-content {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  body:not(.instructor-mode) .instructor-note { display: none; }
+  body.instructor-mode .instructor-note { display: block; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    background: var(--bg-secondary);
+  }
+
+  /* ── Back to Top ── */
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--gradient-1);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    z-index: 999;
+  }
+  .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* ── Utility ── */
+  .mt-sm { margin-top: 8px; }
+  .mt-md { margin-top: 16px; }
+  .mt-05 { margin-top: 0.5rem; }
+  .mt-075 { margin-top: 0.75rem; }
+  .m-0 { margin: 0; }
+  .mb-sm { margin-bottom: 0.5rem; }
+  .text-cyan { color: var(--accent-cyan); }
+  .text-red { color: var(--accent-red); }
+  .text-green { color: var(--accent-green); }
+  .text-yellow { color: var(--accent-yellow); }
+  .text-purple { color: var(--accent-purple); }
+  .text-blue { color: var(--accent-blue); }
+  .mono { font-family: var(--font-mono); }
+  .inline-code { font-family: var(--font-mono); font-size: 0.88em; }
+  .inline-code-accent { font-family: var(--font-mono); font-size: 0.88em; color: var(--accent-cyan); }
+  .code-pill { color: var(--accent-cyan); background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 0.88em; }
+  .ul-indent { padding-left: 1.25rem; line-height: 2; }
+  .ul-indent-mb { padding-left: 1.25rem; margin-bottom: 0.75rem; line-height: 2; }
+  .dashboard-back { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.35rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--accent-blue, #3b82f6); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); text-decoration: none; transition: all 0.2s; flex-shrink: 0; }
+  .dashboard-back:hover { background: rgba(59,130,246,0.2); }
+
+  /* ── Role Filter Bar ── */
+  .role-filter-bar {
+    position: sticky;
+    top: 56px;
+    z-index: 90;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 0.45rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .role-filter-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-right: 0.25rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .role-btn { padding: 0.18rem 0.6rem; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: "JetBrains Mono", monospace; }
+  .role-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+  .role-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+  .role-hidden { display: none !important; }
+
+  /* ── Ops Playbook Collapsible ── */
+  .ops-playbook-collapsible { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--bg-secondary); margin: 1rem 0; }
+  .ops-playbook-collapsible > summary { display: flex; align-items: center; gap: 0.65rem; padding: 0.6rem 1rem; cursor: pointer; list-style: none; color: var(--text-secondary); font-size: 0.85rem; user-select: none; }
+  .ops-playbook-collapsible > summary::-webkit-details-marker { display: none; }
+  .ops-playbook-collapsible > summary::before { content: "▶"; font-size: 0.6rem; transition: transform 0.2s; color: var(--accent-blue); flex-shrink: 0; }
+  .ops-playbook-collapsible[open] > summary::before { transform: rotate(90deg); }
+  .ops-summary-label { font-weight: 700; color: var(--accent-blue); font-family: "JetBrains Mono", monospace; font-size: 0.78rem; }
+  .ops-summary-focus { color: var(--text-muted); font-size: 0.78rem; }
+  .ops-playbook-inner { padding: 0 1rem 1rem; }
+  .ops-playbook-grid { display: grid; gap: 0.75rem; margin-top: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .ops-playbook-card { padding: 0.85rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-secondary); }
+  .ops-playbook-card h3 { margin: 0 0 0.35rem 0; font-size: 0.92rem; line-height: 1.35; color: var(--text-primary); }
+  .ops-playbook-card ul { margin: 0; padding-left: 1.2rem; line-height: 1.7; color: var(--text-secondary); font-size: 0.85rem; }
+
+  /* ── Live Demo Simulation ── */
+  .live-sim {
+    border: 2px solid var(--accent-red);
+    border-radius: var(--radius-lg);
+    margin: 1.5rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .live-sim::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+  }
+  .live-sim.sim-safe {
+    border-color: var(--accent-green);
+  }
+  .live-sim.sim-safe::before {
+    background: linear-gradient(90deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+  }
+  .live-sim .sim-header {
+    padding: 1rem 1.5rem;
+    background: rgba(248,113,113,0.08);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(248,113,113,0.2);
+  }
+  .live-sim.sim-safe .sim-header {
+    background: rgba(52,211,153,0.08);
+    border-bottom-color: rgba(52,211,153,0.2);
+  }
+  .live-sim .sim-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-red);
+  }
+  .live-sim.sim-safe .sim-label {
+    color: var(--accent-green);
+  }
+  .live-sim .sim-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .live-sim .sim-body {
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-card);
+  }
+  .sim-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .sim-msg {
+    max-width: 85%;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .sim-msg.user {
+    align-self: flex-end;
+    background: var(--accent-blue);
+    color: white;
+    border-bottom-right-radius: 3px;
+  }
+  .sim-msg.agent {
+    align-self: flex-start;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 3px;
+  }
+  .sim-msg.agent.danger {
+    border-color: var(--accent-red);
+    background: rgba(248,113,113,0.08);
+  }
+  .sim-msg.agent.safe {
+    border-color: var(--accent-green);
+    background: rgba(52,211,153,0.08);
+  }
+  .sim-msg .pii-highlight {
+    background: rgba(248,113,113,0.25);
+    color: var(--accent-red);
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid rgba(248,113,113,0.4);
+  }
+  .sim-msg .policy-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent-green);
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.3);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 6px;
+  }
+  .sim-verdict {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .sim-verdict.verdict-fail {
+    background: rgba(248,113,113,0.12);
+    border: 1px solid rgba(248,113,113,0.3);
+    color: var(--accent-red);
+  }
+  .sim-verdict.verdict-pass {
+    background: rgba(52,211,153,0.12);
+    border: 1px solid rgba(52,211,153,0.3);
+    color: var(--accent-green);
+  }
+
+  /* ── Wrap-Up Test Section ── */
+  .wrapup-test {
+    background: linear-gradient(135deg, rgba(251,146,60,0.08) 0%, rgba(248,113,113,0.08) 100%);
+    border: 2px solid var(--accent-orange);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .wrapup-test::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--gradient-3);
+  }
+  .wrapup-test .wt-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .wrapup-test .wt-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-orange);
+  }
+  .wrapup-test .wt-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    main { padding: 72px 16px 40px; }
+    .hero { padding: 40px 0 28px; }
+    .hero h1 { font-size: 1.8rem; }
+    nav .nav-links { display: none; }
+    .pipeline-steps { flex-direction: column; }
+    .pipeline-step::after { content: '\2193'; position: static; display: block; text-align: center; margin-top: 4px; }
+    .pipeline-step:first-child, .pipeline-step:last-child { border-radius: var(--radius-sm); }
+    .pipeline-step + .pipeline-step { border-left: 1px solid var(--border-color); margin-top: -1px; }
+    .before-after { grid-template-columns: 1fr; }
+    .how-to-use-grid { grid-template-columns: 1fr; }
+    .exercise-block { padding: 1.5rem; }
+  }
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.5rem; }
+    .time-box { flex-direction: column; align-items: center; }
+    .code-body { font-size: 0.75rem; padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="/index.html" class="dashboard-back">&larr; Dashboard</a>
+  <span class="nav-brand">AI Academy 2026</span>
+  <div class="nav-links">
+    <a href="#live-demo">Live Demo</a>
+    <a href="#work-zone">Work Zone</a>
+    <a href="#sprint-1">Sprint 1</a>
+    <a href="#checkpoint-1">CP 1</a>
+    <a href="#sprint-2">Sprint 2</a>
+    <a href="#checkpoint-2">CP 2</a>
+    <a href="#sprint-3">Sprint 3</a>
+    <a href="#wrapup-test">Wrap-Up</a>
+    <a href="#reference">Reference</a>
+  </div>
+  <div class="theme-toggle">
+    <button class="theme-toggle-btn" id="theme-light" aria-label="Light theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+    <button class="theme-toggle-btn active" id="theme-dark" aria-label="Dark theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Role Filter Bar -->
+<div class="role-filter-bar" id="role-filter" role="navigation" aria-label="Filter by role">
+    <span class="role-filter-label">My role:</span>
+    <button class="role-btn active" data-role="all">ALL</button>
+    <button class="role-btn" data-role="FDE">FDE</button>
+    <button class="role-btn" data-role="AI-SE">AI-SE</button>
+    <button class="role-btn" data-role="AI-DS">AI-DS</button>
+    <button class="role-btn" data-role="AI-DA">AI-DA</button>
+    <button class="role-btn" data-role="AI-PM">AI-PM</button>
+    <button class="role-btn" data-role="AI-FE">AI-FE</button>
+    <button class="role-btn" data-role="AI-SEC">AI-SEC</button>
+</div>
+
+<!-- ── Main Content ── -->
+<main>
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-label">AI Academy 2026 &bull; Day 13</div>
+    <h1>Architecture &mdash; Where Policy&nbsp;as&nbsp;Code Lives</h1>
+    <p class="hero-subtitle">Yesterday you declared dependencies. Today those dependencies become <strong class="text-cyan">interface contracts</strong>. Design your component &mdash; and prove it connects to the others.</p>
+    <div class="time-box">
+      <div class="time-slot"><strong>7 min</strong> &mdash; Live breach simulation</div>
+      <div class="time-slot"><strong>8 min</strong> &mdash; VS Code walkthrough</div>
+      <div class="time-slot"><strong>60 min</strong> &mdash; 3 Sprints + 2 Checkpoints</div>
+      <div class="time-slot"><strong>15 min</strong> &mdash; Wrap-Up (your architecture tested live)</div>
+    </div>
+  </div>
+
+  <!-- ── How to use this page ── -->
+  <div class="how-to-use">
+    <h3>&#128204; How to Use This Page</h3>
+    <!-- Timeline row -->
+    <div style="display:flex; align-items:stretch; gap:0.5rem; margin-bottom:0.6rem; flex-wrap:wrap;">
+
+      <div style="flex:1; min-width:140px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.28); border-radius:8px; padding:0.7rem 0.85rem; display:flex; flex-direction:column; gap:0.25rem;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; font-weight:700; color:#ef4444; margin-bottom:0.15rem;">9:00&ndash;9:07</div>
+        <div style="font-size:1.05rem; line-height:1;">&#128308;</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.45;">Watch the <strong>live breach simulation</strong> &mdash; with and without a PEP</div>
+      </div>
+
+      <div style="display:flex; align-items:center; color:var(--text-muted); font-size:0.9rem; flex-shrink:0; padding:0 0.1rem;">&#8594;</div>
+
+      <div style="flex:1; min-width:140px; background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.28); border-radius:8px; padding:0.7rem 0.85rem; display:flex; flex-direction:column; gap:0.25rem;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; font-weight:700; color:var(--accent-cyan); margin-bottom:0.15rem;">9:07&ndash;9:15</div>
+        <div style="font-size:1.05rem; line-height:1;">&#128187;</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.45;">Follow the <strong>VS Code walkthrough</strong> &mdash; have VS Code open on your machine</div>
+      </div>
+
+      <div style="display:flex; align-items:center; color:var(--text-muted); font-size:0.9rem; flex-shrink:0; padding:0 0.1rem;">&#8594;</div>
+
+      <div style="flex:1; min-width:140px; background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.28); border-radius:8px; padding:0.7rem 0.85rem; display:flex; flex-direction:column; gap:0.25rem;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; font-weight:700; color:var(--accent-green); margin-bottom:0.15rem;">9:15&ndash;10:15</div>
+        <div style="font-size:1.05rem; line-height:1;">&#9889;</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.45;">Jump to <a href="#work-zone" style="color:var(--accent-green); font-weight:600;">&#11015; Work Zone</a> &mdash; sprints, AI Tutor, checkpoints</div>
+      </div>
+
+      <div style="display:flex; align-items:center; color:var(--text-muted); font-size:0.9rem; flex-shrink:0; padding:0 0.1rem;">&#8594;</div>
+
+      <div style="flex:1; min-width:140px; background:rgba(251,146,60,0.08); border:1px solid rgba(251,146,60,0.28); border-radius:8px; padding:0.7rem 0.85rem; display:flex; flex-direction:column; gap:0.25rem;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; font-weight:700; color:#fb923c; margin-bottom:0.15rem;">10:15&ndash;10:30</div>
+        <div style="font-size:1.05rem; line-height:1;">&#128293;</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.45;"><a href="#wrapup-test" style="color:#fb923c; font-weight:600;">Wrap-Up</a> &mdash; lecturer tests a real student architecture live</div>
+      </div>
+
+    </div>
+
+    <!-- Reference bar -->
+    <div style="background:rgba(96,165,250,0.07); border:1px solid rgba(96,165,250,0.22); border-radius:7px; padding:0.5rem 0.9rem; display:flex; align-items:center; gap:0.7rem; font-size:0.82rem; color:var(--text-secondary);">
+      <span style="font-size:1rem; flex-shrink:0;">&#128218;</span>
+      <span><strong style="color:var(--accent-blue);">Throughout the day:</strong> Expand any topic in the <a href="#reference" style="color:var(--accent-blue); font-weight:600;">Reference Library</a> below &mdash; Key Terms, KAF mapping, project skeleton guide, enforcement flow. Or ask your AI Tutor directly.</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--     WOW MOMENT 1: POLICY BREACH SIMULATION    -->
+  <!-- ══════════════════════════════════════════════ -->
+
+  <section id="live-demo">
+    <h2><span class="section-number">&#128308;</span> Live Demo &mdash; 12 Lines of YAML Between You and a &euro;15M Fine</h2>
+
+    <p>Your lecturer is about to show you the same AI helpdesk agent answering the same question &mdash; twice. The only difference: whether a Policy Enforcement Point exists in the architecture. <strong>Have VS Code open and follow along.</strong></p>
+
+    <details class="instructor-note">
+      <summary>Instructor Note: Breach Simulation Setup</summary>
+      <div class="instructor-content">
+        <p><strong>This is the most important demo of the entire week. Prepare carefully.</strong></p>
+        <p>Option A (ideal): Run the agent live in terminal. First run without PEP (comment out the policy check). Show the salary leak. Then uncomment the PEP, restart. Show the block. The live terminal output creates visceral impact.</p>
+        <p>Option B (backup): Use two prepared screenshots or pre-recorded terminal sessions. Still effective &mdash; the contrast matters more than the liveness.</p>
+        <p>After the demo: "12 lines of YAML. One enforcement point. That's the difference between a €15M fine and a compliant system. Today you design that enforcement point."</p>
+        <p><strong>Then open VS Code.</strong> Show the three-pillar structure. Point to <code>governance/policies/</code>. Open <code>pii-protection.yaml</code>. Students should have VS Code open on their machines and follow along. Don't deep-dive into code &mdash; 3 minutes max on VS Code. The breach simulation is the hook; the structure is the map.</p>
+      </div>
+    </details>
+
+    <!-- Simulation A: Without PEP -->
+    <div class="live-sim">
+      <div class="sim-header">
+        <span style="font-size: 1.1rem;">&#128308;</span>
+        <div>
+          <div class="sim-label">Simulation A &mdash; Architecture WITHOUT Policy Enforcement</div>
+          <div class="sim-title">What happens when your pipeline has no PEP</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-chat">
+          <div class="sim-msg user">What is the salary of my manager, John Smith? I need it for the budget review.</div>
+          <div class="sim-msg agent danger">Based on the HR records indexed in our knowledge base, John Smith's monthly salary is <span class="pii-highlight">10,000 EUR</span>. His personal ID is <span class="pii-highlight">123456/7890</span>. For budget review, contact HR at hr@eurohealth.eu.</div>
+        </div>
+        <div class="sim-verdict verdict-fail">&#128680; PII LEAKED &mdash; GDPR Article 5 violation &mdash; Fines up to &euro;15M or 3% of annual turnover</div>
+      </div>
+    </div>
+
+    <!-- Simulation B: With PEP -->
+    <div class="live-sim sim-safe">
+      <div class="sim-header">
+        <span style="font-size: 1.1rem;">&#128994;</span>
+        <div>
+          <div class="sim-label">Simulation B &mdash; Same Agent, Same Query, WITH Policy Enforcement</div>
+          <div class="sim-title">12 lines of YAML + 1 PEP in the pipeline</div>
+        </div>
+      </div>
+      <div class="sim-body">
+        <div class="sim-chat">
+          <div class="sim-msg user">What is the salary of my manager, John Smith? I need it for the budget review.</div>
+          <div class="sim-msg agent safe">I cannot share personal salary information. Please contact HR directly for budget-related queries. <br><span class="policy-tag">POLICY: pii-protection | RULE: block-salary-data | ACTION: block | LOGGED</span></div>
+        </div>
+        <div class="sim-verdict verdict-pass">&#9989; PII blocked &mdash; Audit trail recorded &mdash; Human agent notified &mdash; Response time: 180ms</div>
+      </div>
+    </div>
+
+    <blockquote>"Same agent. Same question. Same knowledge base. The only difference: 12 lines of YAML and one enforcement point in the pipeline. Today you design that enforcement point."</blockquote>
+
+    <!-- ── VS Code Hands-On ── -->
+    <h3 style="margin-top: 2rem;">&#128187; VS Code Walkthrough &mdash; Follow Along on Your Machine (9:07&ndash;9:15)</h3>
+
+    <div class="exercise-block" style="border-color: var(--accent-cyan);">
+      <div class="exercise-header">
+        <div class="exercise-icon" style="background: rgba(34,211,238,0.1);">&#128187;</div>
+        <div>
+          <div class="exercise-label" style="color: var(--accent-cyan);">Hands-On &mdash; Do This Now</div>
+          <div class="exercise-title">Create Your Project Skeleton in VS Code</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9201; 8 minutes (while the lecturer walks you through it)</span>
+        <span>&#128100; Everyone &mdash; all roles</span>
+      </div>
+      <ol class="exercise-steps">
+        <li><strong>Open VS Code.</strong> Create a new folder called <code class="code-pill">eurohealth-helpdesk</code>. This is your project root for the rest of the week.</li>
+        <li><strong>Create the three-pillar folder structure</strong> exactly as your lecturer shows it. Three pillars, all required: <code class="inline-code-accent">docs/</code> (delivery artifacts for the client), <code class="inline-code-accent">governance/</code> (compliance &amp; policy artifacts), <code class="inline-code-accent">src/</code> (technical code). Plus: <code class="inline-code-accent">tests/</code>, <code class="inline-code-accent">monitoring/</code>, <code class="inline-code-accent">data/</code>.</li>
+        <li><strong>Create your role's primary file:</strong>
+          <ul style="list-style: none; padding-left: 0; margin-top: 0.5rem;">
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-fde" style="margin-right: 4px;">FDE</span> <code class="inline-code">src/agent.py</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-se" style="margin-right: 4px;">AI-SE</span> <code class="inline-code">src/policy_engine.py</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-ds" style="margin-right: 4px;">AI-DS</span> <code class="inline-code">tests/golden_dataset/</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-da" style="margin-right: 4px;">AI-DA</span> <code class="inline-code">monitoring/dashboard-spec.md</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-pm" style="margin-right: 4px;">AI-PM</span> <code class="inline-code">docs/discovery/consolidated-discovery-report.md</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-fe" style="margin-right: 4px;">AI-FE</span> <code class="inline-code">docs/architecture/interface-contracts.md</code></li>
+            <li style="padding: 0.2rem 0;"><span class="role-badge badge-sec" style="margin-right: 4px;">AI-SEC</span> <code class="inline-code">governance/policies/pii-protection.yaml</code></li>
+          </ul>
+        </li>
+        <li><strong>Now look at your VS Code sidebar.</strong> This is the real project you're co-designing today. Sprint 1 fills <code class="code-pill">docs/discovery/</code>. Sprint 2 fills <code class="code-pill">docs/architecture/solution-design.md</code>. Sprint 3 finalises <code class="code-pill">docs/architecture/interface-contracts.md</code>.</li>
+      </ol>
+      <div class="done-when">
+        <div class="dw-label">&#10003; Done when</div>
+        <ul>
+          <li>You have a <code>eurohealth-helpdesk/</code> folder open in VS Code</li>
+          <li>You can see the <code>governance/policies/</code> folder in your sidebar (even if it's empty)</li>
+          <li>You have at least 1 role-specific file created</li>
+        </ul>
+      </div>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note: VS Code Walkthrough</summary>
+      <div class="instructor-content">
+        <p><strong>This is not a coding exercise.</strong> This is spatial orientation. Students need to see WHERE policies live before they can design HOW they work.</p>
+        <p>Share your screen. Create the three-pillar structure live. Open <code>governance/policies/pii-protection.yaml</code> from the breach demo and point to it in the sidebar: "This is the file that stopped the salary leak. 12 lines. In this folder. Under governance — not in some SharePoint."</p>
+        <p>Students follow along creating their own skeleton. Don't wait for everyone to finish &mdash; 3&ndash;4 minutes is enough. If someone's VS Code isn't working, they can create the structure later. The important thing is that everyone <strong>sees the three pillars</strong> before starting sprints.</p>
+        <p>Bridge to work: "You now have an empty project. In the next 60 minutes you'll fill it: Sprint 1 builds the discovery foundation, Sprint 2 designs the architecture, Sprint 3 locks the interfaces. Let's go."</p>
+      </div>
+    </details>
+
+    <div class="quick-tip" style="margin-top: 1rem;">
+      <span class="tip-icon">&#128161;</span>
+      <div><strong>VS Code not working?</strong> No problem. You can create the folder structure later. The sprints work in any text editor. What matters is that you <em>saw</em> where policies live &mdash; in <code>governance/policies/</code>, version-controlled, right next to the code, not on someone's SharePoint.</div>
+    </div>
+
+  </section>
+
+  <!-- Ops Playbook -->
+  <details class="ops-playbook-collapsible" id="ai-academy-ops-playbook">
+    <summary>
+      <span class="ops-summary-label">&#128203; Ops Playbook</span>
+      <span class="ops-summary-focus">Today: Turn role dependencies into interface contracts and architecture-ready handoffs.</span>
+    </summary>
+    <div class="ops-playbook-inner">
+      <div class="ops-playbook-grid">
+        <div class="ops-playbook-card">
+          <h3>1) Individual work + channel marketplace</h3>
+          <ul>
+            <li>Work individually with your AI Tutor in 3 sprints.</li>
+            <li>Post to your <strong>role channel</strong> at each checkpoint.</li>
+            <li>Respond to cross-role requests in <strong>other role channels</strong> during Sprint 2.</li>
+          </ul>
+        </div>
+        <div class="ops-playbook-card">
+          <h3>2) Cadence</h3>
+          <ul>
+            <li>Sprint 1 (20 min): Consolidated Discovery Report &mdash; merge Day 12 findings into one shared document.</li>
+            <li>Sprint 2 (15 min): Solution Design &mdash; write your role-specific component section in the shared architecture doc.</li>
+            <li>Sprint 3 (10 min): Interface Contracts &mdash; lock cross-role data formats, protocols, and error handling.</li>
+          </ul>
+        </div>
+        <div class="ops-playbook-card">
+          <h3>3) Minimum contribution</h3>
+          <ul>
+            <li>Checkpoint 1: Post your key finding from the consolidated report + top cross-role dependency.</li>
+            <li>Checkpoint 2: Post your component specification + at least 1 interface contract.</li>
+            <li>Respond to at least 1 cross-role request that mentions your role.</li>
+          </ul>
+        </div>
+        <div class="ops-playbook-card">
+          <h3>4) Deliverables</h3>
+          <ul>
+            <li>Sprint 1: <code style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--accent-cyan); font-size: 0.88em;">docs/discovery/consolidated-discovery-report.md</code> (team)</li>
+            <li>Sprint 2: your section in <code style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--accent-cyan); font-size: 0.88em;">docs/architecture/solution-design.md</code></li>
+            <li>Sprint 3: <code style="background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--accent-cyan); font-size: 0.88em;">docs/architecture/interface-contracts.md</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--              WORK ZONE                        -->
+  <!-- ══════════════════════════════════════════════ -->
+
+  <section id="work-zone">
+    <h2><span class="section-number">&#128296;</span> Work Zone &mdash; Your 60 Minutes Start Here</h2>
+
+    <p>Three sprints, three deliverables: <code class="code-pill">docs/discovery/consolidated-discovery-report.md</code> (Sprint 1, team) → your section in <code class="code-pill">docs/architecture/solution-design.md</code> (Sprint 2) → <code class="code-pill">docs/architecture/interface-contracts.md</code> (Sprint 3). All three documents live in the project skeleton you just created.</p>
+
+    <!-- ── Mission Briefing ── -->
+    <div class="mission-brief">
+      <div class="mb-header">
+        <span class="mb-icon">&#127919;</span>
+        <div>
+          <div class="mb-label">Your Mission Today</div>
+          <div class="mb-title">Design a Policy-Governed Architecture for EuroHealth's AI Helpdesk</div>
+        </div>
+      </div>
+      <p>EuroHealth Insurance needs an AI helpdesk serving 300 employees across 8 EU countries. Your architecture must handle: <strong>2,000 Confluence pages</strong> (EN/DE/CZ), <strong>on-premises deployment</strong> (no cloud LLM), <strong>Policy-as-Code enforcement</strong>, and <strong>EU AI Act compliance</strong>. Budget: &euro;180K total. Timeline: 6 months.</p>
+      <p class="m-0">Yesterday at Checkpoint 2, you declared dependencies like <em>"I need AI-SEC for X"</em> and <em>"I need FDE to confirm Y."</em> Today you first merge all discoveries into one shared foundation (Sprint 1), then design your component with those confirmed facts (Sprint 2), then lock the cross-role contracts so every interface is explicit (Sprint 3). Your VS Code project skeleton is the canvas &mdash; the three deliverable documents are the blueprint that fills it.</p>
+    </div>
+
+    <!-- ── Real-World Context Box ── -->
+    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-blue); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.25rem 0;">
+      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+        <span style="font-size:1rem;">&#127758;</span>
+        <span style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-blue);">Real-World Context &mdash; How This Works on an Actual Engagement</span>
+      </div>
+
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.85rem;">Today's 60-minute sprint compresses what happens over 2–4 weeks on a real project. Here's what that looks like in practice — and what your role in it actually is.</p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.85rem;">
+        <div style="background:var(--bg-tertiary); border-radius:6px; padding:0.75rem 0.9rem;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-blue); margin-bottom:0.4rem;">&#128193; The skeleton is pre-built — not co-created</div>
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin:0;">In reality, the Lead Architect (FDE) or Engagement Lead (AI-PM) prepares the folder structure and template files <em>before</em> the team starts work — exactly like the skeleton you downloaded today. It comes from a firm-standard template, not improvised in a kickoff meeting.</p>
+        </div>
+        <div style="background:var(--bg-tertiary); border-radius:6px; padding:0.75rem 0.9rem;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--accent-blue); margin-bottom:0.4rem;">&#128100; Each role contributes their section asynchronously</div>
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin:0;">Nobody writes the same document simultaneously. AI-SEC works on <code style="font-size:0.75em;">governance/policies/</code> in Week 1–2. FDE designs <code style="font-size:0.75em;">src/agent.py</code> in Week 2–3. AI-DS builds the golden dataset in Week 3–4. Parallel, asynchronous, in their own sections.</p>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-tertiary); border-radius:6px; padding:0.75rem 0.9rem; margin-bottom:0.85rem;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--accent-blue); margin-bottom:0.5rem;">&#9997;&#65039; Who grooms the 4–8 scattered inputs into one coherent deliverable?</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; font-size:0.78rem;">
+          <div style="border:1px solid var(--border-color); border-radius:5px; padding:0.5rem 0.65rem;">
+            <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;"><span class="role-badge badge-pm" style="font-size:0.7rem; margin-right:4px;">AI-PM</span> Primary integrator</div>
+            <div style="color:var(--text-muted);">Owns <code style="font-size:0.75em;">docs/</code> — assembles all role sections into one coherent document, unifies terminology, fills gaps, runs review cycles</div>
+          </div>
+          <div style="border:1px solid var(--border-color); border-radius:5px; padding:0.5rem 0.65rem;">
+            <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;"><span class="role-badge badge-fde" style="font-size:0.7rem; margin-right:4px;">FDE</span> Technical reviewer</div>
+            <div style="color:var(--text-muted);">Checks that architectural decisions from all roles are consistent — no conflicts between what FDE, AI-SE, and AI-SEC designed independently</div>
+          </div>
+          <div style="border:1px solid var(--border-color); border-radius:5px; padding:0.5rem 0.65rem;">
+            <div style="font-weight:700; color:var(--text-primary); margin-bottom:0.2rem;"><span class="role-badge badge-sec" style="font-size:0.7rem; margin-right:4px;">AI-SEC</span> Governance reviewer</div>
+            <div style="color:var(--text-muted);">Reviews <code style="font-size:0.75em;">governance/</code> section before finalisation — not the integrator, but the approver of anything touching compliance</div>
+          </div>
+        </div>
+        <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem; margin-bottom:0;">In practice this plays out over <strong>2–4 review cycles</strong> spanning weeks — not a single session. Each cycle: draft → feedback → revise → merge.</p>
+      </div>
+
+      <div style="background: rgba(34,211,238,0.06); border:1px solid rgba(34,211,238,0.2); border-radius:6px; padding:0.65rem 0.9rem;">
+        <span style="font-size:0.75rem; font-weight:700; color:var(--accent-cyan);">&#128161; So what does today's 60 minutes actually train?</span>
+        <p style="font-size:0.82rem; color:var(--text-secondary); margin:0.35rem 0 0 0;">Not the mechanics of file management — the <strong>thinking</strong>: <em>What does my role produce for others? What do I need before I can design my part? Where does policy enforcement sit in my component?</em> That alignment thinking is what makes weeks of async work coherent. Without it, 8 people produce 8 disconnected documents that nobody can integrate. Today's sprint is the kickoff alignment — the shared mental model the whole team works from.</p>
+      </div>
+    </div>
+
+    <!-- ── AI Tutor Prompt ── -->
+    <!-- KAF Alignment Box -->
+    <div style="background: rgba(197,0,31,0.05); border: 1px solid rgba(197,0,31,0.25); border-left: 4px solid #C5001F; border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;">
+        <span style="font-size: 1rem;">&#127981;</span>
+        <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #C5001F;">Kyndryl Agentic Framework (KAF) &mdash; How Today Maps to the Standard</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Every design decision you make today corresponds to a named layer in the Kyndryl Agentic Framework. Use this table as your alignment filter — if your component doesn't fit a KAF layer, it likely isn't architected correctly.</p>
+      <table class="ref-table" style="margin: 0;">
+        <thead>
+          <tr><th>KAF Layer</th><th>What it is</th><th>Where it lives in Day 13</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Agent Core</strong></td>
+            <td>The core reasoning and execution unit of the AI agent</td>
+            <td><span class="role-badge badge-fde" style="font-size:0.72rem;">FDE</span> RAG pipeline &mdash; <code>src/agent.py</code> + <code>src/retriever.py</code></td>
+          </tr>
+          <tr>
+            <td><strong>Orchestration</strong></td>
+            <td>Controls agent flow, sequencing, and multi-step coordination</td>
+            <td>Pipeline flow: Query → Retrieval → Generation → PEP → Response. Sprint checkpoints validate the orchestration design.</td>
+          </tr>
+          <tr>
+            <td><strong>Governance</strong></td>
+            <td>Rules, policies, and constraints that bound agent behaviour</td>
+            <td><span class="role-badge badge-sec" style="font-size:0.72rem;">AI-SEC</span> <code>governance/policies/*.yaml</code> &mdash; enforced at runtime by PDP/PEP</td>
+          </tr>
+          <tr>
+            <td><strong>Trust &amp; Audit</strong></td>
+            <td>Evidence trail proving every decision was made within policy</td>
+            <td><span class="role-badge badge-se" style="font-size:0.72rem;">AI-SE</span> <code>src/audit_logger.py</code> + <code>governance/evidence/audit-log-schema.json</code></td>
+          </tr>
+          <tr>
+            <td><strong>Human Loop</strong></td>
+            <td>Structured mechanisms for human review, override, and approval</td>
+            <td>Escalation rules in <code>governance/policies/escalation-rules.yaml</code> + <code>governance/operating-model/human-override-protocol.md</code></td>
+          </tr>
+          <tr>
+            <td><strong>Agent Registry</strong></td>
+            <td>Enterprise-wide inventory of all agents: owner, risk level, declared policies</td>
+            <td><code>governance/compliance/ai-inventory.md</code> — the EuroHealth helpdesk agent <em>and</em> the 3 shadow AI systems are registered here. KAF requires every agent to be discoverable, owned, and risk-classified.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; margin-bottom: 0;"><strong>Note:</strong> This agent is <em>one node</em> in a broader KAF-orchestrated workflow. In Phase 2, it will coordinate with a ServiceNow integration agent and a knowledge base refresh agent under the same Orchestration layer. Design for extensibility now.</p>
+    </div>
+
+    <h3 id="ai-tutor-prompt">&#129302; AI Tutor Prompt for Sprint 2 &mdash; Component Design (Copy &amp; Paste)</h3>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="code-title">AI Tutor Prompt &mdash; Copy &amp; Paste</span>
+      </div>
+      <div class="code-body"><pre>I'm designing the architecture for an AI helpdesk for EuroHealth
+Insurance. The system must be on-premises, policy-governed (using
+Policy-as-Code), and EU AI Act compliant. I'm a <span class="code-keyword">[ROLE]</span>. Help me
+design my component:
+
+<span class="code-comment">- FDE: RAG pipeline architecture — chunking strategy for 2,000
+  Confluence pages, embedding model selection (on-prem), vector store
+  choice, agent orchestration, PDP/PEP integration for policy enforcement</span>
+<span class="code-comment">- AI-SE: Deployment architecture — Docker setup, CI/CD pipeline with
+  policy validation gate, environment config (dev/staging/prod),
+  infrastructure requirements for on-prem LLM</span>
+<span class="code-comment">- AI-DS: Evaluation framework — golden dataset structure (50 test
+  questions), RAGAS metrics + policy compliance scoring, evaluation
+  pipeline design, re-evaluation schedule</span>
+<span class="code-comment">- AI-DA: Monitoring architecture — KPIs to track, data sources for
+  each metric, alerting rules, policy violation tracking dashboard,
+  data freshness monitoring</span>
+<span class="code-comment">- AI-PM: Architecture decision record — tech choices with rationale,
+  cost per component, integration map between all roles, timeline
+  for build phase, dependency tracking</span>
+<span class="code-comment">- AI-FE: UI architecture — chat components, API contracts with backend,
+  streaming response setup, trust indicators (AI disclosure, confidence
+  level), language switching (EN/DE/CZ), error states</span>
+<span class="code-comment">- AI-SEC: Policy enforcement design — PDP/PEP placement in architecture,
+  policy file structure, 5 initial policy rules in YAML, audit logging
+  schema, red team test integration</span>
+
+My discovery report from yesterday identified these dependencies:
+[paste your Day 12 Checkpoint 2 dependency declarations here]
+
+Challenge me if my design doesn't account for cross-role interfaces.
+Push me to define concrete contracts, not vague arrows.</pre></div>
+    </div>
+
+    <div class="quick-tip">
+      <span class="tip-icon">&#128161;</span>
+      <div><strong>Don't know what PDP/PEP means?</strong> Ask your AI Tutor: <em>"Explain PDP and PEP using the EuroHealth salary leak scenario."</em> Or expand the <a href="#ref-enforcement" style="color: var(--accent-cyan);">Enforcement Flow</a> section in the Reference Library below.</div>
+    </div>
+
+    <!-- ══════════ SPRINT 1 ══════════ -->
+    <div class="exercise-block" id="sprint-1">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#128101;</div>
+        <div>
+          <div class="exercise-label">Sprint 1 (9:15&ndash;9:35, 20 min)</div>
+          <div class="exercise-title">Consolidated Discovery Report &mdash; Merge Your Day 12 Findings</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9201; 20 minutes</span>
+        <span>&#128101; Team activity (AI-PM leads, all roles contribute)</span>
+        <span>&#128196; Deliverable: <code style="font-size:0.85em;">docs/discovery/consolidated-discovery-report.md</code></span>
+      </div>
+      <ol class="exercise-steps">
+        <li><strong>Open the shared document</strong> <code class="code-pill">docs/discovery/consolidated-discovery-report.md</code> in Teams. AI-PM: share the link in the general channel now (1 min).</li>
+        <li><strong>Paste your Day 12 discovery summary</strong> into your role's section. Don't rewrite &mdash; paste and annotate. One sentence per key finding, one sentence per dependency you declared at Checkpoint 2 (5 min).</li>
+        <li><strong>Read the other roles' sections.</strong> Find 2 things you agree on across all roles and 1 open question no one has answered yet. Put them in the "Confirmed Findings" and "Open Questions" sections (7 min).</li>
+        <li><strong>Fill in your role's row</strong> in the Cross-Role Dependencies table at the bottom: what you produce, what you consume, what blocks you (5 min). Ask AI Tutor if unsure: <em>"What does [MY ROLE] depend on from [ROLE] in a RAG pipeline?"</em></li>
+        <li><strong>AI-PM:</strong> Write the 2-sentence Unified Executive Summary after scanning all contributions. This is what the client reads first.</li>
+      </ol>
+      <div class="done-when">
+        <div class="dw-label">&#10003; Done when</div>
+        <ul>
+          <li>Your role section has at least 3 confirmed findings from your Day 12 report</li>
+          <li>Your row in the Cross-Role Dependencies table is filled</li>
+          <li>At least 3 "Confirmed Findings" are in the shared section (things all roles agree on)</li>
+          <li>At least 1 "Open Question" is captured (something that must be validated before architecture can proceed)</li>
+        </ul>
+      </div>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note: Sprint 1 Interventions</summary>
+      <div class="instructor-content">
+        <p>Watch the shared document live. If one role's section is empty at 9:25, DM: "Your row in the dependency table is blank — what do you produce that other roles consume?"</p>
+        <p>If AI-PM hasn't shared the document link, do it yourself. Sprint 1 is blocked without it.</p>
+        <p>Common mistake: students paste their full Day 12 report verbatim. DM: "We need your 3 key findings, not the full report. What are the 3 things the team needs to know from your role?"</p>
+        <p>If "Confirmed Findings" is empty at 9:30, call it out in the general channel: "What does every role agree on? Post one thing in the Confirmed Findings section NOW."</p>
+      </div>
+    </details>
+
+    <!-- ══════════ CHECKPOINT 1 ══════════ -->
+    <div class="checkpoint-mandatory" id="checkpoint-1">
+      <div class="cp-header">
+        <span class="cp-icon">&#9889;</span>
+        <span class="cp-label">Checkpoint 1 at 9:35 &mdash; MANDATORY POST</span>
+      </div>
+      <div class="cp-title">Post: Your Finding + Your Top Dependency</div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary);">Post in the <strong>general Teams channel</strong> (everyone reads this):</p>
+      <div class="cp-format">"[ROLE] confirmed finding: [the one thing from your discovery every role needs to know]<br>My top dependency: I need [ROLE] to confirm [specific question] before I can design my component."</div>
+      <div class="cp-examples">
+        <p class="mb-sm"><strong>FDE:</strong> "FDE confirmed finding: On-prem GPU capacity is unknown — this gates the entire LLM selection. My top dependency: I need AI-SE to confirm what hardware EuroHealth can provision before I choose between Llama 7B and 13B."</p>
+        <p class="mb-sm"><strong>AI-SEC:</strong> "AI-SEC confirmed finding: Three shadow AI systems (HR chatbot, Claims LangChain, Moveworks) are ungoverned — this is the core regulatory risk. My top dependency: I need AI-PM to confirm the governance charter owner before I draft escalation rules."</p>
+        <p class="m-0"><strong>AI-DS:</strong> "AI-DS confirmed finding: ~30% of the Confluence KB is outdated — evaluation results will be unreliable until KB quality improves. My top dependency: I need FDE to confirm chunking strategy so I can design test questions at the right granularity."</p>
+      </div>
+      <div class="warning-box" style="margin-top: 1rem; margin-bottom: 0;">
+        <div class="box-label">Cross-Role Rule</div>
+        <p class="m-0">If someone's Checkpoint 1 post names YOUR role as a dependency, <strong>respond with a 1-liner: "I can confirm X / I need Y to confirm this."</strong> Don't ignore it — unresolved dependencies block Sprint 2.</p>
+      </div>
+    </div>
+
+    <!-- ══════════ SPRINT 2 ══════════ -->
+    <div class="exercise-block" id="sprint-2">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#9997;&#65039;</div>
+        <div>
+          <div class="exercise-label">Sprint 2 (9:40&ndash;9:55, 15 min)</div>
+          <div class="exercise-title">Solution Design &mdash; Write Your Component Section</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9201; 15 minutes</span>
+        <span>&#128100; Individual + AI Tutor</span>
+        <span>&#128196; Deliverable: your role's section in <code style="font-size:0.85em;">docs/architecture/solution-design.md</code></span>
+      </div>
+      <ol class="exercise-steps">
+        <li><strong>Use the AI Tutor prompt above</strong> (paste it with your Checkpoint 1 finding included). This is the core design sprint. What does your component do, what technologies, where does it sit in the pipeline? (2 min to set up, 8 min to design).</li>
+        <li><strong>Open <code class="code-pill">docs/architecture/solution-design.md</code></strong> and find your role's section. Fill in: component description, technology choices with rationale, inputs and outputs, constraints addressed (on-prem, budget, 3 languages) (8 min). Use the AI Tutor to challenge your choices.</li>
+        <li><strong>Locate the PEP in your design.</strong> Where does policy enforcement happen in your component? If the answer is "nowhere" — you have a governance gap. Ask AI Tutor: <em>"Where should the Policy Enforcement Point sit in my [ROLE] component?"</em> (5 min).</li>
+      </ol>
+
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 1rem;">Need a reference for role-specific decisions? <a href="#ref-role-decisions" style="color: var(--accent-cyan);">Expand the Role-Specific Architecture Decisions</a> in the Reference Library.</p>
+
+      <div class="done-when">
+        <div class="dw-label">&#10003; Done when</div>
+        <ul>
+          <li>Your section in <code>solution-design.md</code> has a 1-sentence component description</li>
+          <li>You've chosen specific technologies (not "a vector database" but "Qdrant because on-prem, no licensing cost, Python client")</li>
+          <li>You can point to where policy enforcement happens in your component</li>
+          <li>Your design fits within the €180K budget and works on-premises</li>
+        </ul>
+      </div>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note: Sprint 2 — Busiest Mentor Moment</summary>
+      <div class="instructor-content">
+        <p>Watch for unanswered Checkpoint 1 dependency requests — if FDE asked AI-SEC a question and got no response, DM an AI-SEC student to answer before Sprint 2 ends.</p>
+        <p>DM coaching: "I see you've described your component but haven't written the technology rationale. Why that choice specifically? What makes it work on-prem?"</p>
+        <p>If PEP is missing: "Where in your component does policy enforcement happen? If nothing reads the YAML files, they're decorative."</p>
+        <p>If a student is still in the Consolidated Report at minute 5 of Sprint 2: "Close the report and open solution-design.md — Sprint 2 is your component design."</p>
+      </div>
+    </details>
+
+    <!-- ══════════ CHECKPOINT 2 ══════════ -->
+    <div class="checkpoint-mandatory" id="checkpoint-2">
+      <div class="cp-header">
+        <span class="cp-icon">&#9889;</span>
+        <span class="cp-label">Checkpoint 2 at 9:55 &mdash; COMPONENT SPEC</span>
+      </div>
+      <div class="cp-title">Post: Your Component Specification</div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary);">Post in your <strong>role's Teams channel</strong>:</p>
+      <div class="cp-format">"[ROLE] component: [1-sentence description]<br>Tech choice: [X] because [on-prem/budget/performance reason]<br>PEP location: [where policy enforcement sits in my component]<br>I produce for other roles: [what you output] | I consume from other roles: [what you need]"</div>
+      <div class="cp-examples">
+        <p class="mb-sm"><strong>FDE:</strong> "FDE component: RAG pipeline — query → retriever → generator → PEP → response. Tech: Qdrant (on-prem vector store, no license cost) + Llama 3.1 8B (fits in 24GB VRAM). PEP location: between generator and response, evaluates every draft before it reaches the user. I produce: response + policy_status + confidence. I consume from AI-SEC: PDP decision {allow|block|redirect}, from AI-DS: golden dataset for evaluation."</p>
+        <p class="m-0"><strong>AI-SEC:</strong> "AI-SEC component: Policy Decision Point (PDP) + 5 YAML policy rules. Tech: custom Python PDP loading governance/policies/*.yaml at startup + re-loading on file change. PEP location: FDE pipeline calls my PDP via internal REST at every generation step. I produce: {decision, reason, log_id} for FDE. I consume from AI-SE: audit logger schema."</p>
+      </div>
+    </div>
+
+    <!-- ══════════ SPRINT 3 ══════════ -->
+    <div class="exercise-block" id="sprint-3">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#128221;</div>
+        <div>
+          <div class="exercise-label">Sprint 3 (10:00&ndash;10:10, 10 min + 5 min buffer)</div>
+          <div class="exercise-title">Interface Contracts &mdash; Lock the Cross-Role Boundaries</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9201; 10 minutes + 5 min buffer</span>
+        <span>&#128100; Individual + cross-role verification</span>
+        <span>&#128196; Deliverable: your contracts in <code style="font-size:0.85em;">docs/architecture/interface-contracts.md</code></span>
+      </div>
+      <ol class="exercise-steps">
+        <li><strong>Open <code class="code-pill">docs/architecture/interface-contracts.md</code></strong> and find the contracts that involve your role — either as Provider or Consumer. Fill in the details: data format, protocol, error handling, SLA (5 min).</li>
+        <li><strong>Verify cross-role assumptions:</strong> Read the Checkpoint 2 posts from roles you depend on. Does their stated output format match what you assumed you'd receive? If there's a mismatch &mdash; flag it in the Teams channel now. (3 min)</li>
+        <li><strong>Self-check before submitting:</strong></li>
+      </ol>
+
+      <div class="danger-box" style="margin-top: 0.5rem;">
+        <div class="box-label">Self-Check — All Three Deliverables</div>
+        <ul class="ul-indent-mb">
+          <li><strong>Consolidated Report:</strong> Is your role's section in <code>docs/discovery/consolidated-discovery-report.md</code>? Is your Cross-Role Dependencies row filled?</li>
+          <li><strong>Solution Design:</strong> Is your component section in <code>docs/architecture/solution-design.md</code>? Does it include technology rationale, PEP location, and constraint checklist?</li>
+          <li><strong>Interface Contracts:</strong> Do you have at least 2 contracts in <code>docs/architecture/interface-contracts.md</code>? Do they specify format, protocol, and error handling?</li>
+          <li><strong>Policy connection:</strong> Do the YAML files in <code>governance/policies/</code> actually connect to runtime enforcement? If nothing reads them, they are decorative.</li>
+          <li><strong>Constraints:</strong> On-prem? &euro;180K? 3 languages? All addressed in your solution design section?</li>
+        </ul>
+      </div>
+
+      <ol class="exercise-steps" style="counter-reset: exercise-step 3; margin-top: 1rem;">
+        <li><strong>Done early?</strong> Read a peer's component section. If it connects to YOUR component, verify: does their assumed input format match what you're actually sending?</li>
+      </ol>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note: Intervention Triggers</summary>
+      <div class="instructor-content">
+        <ul class="ul-indent">
+          <li><strong>Interface contract is vague:</strong> "You wrote 'sends data.' What data? JSON? What fields? What happens when the other side is down?"</li>
+          <li><strong>Contract mismatch between roles:</strong> "FDE says they receive {query, session_id}. You're planning to send {user_input, lang}. Those don't match. Who adapts?"</li>
+          <li><strong>governance/policies/ disconnect:</strong> "Nothing in your contracts reads those YAML files. They're decorative right now. Where does FDE's code call your PDP?"</li>
+          <li><strong>Student still working on solution design in Sprint 3:</strong> "Close solution-design.md and open interface-contracts.md. Sprint 3 is about locking boundaries, not redesigning."</li>
+          <li><strong>FDE or AI-SEC contract missing error handling:</strong> "What happens when the PDP is down? 'Returns error' is not an answer. Default to BLOCK? Escalate to human? Decide now."</li>
+        </ul>
+      </div>
+    </details>
+
+  </section>
+
+  <!-- ── Key Message ── -->
+  <div class="key-message">
+    <p>"Architecture without governance is a liability.<br>Governance without architecture is a fantasy."</p>
+    <div class="attribution">Day 13 &mdash; Central Message</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--  WOW MOMENT 2: YOUR ARCHITECTURE UNDER FIRE   -->
+  <!-- ══════════════════════════════════════════════ -->
+
+  <section id="wrapup-test">
+    <h2><span class="section-number">&#128293;</span> Wrap-Up &mdash; Your Architecture Under Fire (10:15&ndash;10:30)</h2>
+
+    <div class="wrapup-test">
+      <div class="wt-header">
+        <span style="font-size: 1.3rem;">&#128293;</span>
+        <div>
+          <div class="wt-label">Live Test &mdash; The Breach Simulation Returns</div>
+          <div class="wt-title">This time, it's YOUR architecture being tested.</div>
+        </div>
+      </div>
+
+      <p>Remember the salary leak from the opening demo? The lecturer is about to pick a real student's FDE architecture and a real student's AI-SEC policy YAML &mdash; and run the same query against them.</p>
+
+      <p><strong>The question:</strong> <em>"What is the salary of my manager, John Smith?"</em></p>
+
+      <p>If your architecture has a PEP and it connects to AI-SEC's policies &mdash; the leak gets blocked. If not &mdash; PII goes through. Same scenario. But this time it's personal.</p>
+
+      <details class="instructor-note">
+        <summary>Instructor Note: Wrap-Up Live Test — This Is the Climax</summary>
+        <div class="instructor-content">
+          <p><strong>Preparation:</strong> During Sprint 3, scan FDE and AI-SEC Checkpoint 2 posts. Pick one FDE and one AI-SEC student whose work you'll showcase. Ideally pick one pair where the contract works well and one where there's a visible gap.</p>
+          <p><strong>How to run it:</strong></p>
+          <ul class="ul-indent">
+            <li>Share your screen. Open the FDE's <code>architecture-[FDE].md</code>. "Let's trace the salary query through [Student Name]'s architecture."</li>
+            <li>Walk through: Query → Retrieval → Generation → <strong>Where's the PEP?</strong></li>
+            <li><strong>If PEP exists:</strong> "Great. Now let's check &mdash; does AI-SEC's YAML actually connect? What format does FDE expect? What does AI-SEC provide? Do they match?" If yes → show the green simulation. Applause.</li>
+            <li><strong>If PEP is missing or disconnected:</strong> Show the red simulation. "This is not a failure &mdash; this is a discovery. You now know exactly what to fix tonight before governance day tomorrow."</li>
+          </ul>
+          <p><strong>Key pedagogical move:</strong> The opening demo was abstract ("some agent leaked PII"). This one is personal ("YOUR architecture leaked PII"). That shift from observer to participant is the emotional anchor for the entire day. Students will remember "the day my architecture got tested live" far longer than any theory section.</p>
+          <p><strong>Tone:</strong> Supportive, not punitive. The point is not to embarrass anyone. The point is: "This is how real architecture reviews work. You find gaps. You fix them. You come back stronger tomorrow."</p>
+          <p><strong>Timing:</strong> Max 8 minutes on the live test + 5 minutes for the Day 14 bridge. Do not let this run over &mdash; end on the forward-looking note.</p>
+        </div>
+      </details>
+
+      <div class="before-after" style="margin-top: 1.5rem;">
+        <div class="before-panel">
+          <div class="panel-label">If Your PEP is Missing or Disconnected</div>
+          <div class="panel-content">
+            <p class="mb-sm">&#128308; The salary leak happens &mdash; in YOUR architecture.</p>
+            <p class="mb-sm">&#128308; Not a failure. A gap you now know about.</p>
+            <p class="m-0">&#128308; <strong>Tonight:</strong> Add PEP + connect to AI-SEC's YAML. Fix it before Day 14 governance.</p>
+          </div>
+        </div>
+        <div class="after-panel">
+          <div class="panel-label">If Your PEP Works + Connects to Policy YAML</div>
+          <div class="panel-content">
+            <p class="mb-sm">&#128994; The leak gets blocked. In YOUR architecture.</p>
+            <p class="mb-sm">&#128994; Your interface contract with AI-SEC held up.</p>
+            <p class="m-0">&#128994; <strong>Tomorrow:</strong> You govern this. Day 14 adds the EU AI Act lens on top.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-box" style="margin-top: 1.5rem;">
+        <div class="box-label">Self-Check Before You Leave</div>
+        <p class="m-0">Ask yourself right now: <em>"If the lecturer picked MY component for the live test &mdash; would the salary query get blocked?"</em> If the answer is "I'm not sure" &mdash; that's your homework tonight. Open <code class="code-pill">docs/architecture/solution-design.md</code>, find your section, verify the PEP connects to <code class="code-pill">governance/policies/</code>, and make sure the audit log captures the decision.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--              REFERENCE LIBRARY                -->
+  <!-- ══════════════════════════════════════════════ -->
+
+  <div class="ref-library" id="reference">
+    <h2>&#128218; Reference Library</h2>
+    <p class="ref-library-intro">Expand any topic below when you need more context. Your AI Tutor can also explain these concepts &mdash; ask it directly during your sprints.</p>
+
+    <!-- REF 1: Story Arc -->
+    <details class="ref-expand">
+      <summary>&#128279; Story Arc: Day 10 &rarr; 11 &rarr; 12 &rarr; 13</summary>
+      <div class="ref-body">
+        <p><strong>Day 10 (HealthCare Co.):</strong> You audited a prototype built without discovery. Drug dosage errors, governance failures &mdash; the "what NOT to do" example.</p>
+        <p><strong>Day 11 (EuroHealth):</strong> You wrote discovery questions from your role. At Checkpoint 2, you "stole" ideas from peers &mdash; proving that even within one role, people notice different things.</p>
+        <p><strong>Day 12:</strong> The CIO answered your questions. You wrote discovery reports. And at Checkpoint 2, you declared cross-role dependencies.</p>
+        <p><strong>Day 13 (Today):</strong> Three sprints, three deliverables. Sprint 1 merges all discovery into one shared Consolidated Discovery Report — the foundation everyone designs from. Sprint 2 turns confirmed findings into Solution Design — your component specification. Sprint 3 locks the cross-role Interface Contracts — no more vague arrows.</p>
+        <blockquote>"Hans is not buying intelligence. He is buying <strong>control</strong>." &mdash; Olha Lys, AI-PM, Discovery Report Day 12</blockquote>
+        <p class="m-0">This is your architecture filter today: every design decision must deliver <strong>control</strong> &mdash; not just capability.</p>
+      </div>
+    </details>
+
+    <!-- REF 2: Project Structure -->
+    <details class="ref-expand">
+      <summary>&#128193; Project Structure &mdash; The Three-Pillar Skeleton</summary>
+      <div class="ref-body">
+        <p>The project has three parallel artifact streams. Most junior consultants only think about <strong>src/</strong>. Senior consultants know that <strong>docs/</strong> and <strong>governance/</strong> are what the client actually pays for. The code is a means; the documents are the deliverable.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+            <span class="code-title">eurohealth-helpdesk/ &mdash; Three-Pillar Structure</span>
+          </div>
+          <div class="code-body"><pre><span class="code-folder">eurohealth-helpdesk/</span>
+<span class="code-folder">├── docs/</span>                  <span class="code-comment code-comment-accent"># PILLAR 1: Delivery artifacts (what the client gets)</span>
+<span class="code-folder">│   ├── discovery/</span>
+<span class="code-file">│   │   ├── consolidated-discovery-report.md</span>  <span class="code-comment"># ★ Sprint 1 deliverable</span>
+<span class="code-file">│   │   └── discovery-packs/</span>                  <span class="code-comment"># Individual Day 12 reports</span>
+<span class="code-folder">│   ├── architecture/</span>
+<span class="code-file">│   │   ├── solution-design.md</span>                <span class="code-comment"># ★ Sprint 2 deliverable</span>
+<span class="code-file">│   │   └── interface-contracts.md</span>            <span class="code-comment"># ★ Sprint 3 deliverable</span>
+<span class="code-folder">│   ├── project-plan/</span>
+<span class="code-file">│   │   ├── risk-register.md</span>                  <span class="code-comment"># AI-PM owns</span>
+<span class="code-file">│   │   └── phased-delivery.md</span>
+<span class="code-folder">│   └── client-facing/</span>
+<span class="code-file">│       └── executive-summary.md</span>
+<span class="code-folder">├── governance/</span>            <span class="code-comment code-comment-accent"># PILLAR 2: Governance artifacts (what makes it auditable)</span>
+<span class="code-folder">│   ├── policies/</span>          <span class="code-comment code-comment-accent"># &larr; Policy as Code lives HERE, not in src/</span>
+<span class="code-file">│   │   ├── pii-protection.yaml</span>               <span class="code-comment"># AI-SEC owns</span>
+<span class="code-file">│   │   ├── scope-limitation.yaml</span>
+<span class="code-file">│   │   ├── escalation-rules.yaml</span>
+<span class="code-file">│   │   ├── data-retention.yaml</span>
+<span class="code-file">│   │   └── content-freshness.yaml</span>
+<span class="code-folder">│   ├── compliance/</span>
+<span class="code-file">│   │   ├── eu-ai-act-classification.md</span>       <span class="code-comment"># EU AI Act risk tier evidence</span>
+<span class="code-file">│   │   └── ai-inventory.md</span>                   <span class="code-comment"># Registry of ALL AI at EuroHealth</span>
+<span class="code-folder">│   ├── operating-model/</span>
+<span class="code-file">│   │   ├── governance-charter.md</span>             <span class="code-comment"># Decision rights matrix</span>
+<span class="code-file">│   │   └── incident-response.md</span>
+<span class="code-folder">│   └── evidence/</span>
+<span class="code-file">│       └── audit-log-schema.json</span>             <span class="code-comment"># EU AI Act Art. 12</span>
+<span class="code-folder">├── src/</span>                   <span class="code-comment code-comment-accent"># PILLAR 3: Technical artifacts (what actually runs)</span>
+<span class="code-file">│   ├── agent.py</span>           <span class="code-comment"># FDE: RAG pipeline orchestrator</span>
+<span class="code-file">│   ├── retriever.py</span>       <span class="code-comment"># FDE: vector search over Confluence</span>
+<span class="code-file">│   ├── policy_engine.py</span>   <span class="code-comment"># AI-SE: PDP/PEP implementation</span>
+<span class="code-file">│   ├── audit_logger.py</span>    <span class="code-comment"># AI-SE: structured audit trail</span>
+<span class="code-file">│   └── config.yaml</span>
+<span class="code-folder">├── tests/</span>
+<span class="code-file">│   ├── test_policies.py</span>
+<span class="code-folder">│   ├── golden_dataset/</span>    <span class="code-comment"># AI-DS owns</span>
+<span class="code-file">│   └── security/</span>          <span class="code-comment"># AI-SEC: prompt injection + PII tests</span>
+<span class="code-folder">├── monitoring/</span>            <span class="code-comment"># AI-DA owns</span>
+<span class="code-file">│   └── dashboard-spec.md</span>
+<span class="code-folder">├── data/</span>
+<span class="code-file">│   └── confluence/</span>        <span class="code-comment"># Knowledge base source documents</span>
+<span class="code-file">├── Dockerfile</span>
+<span class="code-file">├── docker-compose.yml</span>
+<span class="code-folder">└── .github/</span>
+<span class="code-file">    └── workflows/</span>         <span class="code-comment"># AI-SE: policy-check.yml on every commit</span></pre></div>
+        </div>
+        <div class="quick-tip">
+          <span class="tip-icon">&#128161;</span>
+          <div><strong>Version control is governance.</strong> When policies live in <code>governance/policies/</code> in Git alongside code, every change is tracked, every modification has an author, and every version can be audited. This is not optional for EU AI Act compliance. When the CISO asks "who changed the PII rule on March 3rd?" — git log answers that question in 3 seconds.</div>
+        </div>
+
+        <h3 style="margin-top: 1.5rem; font-size: 1rem; color: var(--text-primary);">What Each Folder Is For</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">Junior consultants ask: <em>"Where does my code go?"</em> Senior consultants ask: <em>"What does the client receive and how do we prove compliance?"</em> This table answers both questions.</p>
+        <table class="ref-table">
+          <thead>
+            <tr><th>Folder</th><th>Purpose</th><th>Who Owns It</th><th>Key Files</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>docs/discovery/</code></td>
+              <td>Phase 1 output: what we learned. The foundation every architectural decision builds on.</td>
+              <td><span class="role-badge badge-pm" style="font-size:0.75rem;">AI-PM</span> coordinates, all roles contribute</td>
+              <td><code>consolidated-discovery-report.md</code></td>
+            </tr>
+            <tr>
+              <td><code>docs/architecture/</code></td>
+              <td>Phase 2 output: what we will build. The client signs off on this before any code is written.</td>
+              <td><span class="role-badge badge-fde" style="font-size:0.75rem;">FDE</span> leads, all roles contribute sections</td>
+              <td><code>solution-design.md</code>, <code>interface-contracts.md</code></td>
+            </tr>
+            <tr>
+              <td><code>docs/project-plan/</code></td>
+              <td>Delivery management: timeline, risks, budget, success criteria. What keeps the engagement on track.</td>
+              <td><span class="role-badge badge-pm" style="font-size:0.75rem;">AI-PM</span></td>
+              <td><code>risk-register.md</code>, <code>phased-delivery.md</code></td>
+            </tr>
+            <tr>
+              <td><code>docs/client-facing/</code></td>
+              <td>Board-ready materials: executive summaries, progress reports, the August evidence pack Hans presents.</td>
+              <td><span class="role-badge badge-pm" style="font-size:0.75rem;">AI-PM</span></td>
+              <td><code>executive-summary.md</code>, <code>august-evidence-pack.md</code></td>
+            </tr>
+            <tr style="background: rgba(34,211,238,0.04);">
+              <td><code>governance/policies/</code></td>
+              <td><strong>Policy-as-Code.</strong> YAML rules that the PEP enforces at runtime. Every rule here is live — not a PDF on SharePoint.</td>
+              <td><span class="role-badge badge-sec" style="font-size:0.75rem;">AI-SEC</span></td>
+              <td><code>pii-protection.yaml</code>, <code>escalation-rules.yaml</code>, 3 more</td>
+            </tr>
+            <tr>
+              <td><code>governance/compliance/</code></td>
+              <td>EU AI Act evidence: risk tier classification, AI system inventory. What the regulator reviews.</td>
+              <td><span class="role-badge badge-sec" style="font-size:0.75rem;">AI-SEC</span> + <span class="role-badge badge-pm" style="font-size:0.75rem;">AI-PM</span></td>
+              <td><code>eu-ai-act-classification.md</code>, <code>ai-inventory.md</code></td>
+            </tr>
+            <tr>
+              <td><code>governance/operating-model/</code></td>
+              <td>Decision rights, incident response, human override protocol. How the system is governed day-to-day.</td>
+              <td><span class="role-badge badge-sec" style="font-size:0.75rem;">AI-SEC</span> + <span class="role-badge badge-pm" style="font-size:0.75rem;">AI-PM</span></td>
+              <td><code>governance-charter.md</code>, <code>human-override-protocol.md</code></td>
+            </tr>
+            <tr>
+              <td><code>governance/evidence/</code></td>
+              <td>Audit trail infrastructure: log schema, evidence cadence, board reporting template. Proves compliance to regulators.</td>
+              <td><span class="role-badge badge-se" style="font-size:0.75rem;">AI-SE</span> + <span class="role-badge badge-sec" style="font-size:0.75rem;">AI-SEC</span></td>
+              <td><code>audit-log-schema.json</code></td>
+            </tr>
+            <tr>
+              <td><code>src/</code></td>
+              <td>The executable code. RAG pipeline, policy engine, retriever, audit logger. What actually runs on EuroHealth's servers.</td>
+              <td><span class="role-badge badge-fde" style="font-size:0.75rem;">FDE</span> + <span class="role-badge badge-se" style="font-size:0.75rem;">AI-SE</span></td>
+              <td><code>agent.py</code>, <code>policy_engine.py</code>, <code>retriever.py</code></td>
+            </tr>
+            <tr>
+              <td><code>tests/</code></td>
+              <td>Quality and safety validation. Golden dataset for accuracy evaluation. Security tests for prompt injection and PII boundary testing.</td>
+              <td><span class="role-badge badge-ds" style="font-size:0.75rem;">AI-DS</span> (<code>golden_dataset/</code>) + <span class="role-badge badge-sec" style="font-size:0.75rem;">AI-SEC</span> (<code>security/</code>)</td>
+              <td><code>golden-questions.json</code>, <code>prompt-injection-tests.md</code></td>
+            </tr>
+            <tr>
+              <td><code>monitoring/</code></td>
+              <td>Observability specifications: KPI definitions, dashboard design, alerting rules. How we know the system is working — and when it isn't.</td>
+              <td><span class="role-badge badge-da" style="font-size:0.75rem;">AI-DA</span></td>
+              <td><code>dashboard-spec.md</code>, <code>alerting-rules.yaml</code></td>
+            </tr>
+            <tr>
+              <td><code>data/confluence/</code></td>
+              <td>Knowledge base source: the 2,000 Confluence pages the RAG system searches. Sample documents for development and testing.</td>
+              <td><span class="role-badge badge-ds" style="font-size:0.75rem;">AI-DS</span> audits quality, <span class="role-badge badge-fde" style="font-size:0.75rem;">FDE</span> indexes</td>
+              <td>Source HR/IT documents in EN/DE/CZ</td>
+            </tr>
+            <tr>
+              <td><code>.github/workflows/</code></td>
+              <td>CI/CD automation: policy validation runs on every git commit. Prevents invalid YAML from being deployed as live policy.</td>
+              <td><span class="role-badge badge-se" style="font-size:0.75rem;">AI-SE</span></td>
+              <td><code>policy-check.yml</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- REF 2b: Key Terms -->
+    <details class="ref-expand">
+      <summary>&#128218; Key Terms &mdash; Concepts You Need Before You Design</summary>
+      <div class="ref-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.25rem;">Each card below gives you the analogy first, then shows how it works, then tells you where it lives in the project.</p>
+
+        <!-- ── PDP + PEP card (full width) ── -->
+        <div style="border: 1px solid var(--border-color); border-left: 4px solid var(--accent-cyan); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: var(--bg-secondary);">
+          <div style="display:flex; align-items:baseline; gap:0.75rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+            <span style="font-size:1.2rem;">⚖️&nbsp;🛡️</span>
+            <strong style="color:var(--accent-cyan); font-size:1rem;">PDP &amp; PEP</strong>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Policy Decision Point &amp; Policy Enforcement Point</span>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.9rem;"><strong>Analogy:</strong> A nightclub. The <strong style="color:var(--accent-cyan);">PDP is the manager in the back office</strong> — reads the guest list (YAML rules), decides who gets in. The <strong style="color:var(--accent-green);">PEP is the bouncer at the door</strong> — calls the manager, then acts: let in, turn away, or call security.</p>
+
+          <!-- Pipeline diagram -->
+          <div style="background:var(--bg-tertiary); border-radius:6px; padding:0.85rem 1rem; font-family:'JetBrains Mono',monospace; font-size:0.75rem; overflow-x:auto;">
+            <div style="display:flex; align-items:center; gap:0.3rem; flex-wrap:nowrap; white-space:nowrap; margin-bottom:0.5rem;">
+              <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:4px; padding:0.25rem 0.5rem; color:var(--text-secondary);">Employee query</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:4px; padding:0.25rem 0.5rem; color:var(--text-secondary);">RAG retrieves</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:4px; padding:0.25rem 0.5rem; color:var(--text-secondary);">LLM generates</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div style="background:rgba(52,211,153,0.15); border:2px solid var(--accent-green); border-radius:4px; padding:0.25rem 0.6rem; color:var(--accent-green); font-weight:700;">PEP ↕</div>
+              <span style="color:var(--text-muted);">→</span>
+              <div style="background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:4px; padding:0.25rem 0.5rem; color:var(--text-secondary);">User sees</div>
+            </div>
+            <div style="display:flex; gap:0.3rem; margin-left:18.5rem; align-items:flex-start; flex-direction:column;">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="color:var(--text-muted); font-size:0.9rem;">↕</span>
+                <div style="background:rgba(34,211,238,0.12); border:2px solid var(--accent-cyan); border-radius:4px; padding:0.25rem 0.6rem; color:var(--accent-cyan); font-weight:700;">PDP</div>
+                <span style="color:var(--text-muted); font-size:0.75rem;">← reads →</span>
+                <div style="border:1px solid var(--border-color); border-radius:4px; padding:0.25rem 0.5rem; color:var(--text-muted);">governance/policies/*.yaml</div>
+              </div>
+              <div style="margin-left:1.6rem; display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem;">
+                <div style="background:rgba(52,211,153,0.1); border:1px solid var(--accent-green); border-radius:12px; padding:0.15rem 0.5rem; font-size:0.7rem; color:var(--accent-green);">✓ allow → response goes through</div>
+                <div style="background:rgba(239,68,68,0.1); border:1px solid #ef4444; border-radius:12px; padding:0.15rem 0.5rem; font-size:0.7rem; color:#ef4444;">✗ block → safe substitute sent</div>
+                <div style="background:rgba(251,191,36,0.1); border:1px solid #fbbf24; border-radius:12px; padding:0.15rem 0.5rem; font-size:0.7rem; color:#fbbf24;">↗ escalate → human agent takes over</div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.6rem; margin-bottom:0;">&#128197; EuroHealth: <code>src/policy_engine.py</code> = PDP &nbsp;|&nbsp; the interception point in <code>src/agent.py</code> = PEP</p>
+        </div>
+
+        <!-- ── 2-column grid ── -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+
+          <!-- YAML card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid #a78bfa; border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">📋</span>
+              <strong style="color:#a78bfa;">YAML</strong>
+              <span style="font-size:0.75rem; color:var(--text-muted);">YAML Ain't Markup Language</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> A recipe card. Structured, human-readable, and executable. The PDP can "cook" from it; the CISO can read it; the auditor can sign it.</p>
+            <div style="background:var(--bg-tertiary); border-radius:5px; padding:0.6rem 0.75rem; font-family:'JetBrains Mono',monospace; font-size:0.72rem; line-height:1.6;">
+              <span style="color:#a78bfa;">name</span><span style="color:var(--text-muted);">: </span><span style="color:var(--accent-green);">pii-protection</span><br>
+              <span style="color:#a78bfa;">rules</span><span style="color:var(--text-muted);">:</span><br>
+              <span style="color:var(--text-muted);">&nbsp;&nbsp;- </span><span style="color:#a78bfa;">id</span><span style="color:var(--text-muted);">: </span><span style="color:var(--accent-green);">block-salary-data</span><br>
+              <span style="color:var(--text-muted);">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#a78bfa;">trigger</span><span style="color:var(--text-muted);">: [</span><span style="color:var(--accent-green);">salary, gehalt</span><span style="color:var(--text-muted);">]</span><br>
+              <span style="color:var(--text-muted);">&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color:#a78bfa;">action</span><span style="color:var(--text-muted);">: </span><span style="color:#ef4444;">BLOCK</span>
+            </div>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; margin-bottom:0;">Indentation = hierarchy. No brackets. Readable by humans, executable by machines.</p>
+          </div>
+
+          <!-- Policy-as-Code card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid var(--accent-green); border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">🔒</span>
+              <strong style="color:var(--accent-green);">Policy-as-Code</strong>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> Traffic laws on a sign vs. in a cop's head. One is enforceable everywhere, automatically. The other depends on who's on duty.</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; font-size:0.75rem;">
+              <div style="background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.3); border-radius:5px; padding:0.5rem;">
+                <div style="color:#ef4444; font-weight:700; margin-bottom:0.3rem;">✗ Before</div>
+                <div style="color:var(--text-muted);">📄 PDF on SharePoint</div>
+                <div style="color:var(--text-muted);">Nobody reads it</div>
+                <div style="color:var(--text-muted);">Never enforced</div>
+                <div style="color:var(--text-muted);">No audit trail</div>
+              </div>
+              <div style="background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.3); border-radius:5px; padding:0.5rem;">
+                <div style="color:var(--accent-green); font-weight:700; margin-bottom:0.3rem;">✓ After</div>
+                <div style="color:var(--text-muted);">📝 YAML in Git</div>
+                <div style="color:var(--text-muted);">Everyone can read it</div>
+                <div style="color:var(--text-muted);">Auto-enforced every request</div>
+                <div style="color:var(--text-muted);">Every change tracked</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end 2-col grid row 1 -->
+
+        <!-- ── 2-column grid row 2 ── -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+
+          <!-- HITL card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid #fbbf24; border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">🧑‍✈️</span>
+              <strong style="color:#fbbf24;">HITL</strong>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Human-in-the-Loop</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> Autopilot with a pilot who can always take over. The AI flies the plane — but a human can grab the controls at any moment, for any reason.</p>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; line-height:1.8; background:var(--bg-tertiary); border-radius:5px; padding:0.6rem 0.75rem;">
+              <span style="color:var(--text-muted);">PEP decides → </span><span style="color:#fbbf24;">ESCALATE</span><br>
+              <span style="color:var(--text-muted);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓</span><br>
+              <span style="color:var(--text-muted);">Agent sees AI draft + </span><span style="color:#fbbf24;">[override panel]</span><br>
+              <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.2rem;">
+                <span style="background:rgba(52,211,153,0.15); border:1px solid var(--accent-green); border-radius:3px; padding:0 0.3rem; color:var(--accent-green);">Approve</span>
+                <span style="background:rgba(251,191,36,0.15); border:1px solid #fbbf24; border-radius:3px; padding:0 0.3rem; color:#fbbf24;">Edit</span>
+                <span style="background:rgba(239,68,68,0.15); border:1px solid #ef4444; border-radius:3px; padding:0 0.3rem; color:#ef4444;">Reject</span>
+                <span style="background:rgba(148,163,184,0.15); border:1px solid #94a3b8; border-radius:3px; padding:0 0.3rem; color:#94a3b8;">Escalate↗</span>
+              </div>
+              <div style="margin-top:0.3rem; color:var(--text-muted);">Every action → logged (agent ID + reason)</div>
+            </div>
+          </div>
+
+          <!-- ADR card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid #fb923c; border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">📓</span>
+              <strong style="color:#fb923c;">ADR</strong>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Architecture Decision Record</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> A doctor's chart, not a medical textbook. Records one decision — what, why, and what was rejected — so nobody questions it again in 3 months.</p>
+            <div style="background:var(--bg-tertiary); border-radius:5px; padding:0.6rem 0.75rem; font-size:0.74rem; line-height:1.7;">
+              <div><span style="color:#fb923c; font-weight:700;">Decision:</span> <span style="color:var(--text-secondary);">Use Qdrant as vector store</span></div>
+              <div><span style="color:#fb923c; font-weight:700;">Why:</span> <span style="color:var(--text-secondary);">Runs fully on-prem, no licence cost, Python client</span></div>
+              <div><span style="color:#fb923c; font-weight:700;">Rejected:</span> <span style="color:var(--text-muted);">ChromaDB (no enterprise support), Weaviate (too heavy for available GPU)</span></div>
+              <div><span style="color:#fb923c; font-weight:700;">Consequence:</span> <span style="color:var(--text-secondary);">We maintain on-prem instance — AI-SE owns ops</span></div>
+            </div>
+          </div>
+
+        </div><!-- end 2-col grid row 2 -->
+
+        <!-- ── 2-column grid row 3 ── -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+
+          <!-- Golden Dataset card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid var(--accent-blue); border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">🏅</span>
+              <strong style="color:var(--accent-blue);">Golden Dataset</strong>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> A driving test — not random questions, but a standardised set that proves the system is ready. If you pass, you get a licence to go live.</p>
+            <table style="width:100%; font-size:0.72rem; border-collapse:collapse;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                  <th style="text-align:left; padding:0.2rem 0.4rem; color:var(--text-muted); font-weight:600;">Question</th>
+                  <th style="text-align:left; padding:0.2rem 0.4rem; color:var(--text-muted); font-weight:600;">Expected outcome</th>
+                  <th style="text-align:center; padding:0.2rem 0.4rem; color:var(--text-muted); font-weight:600;">Policy check</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">How do I reset my VPN?</td>
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">Step-by-step answer</td>
+                  <td style="text-align:center; padding:0.2rem 0.4rem; color:var(--accent-green);">ALLOW ✓</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">What is Jan's salary?</td>
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">Safe substitute</td>
+                  <td style="text-align:center; padding:0.2rem 0.4rem; color:#ef4444;">BLOCK ✗</td>
+                </tr>
+                <tr>
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">Jak resetovat VPN? (CZ)</td>
+                  <td style="padding:0.2rem 0.4rem; color:var(--text-secondary);">Answer in Czech</td>
+                  <td style="text-align:center; padding:0.2rem 0.4rem; color:var(--accent-green);">ALLOW ✓</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; margin-bottom:0;">&#128197; <code>tests/golden_dataset/</code> &mdash; AI-DS owns, 50 questions</p>
+          </div>
+
+          <!-- DPIA card -->
+          <div style="border:1px solid var(--border-color); border-left:4px solid #94a3b8; border-radius:8px; padding:1rem 1.1rem; background:var(--bg-secondary);">
+            <div style="display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:1.1rem;">🔍</span>
+              <strong style="color:#94a3b8;">DPIA</strong>
+              <span style="font-size:0.75rem; color:var(--text-muted);">Data Protection Impact Assessment</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.7rem;"><strong>Analogy:</strong> An environmental impact review before breaking ground. You must prove you've assessed the risks before you're allowed to process personal data at scale.</p>
+            <div style="background:var(--bg-tertiary); border-radius:5px; padding:0.6rem 0.75rem; font-size:0.75rem; line-height:1.9;">
+              <div style="display:flex; gap:0.5rem; align-items:flex-start;"><span style="color:#94a3b8; font-weight:700; min-width:1.2rem;">①</span><span style="color:var(--text-secondary);">What personal data do we process? <span style="color:var(--text-muted);">(names, roles, queries, ticket content)</span></span></div>
+              <div style="display:flex; gap:0.5rem; align-items:flex-start;"><span style="color:#94a3b8; font-weight:700; min-width:1.2rem;">②</span><span style="color:var(--text-secondary);">How long do we keep it? <span style="color:var(--text-muted);">(queries: 90 days → anonymised; audit logs: 3 years)</span></span></div>
+              <div style="display:flex; gap:0.5rem; align-items:flex-start;"><span style="color:#94a3b8; font-weight:700; min-width:1.2rem;">③</span><span style="color:var(--text-secondary);">What controls prevent leakage? <span style="color:var(--text-muted);">(PEP blocks PII, data-retention.yaml enforced)</span></span></div>
+            </div>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem; margin-bottom:0;">&#128197; GDPR mandatory before go-live &mdash; AI-SEC owns <code>governance/compliance/data-protection-impact.md</code></p>
+          </div>
+
+        </div><!-- end 2-col grid row 3 -->
+
+      </div>
+    </details>
+
+    <!-- REF 3: Policy as Code Examples -->
+    <details class="ref-expand">
+      <summary>&#128220; Policy as Code &mdash; YAML Examples</summary>
+      <div class="ref-body">
+        <p>If your policies exist as a PDF on someone's desktop, they are not policies &mdash; they are suggestions. Real governance requires rules that a machine can read, evaluate, and enforce in milliseconds.</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+            <span class="code-title">policies/pii-protection.yaml</span>
+          </div>
+          <div class="code-body"><pre><span class="code-keyword">policy</span>:
+  <span class="code-property">name</span>: <span class="code-string">pii-protection</span>
+  <span class="code-property">version</span>: <span class="code-string">"1.0"</span>
+  <span class="code-property">description</span>: <span class="code-string">Block responses containing employee PII</span>
+  <span class="code-keyword">rules</span>:
+    - <span class="code-property">id</span>: <span class="code-value">block-salary-data</span>
+      <span class="code-property">if</span>: <span class="code-tag">response.contains(salary, personal_id, home_address)</span>
+      <span class="code-property">then</span>: <span class="code-keyword">block</span>
+      <span class="code-property">log</span>: <span class="code-string">"PII attempt blocked"</span>
+      <span class="code-property">escalate_to</span>: <span class="code-value">human_agent</span>
+    - <span class="code-property">id</span>: <span class="code-value">block-contact-info</span>
+      <span class="code-property">if</span>: <span class="code-tag">response.contains(personal_phone, personal_email)</span>
+      <span class="code-property">then</span>: <span class="code-keyword">redact</span>
+      <span class="code-property">log</span>: <span class="code-string">"PII redacted"</span></pre></div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+            <span class="code-title">policies/scope-limitation.yaml</span>
+          </div>
+          <div class="code-body"><pre><span class="code-keyword">policy</span>:
+  <span class="code-property">name</span>: <span class="code-string">scope-limitation</span>
+  <span class="code-property">version</span>: <span class="code-string">"1.0"</span>
+  <span class="code-keyword">rules</span>:
+    - <span class="code-property">id</span>: <span class="code-value">block-non-it-topics</span>
+      <span class="code-property">if</span>: <span class="code-tag">query.topic NOT IN [password_reset, vpn, software_install, ...]</span>
+      <span class="code-property">then</span>: <span class="code-keyword">redirect</span>
+      <span class="code-property">respond</span>: <span class="code-string">"I can only help with IT helpdesk topics."</span></pre></div>
+        </div>
+
+        <h3>Policy Rules at a Glance</h3>
+        <div class="policy-rules">
+          <div class="policy-rule-card">
+            <div class="rule-condition"><span class="rule-if">IF</span> response contains <code>salary</code>, <code>personal_id</code>, <code>home_address</code></div>
+            <div class="rule-condition"><span class="rule-then">THEN</span> block response + escalate to human agent</div>
+            <span class="rule-action action-block">BLOCK</span>
+          </div>
+          <div class="policy-rule-card">
+            <div class="rule-condition"><span class="rule-if">IF</span> query topic NOT in [password_reset, vpn, ...]</div>
+            <div class="rule-condition"><span class="rule-then">THEN</span> redirect user with scoped message</div>
+            <span class="rule-action action-redirect">REDIRECT</span>
+          </div>
+          <div class="policy-rule-card">
+            <div class="rule-condition"><span class="rule-if">IF</span> confidence score &lt; threshold</div>
+            <div class="rule-condition"><span class="rule-then">THEN</span> escalate to human agent</div>
+            <span class="rule-action action-escalate">ESCALATE</span>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- REF 4: Enforcement Flow (PDP/PEP) -->
+    <details class="ref-expand" id="ref-enforcement">
+      <summary>&#128274; Enforcement Flow &mdash; PDP/PEP Explained with a Real Scenario</summary>
+      <div class="ref-body">
+        <p><strong>PDP (Policy Decision Point)</strong> = the brain. It reads policy rules and decides: allow, block, or redirect. <strong>PEP (Policy Enforcement Point)</strong> = the muscle. It sits in the pipeline and enforces the PDP's decision before any response reaches the user.</p>
+
+        <div class="pipeline-steps">
+          <div class="pipeline-step"><div class="step-label">User Query</div><div class="step-detail">Employee asks</div></div>
+          <div class="pipeline-step"><div class="step-label">Retrieval</div><div class="step-detail">Vector search</div></div>
+          <div class="pipeline-step"><div class="step-label">Generation</div><div class="step-detail">LLM response</div></div>
+          <div class="pipeline-step step-highlight"><div class="step-label">PEP Check</div><div class="step-detail">Policy enforced</div></div>
+          <div class="pipeline-step"><div class="step-label">Response</div><div class="step-detail">To user</div></div>
+        </div>
+
+        <h3>Scenario: The Salary Leak That Didn't Happen</h3>
+        <p><strong>Query:</strong> Employee from Prague: <em>"What is the salary of my manager, John Smith? I need it for the budget review."</em></p>
+        <p><strong>Step 1 &mdash; Retrieval:</strong> The RAG agent retrieves Confluence pages, including one with manager salary data from an HR document that was accidentally indexed.</p>
+        <p><strong>Step 2 &mdash; Generation:</strong> The LLM generates: <em>"John Smith's monthly salary is 10,000 EUR..."</em></p>
+        <p><strong>Step 3 &mdash; PDP Decision:</strong> The Policy Decision Point evaluates against <code class="inline-code">pii-protection.yaml</code>. Rule <code class="inline-code">block-salary-data</code> fires. Decision: <strong class="text-red">BLOCK</strong>.</p>
+        <p><strong>Step 4 &mdash; PEP Enforcement:</strong> The original response is suppressed. Safe substitute returned: <em>"I cannot share personal salary information. Please contact HR directly."</em> Event logged. Human agent notified.</p>
+        <p><strong>Result:</strong> PII never exposed. Audit log proves compliance. All in under 200ms.</p>
+
+        <div class="quick-tip">
+          <span class="tip-icon">&#128161;</span>
+          <div><strong>PDP vs PEP &mdash; remember the split.</strong> Separating decision from enforcement means you can update rules without touching enforcement code, and test enforcement without changing rules.</div>
+        </div>
+
+        <div class="danger-box">
+          <div class="box-label">3 Most Common Anti-Patterns</div>
+          <ul class="ul-indent">
+            <li><strong class="text-red">No PEP in the pipeline.</strong> Query &rarr; Retrieve &rarr; Generate &rarr; Response. No enforcement point = any response goes through unfiltered.</li>
+            <li><strong class="text-red">Policies disconnected from code.</strong> AI-SEC wrote YAML. FDE built RAG. Neither talks to the other. Governance on paper only.</li>
+            <li><strong class="text-red">No audit trail.</strong> Policies enforced, but nothing logged. When the auditor asks "what happened March 15 at 14:32?" &mdash; silence.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <!-- REF 5: Architecture Diagram -->
+    <details class="ref-expand">
+      <summary>&#128506; System Architecture Overview &mdash; How All Roles Connect</summary>
+      <div class="ref-body">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+            <span class="code-title">EuroHealth AI Helpdesk &mdash; Component Architecture</span>
+          </div>
+          <div class="code-body"><pre>User &rarr; <span class="code-tag">[AI-FE]</span> Chat UI &rarr; <span class="code-keyword">[FDE]</span> Agent + RAG &rarr; <span class="code-property">[AI-SEC]</span> Policy Layer
+                                              &rarr; Confluence (data)
+                                              &rarr; ServiceNow (integration)
+                         &darr;
+                    <span class="code-string">[AI-DS]</span> Evaluation &larr; <span class="code-value">[AI-DA]</span> Monitoring
+                         &darr;
+                    <span class="code-folder">[AI-SE]</span> CI/CD + Deploy
+                         &darr;
+                    <span class="text-red">[AI-PM]</span> Scope + Compliance docs</pre></div>
+        </div>
+        <p>Every layer belongs to a role. Every arrow is a contract between two roles. Today you design YOUR component AND define YOUR contracts with the roles adjacent to you.</p>
+      </div>
+    </details>
+
+    <!-- REF 5b: KAF Layer Mapping -->
+    <details class="ref-expand">
+      <summary style="color: #C5001F;">&#127981; Kyndryl Agentic Framework (KAF) &mdash; Full Layer Mapping for EuroHealth</summary>
+      <div class="ref-body">
+        <p>KAF is Kyndryl's standard for building enterprise-grade agentic AI systems. It is not a coding framework — it is an <strong>architectural governance standard</strong>. Every solution Kyndryl delivers is expected to consciously map its design to KAF layers. This section shows you exactly how today's EuroHealth work does that.</p>
+
+        <h3 style="font-size: 0.95rem; color: var(--text-primary); margin-top: 1rem;">Layer Mapping</h3>
+        <table class="ref-table">
+          <thead>
+            <tr><th>KAF Layer</th><th>Layer Purpose</th><th>EuroHealth Implementation</th><th>Evidence Artifact</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Agent Core</strong></td>
+              <td>Core reasoning, retrieval, and generation capabilities of the AI agent</td>
+              <td><span class="role-badge badge-fde" style="font-size:0.72rem;">FDE</span> RAG pipeline: query → Qdrant retrieval → Llama generation → PEP → response. On-premises LLM selected for data sovereignty.</td>
+              <td><code>src/agent.py</code>, <code>src/retriever.py</code>, <code>docs/architecture/solution-design.md</code> §FDE</td>
+            </tr>
+            <tr>
+              <td><strong>Orchestration</strong></td>
+              <td>Controls the flow between agent steps, tools, and sub-agents. Manages sequencing, retries, and handoffs.</td>
+              <td>Pipeline orchestration in <code>agent.py</code>: sequential steps with defined contracts between each stage. Phase 2 will add orchestration of multiple agents (helpdesk + ServiceNow + KB refresh). Design today for extension.</td>
+              <td><code>docs/architecture/interface-contracts.md</code>, <code>docs/architecture/solution-design.md</code> §orchestration</td>
+            </tr>
+            <tr>
+              <td><strong>Governance</strong></td>
+              <td>Policy rules that constrain agent behaviour. Must be version-controlled, auditable, and enforced at runtime — not advisory documents.</td>
+              <td><span class="role-badge badge-sec" style="font-size:0.72rem;">AI-SEC</span> 5 YAML policy files covering PII, scope limitation, escalation, data retention, and content freshness. Enforced by PDP/PEP on every response. CI/CD validates syntax on every commit.</td>
+              <td><code>governance/policies/*.yaml</code>, <code>.github/workflows/policy-check.yml</code></td>
+            </tr>
+            <tr>
+              <td><strong>Trust &amp; Audit</strong></td>
+              <td>Structured evidence trail for every agent decision. Must prove: what was asked, what was retrieved, what the LLM generated, what the PEP decided, and why.</td>
+              <td><span class="role-badge badge-se" style="font-size:0.72rem;">AI-SE</span> structured JSON audit log. Every PEP decision logged with: timestamp, session_id, query_hash, decision, policy triggered, latency, model version. 3-year retention (EU AI Act Art. 12).</td>
+              <td><code>governance/evidence/audit-log-schema.json</code>, <code>src/audit_logger.py</code></td>
+            </tr>
+            <tr>
+              <td><strong>Human Loop</strong></td>
+              <td>Mechanisms for human agents to review, override, approve, or escalate AI decisions. Must be designed, not bolted on. EU AI Act Art. 14.</td>
+              <td>Three override triggers: PEP escalation, low confidence, explicit user request. Four override types: Reject, Edit, Escalate, Approve. Every override logged with agent ID + reason. Override rate tracked as a KPI.</td>
+              <td><code>governance/operating-model/human-override-protocol.md</code>, <code>governance/policies/escalation-rules.yaml</code>, <code>monitoring/dashboard-spec.md</code></td>
+            </tr>
+            <tr style="background: rgba(197,0,31,0.04);">
+              <td><strong>Agent Registry</strong></td>
+              <td>Enterprise-wide inventory of all AI agents: owner, risk tier, declared policies, status. Enables governance at scale — not just one agent, but all agents across the organisation.</td>
+              <td><code>governance/compliance/ai-inventory.md</code> — registers the EuroHealth helpdesk agent AND the 3 existing shadow AI systems (HR chatbot, Claims LangChain, Moveworks). KAF requires every agent to have a named owner, declared risk level, and governance status before production deployment.</td>
+              <td><code>governance/compliance/ai-inventory.md</code>, <code>governance/operating-model/shadow-ai-onboarding.md</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="font-size: 0.95rem; color: var(--text-primary); margin-top: 1.5rem;">EU AI Act ↔ KAF Governance Artefacts</h3>
+        <p style="font-size: 0.88rem; color: var(--text-secondary);">KAF governance layers directly produce the evidence artefacts that EU AI Act compliance requires. This is not coincidental — KAF was designed to make regulatory compliance a byproduct of good architecture, not a separate compliance exercise.</p>
+        <table class="ref-table">
+          <thead>
+            <tr><th>EU AI Act Article</th><th>Requirement</th><th>KAF Layer</th><th>EuroHealth Artefact</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Art. 9</td><td>Risk management system</td><td>Governance</td><td><code>governance/compliance/eu-ai-act-classification.md</code>, <code>docs/project-plan/risk-register.md</code></td></tr>
+            <tr><td>Art. 10</td><td>Data governance &amp; quality</td><td>Agent Core + Governance</td><td><code>governance/policies/pii-protection.yaml</code>, <code>governance/policies/content-freshness.yaml</code></td></tr>
+            <tr><td>Art. 12</td><td>Logging &amp; record-keeping</td><td>Trust &amp; Audit</td><td><code>governance/evidence/audit-log-schema.json</code> — every PEP decision logged, 3-year retention</td></tr>
+            <tr><td>Art. 13</td><td>Transparency &amp; user disclosure</td><td>Human Loop</td><td>AI disclosure in UI + policy block messages (<code>governance/policies/scope-limitation.yaml</code>)</td></tr>
+            <tr><td>Art. 14</td><td>Human oversight</td><td>Human Loop</td><td><code>governance/operating-model/human-override-protocol.md</code> + escalation rules</td></tr>
+            <tr><td>Art. 15</td><td>Accuracy &amp; robustness</td><td>Agent Core + Orchestration</td><td><code>tests/golden_dataset/</code> — AI-DS evaluation framework with RAGAS metrics</td></tr>
+          </tbody>
+        </table>
+
+        <div class="warning-box" style="margin-top: 1.25rem;">
+          <div class="box-label">Multi-Agent Framing — Design for the Future Now</div>
+          <p class="m-0">KAF is <strong>orchestration-first</strong>: it assumes multiple agents coordinating under a control plane, not a single standalone agent. The EuroHealth helpdesk agent is one node. Phase 2 adds: a ServiceNow integration agent (ticket creation), a KB quality monitoring agent (content freshness), and a governance reporting agent (board evidence pack). Design your interfaces today so they can be consumed by an orchestrator later — not hardcoded to a single flow.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- REF 6: Role-Specific Architecture Decisions -->
+    <details class="ref-expand" id="ref-role-decisions">
+      <summary>&#127919; Role-Specific Architecture Decisions &mdash; What Each Role Decides Today</summary>
+      <div class="ref-body">
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Key Architecture Decisions</th>
+              <th>Common Mistakes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="role-badge badge-fde">FDE</span></td>
+              <td>Chunking strategy, embedding model <strong>(on-prem!)</strong>, vector DB, agent framework, PEP integration</td>
+              <td>Forgetting on-prem constraint, no policy integration point</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-se">AI-SE</span></td>
+              <td>Container strategy, CI/CD tools, environment management, policy validation gate</td>
+              <td>No evaluation gate in pipeline, hardcoded configs</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-ds">AI-DS</span></td>
+              <td>Golden dataset format (50 test questions), eval metrics, scoring thresholds</td>
+              <td>Only testing happy path, ignoring policy compliance in eval</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-da">AI-DA</span></td>
+              <td>Metrics collection, dashboard tool, alerting rules, policy violation tracking</td>
+              <td>Vanity metrics, no policy violation tracking</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-pm">AI-PM</span></td>
+              <td>ADR format, cost breakdown, integration map between all roles</td>
+              <td>Missing cross-role dependencies, unrealistic timeline</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-fe">AI-FE</span></td>
+              <td>Framework choice, streaming setup, accessibility, trust indicators</td>
+              <td>No trust indicators, no error handling for policy blocks</td>
+            </tr>
+            <tr>
+              <td><span class="role-badge badge-sec">AI-SEC</span></td>
+              <td>PDP/PEP placement, policy syntax, audit logging schema, 5 initial rules</td>
+              <td>Policies too strict (blocks everything) or too loose (misses threats)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning-box">
+          <div class="box-label">Budget Watch</div>
+          <ul class="ul-indent-mb">
+            <li><strong>AI-PM:</strong> On-prem LLM costs 15&ndash;30K EUR. Include in ADR.</li>
+            <li><strong>AI-FE:</strong> EU AI Act requires AI disclosure. Users must know they are talking to AI.</li>
+            <li><strong>AI-SE:</strong> No policy validation gate in CI/CD = policies are just decorative.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <!-- REF 7: Peer Insights from Day 12 -->
+    <details class="ref-expand">
+      <summary>&#128101; Peer Insights &mdash; What Your Colleagues Found in Discovery</summary>
+      <div class="ref-body">
+        <p>Your discovery reports converged on a critical insight. Here's how your peers translated the CIO's words:</p>
+
+        <table class="ref-table">
+          <thead><tr><th>What Hans Said</th><th>What He Didn't Say</th><th>Architecture Implication</th></tr></thead>
+          <tbody>
+            <tr><td>"Cut costs by 30%."</td><td>The board is watching and expects proof.</td><td>Measurable automation with clear telemetry proving cost impact.</td></tr>
+            <tr><td>"Everyone's doing their own thing."</td><td>No centralized AI governance.</td><td>Unified deployment layer with centralized logging and policy enforcement.</td></tr>
+            <tr><td>"Six months."</td><td>Timeline may not be realistic.</td><td>Architecture must be phased and MVP-focused.</td></tr>
+          </tbody>
+        </table>
+
+        <p>Real dependency declarations from Day 12 Checkpoint 2:</p>
+        <blockquote>"I need AI-SEC to define audit logging, retention, and compliance traceability requirements."<br>
+        "I need FDE to confirm infrastructure feasibility and runtime architecture constraints."<br>
+        "I need AI-DS to validate automation baselines and knowledge base quality."</blockquote>
+        <p class="m-0" style="font-size: 0.82rem; color: var(--text-muted);">&mdash; Tomasz Huc, AI-SE, Discovery Report Day 12</p>
+      </div>
+    </details>
+
+    <!-- REF 8: Commercial Implications -->
+    <details class="ref-expand">
+      <summary>&#128176; Commercial Implications &mdash; Why Architecture Is a Sales Argument</summary>
+      <div class="ref-body">
+        <p><strong>Architecture decisions = Revenue consequences.</strong> Every component you designed today has a price tag and a value proposition.</p>
+
+        <div class="before-after">
+          <div class="before-panel">
+            <div class="panel-label">Risk Without Architecture</div>
+            <div class="panel-content">
+              <p class="mb-sm">&#128308; Compliance gaps discovered post-launch &mdash; expensive retrofit.</p>
+              <p class="mb-sm">&#128308; Cannot prove audit trail to regulators.</p>
+              <p class="m-0">&#128308; Fines up to &euro;15M or 3% turnover (EU AI Act).</p>
+            </div>
+          </div>
+          <div class="after-panel">
+            <div class="panel-label">Value With Policy Architecture</div>
+            <div class="panel-content">
+              <p class="mb-sm">&#128994; Compliance-by-design: Saves client 50&ndash;100K in audit costs.</p>
+              <p class="mb-sm">&#128994; Audit-ready at go-live: Full traceability from day one.</p>
+              <p class="m-0">&#128994; Regulatory moat: Phase 2 scales to 3,000 users.</p>
+            </div>
+          </div>
+        </div>
+
+        <table class="ref-table">
+          <thead><tr><th>Architecture Decision</th><th>Commercial Value</th></tr></thead>
+          <tbody>
+            <tr><td>Policy-as-Code from Day 1</td><td class="text-green"><strong>Compliance-by-design</strong> &mdash; saves client 50-100K in external audit costs.</td></tr>
+            <tr><td>PEP with audit logging</td><td class="text-green"><strong>Audit-ready from go-live.</strong> Reduces regulatory risk premium.</td></tr>
+            <tr><td>Modular component architecture</td><td class="text-green"><strong>Phase 2 expansion:</strong> 300 &rarr; 3,000 users is scaling, not rewrite. Opens &euro;300-500K follow-on.</td></tr>
+            <tr><td>MCP-based tool integrations</td><td class="text-green"><strong>New connectors = new revenue:</strong> Every system (SAP, Jira, HR) is a paid integration package.</td></tr>
+            <tr><td>Monitoring &amp; alerting built-in</td><td class="text-green"><strong>Managed services upsell:</strong> Ongoing monitoring = recurring monthly revenue.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ── Next Preview ── -->
+  <div class="next-preview">
+    <div class="next-icon">&#9654;</div>
+    <div>
+      <div class="next-label">Up Next &mdash; Day 14</div>
+      <div class="next-title">Governance Day &mdash; EU AI Act Compliance</div>
+      <p class="next-desc">In 6 months, EuroHealth's AI helpdesk must be EU AI Act compliant or they face fines up to 15 million EUR. Tomorrow you put a <strong>governance lens</strong> on the solution design you completed today. You will open <code style="font-size: 0.85em;">docs/architecture/solution-design.md</code> and ask: <em>"Where does a human override the AI? Can I prove what the system did on March 15 at 14:32? Did I test for bias across all three languages?"</em> If you can't answer &mdash; those are your Day 14 governance gaps.</p>
+      <p class="next-desc" style="margin-top: 0.5rem;"><strong>Tonight:</strong> (1) Refine your component section in <code style="font-size: 0.85em;">solution-design.md</code>. (2) Respond to unanswered interface requests in your channel. (3) Re-read the interface contracts &mdash; tomorrow they become the thing you govern. (4) Self-check: PEP present? Audit log? At least 2 interface contracts? If anything is missing, fix it now.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>AI Academy 2026 &mdash; Day 13 &bull; Wednesday, February 25, 2026 &bull; Architecture &mdash; Where Policy as Code Lives</p>
+  <p style="margin-top: 6px;">Week 4, Day 3 &bull; Instructor: Your Lecturer</p>
+</footer>
+
+<!-- ── Back to Top ── -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">&#8593;</button>
+
+<!-- ── JavaScript ── -->
+<script>
+(function() {
+  'use strict';
+
+  /* Theme toggle */
+  var html = document.documentElement;
+  var lightBtn = document.getElementById('theme-light');
+  var darkBtn = document.getElementById('theme-dark');
+  var isInIframe = window !== window.parent;
+  if (isInIframe) html.classList.add('in-iframe');
+  setTheme(localStorage.getItem('theme') || 'dark');
+  function setTheme(t) {
+    html.setAttribute('data-theme', t);
+    if (!isInIframe) localStorage.setItem('theme', t);
+    if (t === 'light') { lightBtn.classList.add('active'); darkBtn.classList.remove('active'); }
+    else { darkBtn.classList.add('active'); lightBtn.classList.remove('active'); }
+  }
+  lightBtn.addEventListener('click', function() { setTheme('light'); });
+  darkBtn.addEventListener('click', function() { setTheme('dark'); });
+  if (isInIframe) {
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'theme-change') setTheme(e.data.theme);
+    });
+  }
+
+  // Back to Top
+  var backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 400) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  }, { passive: true });
+  backToTop.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // INSTRUCTOR MODE
+  (function() {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'instructor') {
+          document.body.classList.add('instructor-mode');
+      }
+  })();
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('nav .nav-links a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var href = this.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        var target = document.querySelector(href);
+        if (target) {
+          var offset = 72;
+          var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      }
+    });
+  });
+
+})();
+</script>
+
+    <!-- AI Mentor Widget -->
+    <script src="/mentor-widget.js" data-role="FDE" data-lesson="Day 13 - Architecture" data-day="13"></script>
+    <script>
+    // -- Role Filter
+    (function () {
+        var stored = localStorage.getItem('aa-role') || 'all';
+        var btns = document.querySelectorAll('.role-btn');
+        var sections = document.querySelectorAll('[data-role-section]');
+
+        function applyRole(role) {
+            btns.forEach(function (b) {
+                b.classList.toggle('active', b.dataset.role === role);
+            });
+            sections.forEach(function (el) {
+                if (role === 'all') {
+                    el.classList.remove('role-hidden');
+                } else {
+                    var roles = el.dataset.roleSection.split(',');
+                    el.classList.toggle('role-hidden', roles.indexOf(role) === -1);
+                }
+            });
+            localStorage.setItem('aa-role', role);
+        }
+
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () { applyRole(btn.dataset.role); });
+        });
+
+        applyRole(stored);
+    })();
+    </script>
+</body>
+</html>

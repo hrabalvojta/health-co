@@ -1,0 +1,3304 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+    <meta name="course-day" content="15">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Academy 2026 — Day 15: Steering Committee — Go/No-Go</title>
+<style>
+/* ========== CSS Custom Properties ========== */
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --gradient-1: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --gradient-2: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  --gradient-hero: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #3b82f6 100%);
+  --gradient-3: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.2);
+  --shadow-xl: 0 12px 40px rgba(0,0,0,0.3);
+
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --max-width: 1100px;
+
+  /* Fallback theme tokens if data-theme is missing/invalid */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-card: #1e293b;
+  --bg-card-hover: #263548;
+  --bg-code: #0d1117;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  --border-primary: #334155;
+  --border-secondary: #475569;
+  --border: #334155;
+
+  --accent-green: #10b981;
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --accent-red: #ef4444;
+  --accent-yellow: #f59e0b;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+
+  --go-bg: rgba(16, 185, 129, 0.1);
+  --go-border: rgba(16, 185, 129, 0.3);
+  --nogo-bg: rgba(239, 68, 68, 0.1);
+  --nogo-border: rgba(239, 68, 68, 0.3);
+  --conditions-bg: rgba(245, 158, 11, 0.1);
+  --conditions-border: rgba(245, 158, 11, 0.3);
+
+  --nav-bg: rgba(15, 23, 42, 0.9);
+}
+
+/* Dark theme (default) */
+[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-card: #1e293b;
+  --bg-card-hover: #263548;
+  --bg-code: #0d1117;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  --border-primary: #334155;
+  --border-secondary: #475569;
+
+  --accent-green: #10b981;
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --accent-red: #ef4444;
+  --accent-yellow: #f59e0b;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+
+  --go-bg: rgba(16, 185, 129, 0.1);
+  --go-border: rgba(16, 185, 129, 0.3);
+  --nogo-bg: rgba(239, 68, 68, 0.1);
+  --nogo-border: rgba(239, 68, 68, 0.3);
+  --conditions-bg: rgba(245, 158, 11, 0.1);
+  --conditions-border: rgba(245, 158, 11, 0.3);
+
+  --border: #334155;
+  --gradient-3: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+  --nav-bg: rgba(15, 23, 42, 0.9);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-code: #f1f5f9;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+  --text-muted: #94a3b8;
+  --text-inverse: #f1f5f9;
+
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
+
+  --accent-green: #059669;
+  --accent-cyan: #0891b2;
+  --accent-blue: #2563eb;
+  --accent-red: #dc2626;
+  --accent-yellow: #d97706;
+  --accent-orange: #ea580c;
+  --accent-purple: #7c3aed;
+
+  --go-bg: rgba(5, 150, 105, 0.08);
+  --go-border: rgba(5, 150, 105, 0.25);
+  --nogo-bg: rgba(220, 38, 38, 0.08);
+  --nogo-border: rgba(220, 38, 38, 0.25);
+  --conditions-bg: rgba(217, 119, 6, 0.08);
+  --conditions-border: rgba(217, 119, 6, 0.25);
+
+  --border: #e2e8f0;
+  --gradient-3: linear-gradient(135deg, #ea580c 0%, #d97706 100%);
+  --nav-bg: rgba(248, 250, 252, 0.9);
+}
+
+/* ========== Reset & Base ========== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background var(--transition), color var(--transition);
+  min-height: 100vh;
+}
+
+/* ========== Navigation ========== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-primary);
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.nav-brand {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  overflow-x: auto;
+  max-width: 60%;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.nav-links a:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.theme-toggle { display: flex; align-items: center; background: var(--bg-secondary); border: 1px solid var(--border-primary); border-radius: 100px; padding: 0.3rem; }
+.in-iframe .theme-toggle { display: none !important; }
+.theme-toggle-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; border: none; background: transparent; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
+.theme-toggle-btn.active { background: var(--accent-green); color: white; }
+
+/* ========== Hero ========== */
+.hero {
+  margin-top: 56px;
+  padding: 4rem 1.5rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(16,185,129,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(6,182,212,0.10) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.hero h1 {
+  color: var(--accent-cyan);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 650px;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.time-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  position: relative;
+}
+
+.time-box .separator {
+  width: 4px;
+  height: 4px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+}
+
+.time-box strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ========== Main Content ========== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+/* ========== Section ========== */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: var(--gradient-1);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.section p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.section p strong {
+  color: var(--text-primary);
+}
+
+.section > :last-child {
+  margin-bottom: 0;
+}
+
+/* ========== Key Message ========== */
+.key-message {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-left: 4px solid var(--accent-green);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1.75rem;
+  margin: 1.5rem 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.key-message em {
+  color: var(--accent-cyan);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ========== Pipeline Flow ========== */
+.pipeline-flow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.pipeline-step {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-bottom: none;
+  transition: all var(--transition);
+}
+
+.pipeline-step:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.pipeline-step:last-child {
+  border-bottom: 1px solid var(--border-primary);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.pipeline-step:hover {
+  background: var(--bg-card-hover);
+}
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-1);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.pipeline-step:last-child .step-num {
+  background: var(--gradient-hero);
+}
+
+.step-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.step-owner {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* ========== Compare Grid ========== */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.compare-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  border: 1px solid var(--border-primary);
+  transition: all var(--transition);
+}
+
+.compare-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.compare-card.go {
+  border-color: var(--go-border);
+  background: var(--go-bg);
+}
+
+.compare-card.nogo {
+  border-color: var(--nogo-border);
+  background: var(--nogo-bg);
+}
+
+.compare-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compare-card.go h3 {
+  color: var(--accent-green);
+}
+
+.compare-card.nogo h3 {
+  color: var(--accent-red);
+}
+
+.compare-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.compare-card ul li {
+  padding: 0.4rem 0;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.compare-card.go ul li::before {
+  content: '\2705 ';
+  margin-right: 0.25rem;
+}
+
+.compare-card.nogo ul li::before {
+  content: '\274C ';
+  margin-right: 0.25rem;
+}
+
+/* ========== Warning Box ========== */
+.warning-box {
+  background: var(--conditions-bg);
+  border: 1px solid var(--conditions-border);
+  border-left: 4px solid var(--accent-yellow);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.warning-box h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warning-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.warning-box ul li {
+  padding: 0.35rem 0;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.warning-box ul li::before {
+  content: '\26A0\FE0F ';
+  margin-right: 0.25rem;
+}
+
+/* ========== Time Split ========== */
+.time-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 1.5rem 0;
+}
+
+.time-block {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-bottom: none;
+  align-items: center;
+  transition: all var(--transition);
+}
+
+.time-block:first-child {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.time-block:last-child {
+  border-bottom: 1px solid var(--border-primary);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.time-block:hover {
+  background: var(--bg-card-hover);
+}
+
+.time-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.time-minutes {
+  color: var(--accent-green);
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.time-unit {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.time-desc h4 {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.time-desc p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Progress bar under time blocks */
+.time-progress {
+  margin-top: 0.75rem;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+  display: flex;
+}
+
+.progress-seg {
+  height: 100%;
+  transition: all var(--transition);
+}
+
+.progress-seg.seg-create {
+  width: 50%;
+  background: var(--accent-green);
+}
+
+.progress-seg.seg-post {
+  width: 25%;
+  background: var(--accent-cyan);
+}
+
+.progress-seg.seg-review {
+  width: 25%;
+  background: var(--accent-blue);
+}
+
+/* ========== Code Block ========== */
+.code-block {
+  background: var(--bg-code);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  color: var(--text-primary);
+}
+
+.code-block .code-label {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  background: rgba(6, 182, 212, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.code-block .code-line {
+  display: block;
+  padding: 0.1rem 0;
+  color: var(--text-secondary);
+}
+
+.code-block .code-line .key {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.code-block .code-line .val {
+  color: var(--text-primary);
+}
+
+.code-block .code-line .comment {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+/* ========== Ref Table ========== */
+.ref-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+
+.ref-table thead {
+  background: var(--bg-tertiary);
+}
+
+.ref-table th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.ref-table td {
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  vertical-align: top;
+}
+
+.ref-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ref-table tbody tr {
+  background: var(--bg-card);
+  transition: background var(--transition);
+}
+
+.ref-table tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+
+.ref-table .role-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.ref-table .check-text {
+  font-style: italic;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+/* ========== Stat Grid ========== */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-secondary);
+}
+
+.stat-card .stat-icon {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.stat-card p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.stat-card .stat-day {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+/* ========== Role Badges ========== */
+.role-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.badge-fde { background: rgba(96,165,250,0.12); color: var(--accent-blue); }
+.badge-se { background: rgba(251,146,60,0.12); color: var(--accent-orange); }
+.badge-ds { background: rgba(52,211,153,0.12); color: var(--accent-green); }
+.badge-da { background: rgba(251,191,36,0.12); color: var(--accent-yellow); }
+.badge-pm { background: rgba(248,113,113,0.12); color: var(--accent-red); }
+.badge-fe { background: rgba(167,139,250,0.12); color: var(--accent-purple); }
+.badge-sec { background: rgba(34,211,238,0.12); color: var(--accent-cyan); }
+
+/* ========== Three Pillars Diagram ========== */
+.pillars-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.pillar-box {
+  text-align: center;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-primary);
+  background: var(--bg-tertiary);
+  min-width: 160px;
+  transition: var(--transition);
+}
+
+.pillar-box.completed {
+  border-color: var(--accent-green);
+  opacity: 0.75;
+}
+
+.pillar-box.current {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.15);
+}
+
+.pillar-box .p-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.pillar-box .p-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.pillar-box .p-sub {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  margin-top: 0.15rem;
+}
+
+.pillar-arrow {
+  color: var(--text-tertiary);
+  font-size: 1.2rem;
+}
+
+/* ── Role Artifacts Table ── */
+.artifacts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.88rem;
+}
+
+.artifacts-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 2px solid var(--border-primary);
+}
+
+.artifacts-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.artifacts-table tr:hover td {
+  background: var(--bg-secondary);
+}
+
+.artifacts-table code {
+  background: var(--bg-code);
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.82em;
+  color: var(--accent-cyan);
+}
+
+/* ── System Architecture Stack ── */
+.arch-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.arch-layer {
+  display: grid;
+  gap: 0;
+  position: relative;
+}
+
+.arch-layer.full { grid-template-columns: 1fr; }
+.arch-layer.split { grid-template-columns: 1fr 1fr; }
+
+.arch-cell {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background 0.2s;
+}
+
+.arch-cell:hover { background: var(--bg-card-hover); }
+
+.arch-layer.split .arch-cell:first-child {
+  border-right: 1px solid var(--border-primary);
+}
+
+.arch-cell-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  width: 2rem;
+  text-align: center;
+}
+
+.arch-cell-content { flex: 1; min-width: 0; }
+
+.arch-cell-title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.arch-cell-desc {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: 0.15rem;
+}
+
+.arch-cell-desc code {
+  background: var(--bg-code);
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  padding: 0px 4px;
+  font-size: 0.85em;
+  color: var(--accent-cyan);
+}
+
+/* Layer accent borders */
+.arch-cell[data-role="fe"]  { border-left: 3px solid var(--accent-purple); }
+.arch-cell[data-role="fde"] { border-left: 3px solid var(--accent-blue); }
+.arch-cell[data-role="se"]  { border-left: 3px solid var(--accent-orange); }
+.arch-cell[data-role="sec"] { border-left: 3px solid var(--accent-cyan); }
+.arch-cell[data-role="da"]  { border-left: 3px solid var(--accent-yellow); }
+.arch-cell[data-role="ds"]  { border-left: 3px solid var(--accent-green); }
+.arch-cell[data-role="pm"]  { border-left: 3px solid var(--accent-red); }
+
+/* Flow arrows between layers */
+.arch-arrow {
+  display: flex;
+  justify-content: center;
+  padding: 0.15rem 0;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+}
+
+/* Bottom layer has no border-bottom */
+.arch-stack .arch-layer:last-child .arch-cell {
+  border-bottom: none;
+}
+
+.arch-stack-caption {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .pillars-row { flex-direction: column; }
+  .pillar-arrow { transform: rotate(90deg); }
+  .artifacts-table { font-size: 0.8rem; }
+  .artifacts-table th, .artifacts-table td { padding: 0.4rem 0.5rem; }
+  .arch-layer.split { grid-template-columns: 1fr; }
+  .arch-layer.split .arch-cell:first-child { border-right: none; }
+}
+
+/* ========== Go-Live Grid (Checklist) ========== */
+.go-live-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.go-live-item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.25rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-primary);
+  transition: all var(--transition);
+}
+
+.go-live-item:last-child {
+  border-bottom: none;
+}
+
+.go-live-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.go-live-check {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.go-live-check.pending {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border-secondary);
+  color: var(--text-tertiary);
+}
+
+.go-live-check.done {
+  background: rgba(16, 185, 129, 0.15);
+  border: 2px solid var(--accent-green);
+  color: var(--accent-green);
+}
+
+.go-live-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text-primary);
+}
+
+.go-live-day {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* ========== Next Preview ========== */
+.next-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.next-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-1);
+}
+
+.next-preview .preview-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 0.75rem;
+}
+
+.next-preview h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.next-preview p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.next-preview .preview-quote {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  margin-top: 1rem;
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+}
+
+/* ========== Deep Dive Toggle ========== */
+.deep-dive-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-sans);
+  margin: 1rem 0;
+}
+
+.deep-dive-toggle:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--border-secondary);
+}
+
+.deep-dive-toggle .toggle-arrow {
+  transition: transform var(--transition);
+  display: inline-block;
+}
+
+.deep-dive-toggle.open .toggle-arrow {
+  transform: rotate(90deg);
+}
+
+.deep-dive-content {
+  display: none;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.deep-dive-content.visible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== Back to Top ========== */
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  background: var(--gradient-1);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all var(--transition);
+  z-index: 999;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ========== Footer ========== */
+.site-footer {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border-top: 1px solid var(--border-primary);
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+}
+
+.site-footer .footer-brand {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ========== Exercise Block ========== */
+        .exercise-block { background: var(--bg-card); border: 2px solid var(--accent-green); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden; }
+        .exercise-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-2); }
+        .exercise-block .exercise-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .exercise-block .exercise-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-sm); font-size: 1.2rem; }
+        .exercise-block .exercise-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-green); }
+        .exercise-block .exercise-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        .exercise-block .exercise-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .exercise-block .exercise-meta span { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; }
+        .exercise-block .exercise-steps { list-style: none; padding: 0; counter-reset: exercise-step; }
+        .exercise-block .exercise-steps li { counter-increment: exercise-step; position: relative; padding: 0.75rem 0 0.75rem 2.5rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); line-height: 1.6; }
+        .exercise-block .exercise-steps li:last-child { border-bottom: none; }
+        .exercise-block .exercise-steps li::before { content: counter(exercise-step); position: absolute; left: 0; top: 0.75rem; width: 24px; height: 24px; background: var(--accent-green); color: #fff; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+        .checkpoint { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden; }
+        .checkpoint::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-1); }
+        .checkpoint .checkpoint-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+        .checkpoint .checkpoint-icon { font-size: 1.2rem; }
+        .checkpoint .checkpoint-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-blue); }
+        .checkpoint .checkpoint-question { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.5; }
+        .checkpoint .checkpoint-options { list-style: none; padding: 0; margin-bottom: 1rem; }
+        .checkpoint .checkpoint-options li { padding: 0.6rem 1rem; margin-bottom: 0.5rem; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; color: var(--text-secondary); cursor: default; }
+        .checkpoint .checkpoint-options li:hover { border-color: var(--accent-blue); }
+        .checkpoint details { margin-top: 1rem; }
+        .checkpoint details summary { font-size: 0.85rem; font-weight: 600; color: var(--accent-blue); cursor: pointer; padding: 0.5rem 0; }
+        .checkpoint details .checkpoint-answer { padding: 1rem; background: rgba(59, 130, 246, 0.08); border-radius: var(--radius-sm); margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+
+        .analogy-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.5rem; align-items: center; }
+        .analogy-box .analogy-left, .analogy-box .analogy-right { text-align: center; padding: 1.5rem; border-radius: var(--radius-md); }
+        .analogy-box .analogy-left { background: var(--bg-secondary); border: 1px solid var(--border); }
+        .analogy-box .analogy-right { background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .analogy-box .analogy-emoji { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+        .analogy-box .analogy-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .analogy-box .analogy-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+        .analogy-box .analogy-connector { font-size: 0.85rem; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+
+        .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        .before-after .before-panel, .before-after .after-panel { padding: 1.5rem; border-radius: var(--radius-md); }
+        .before-after .before-panel { background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .before-after .after-panel { background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .before-after .panel-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+        .before-after .before-panel .panel-label { color: var(--accent-red); }
+        .before-after .after-panel .panel-label { color: var(--accent-green); }
+        .before-after .panel-content { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+
+        .scenario-box { background: var(--bg-card); border: 2px solid var(--accent-orange); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; position: relative; overflow: hidden; }
+        .scenario-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gradient-3); }
+        .scenario-box .scenario-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .scenario-box .scenario-icon { font-size: 1.3rem; }
+        .scenario-box .scenario-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-orange); }
+        .scenario-box .scenario-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        .scenario-box .scenario-section { padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); margin-bottom: 0.75rem; }
+        .scenario-box .scenario-section:last-child { margin-bottom: 0; }
+        .scenario-box .scenario-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .scenario-box .scenario-section p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+
+        .step-guide { margin: 2rem 0; padding-left: 2rem; border-left: 3px solid var(--border); }
+        .step-guide .step-guide-item { position: relative; padding: 1rem 0 1.5rem 1.5rem; }
+        .step-guide .step-guide-item::before { content: ''; position: absolute; left: -2rem; top: 1.25rem; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-blue); border: 3px solid var(--bg-primary); transform: translateX(-50%); margin-left: -1.5px; }
+        .step-guide .step-guide-item.done::before { background: var(--accent-green); }
+        .step-guide .step-guide-item.active::before { background: var(--accent-blue); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); }
+        .step-guide .step-guide-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .step-guide .step-guide-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+        .quick-tip { display: flex; align-items: flex-start; gap: 0.75rem; background: rgba(139, 92, 246, 0.08); border-left: 4px solid var(--accent-purple); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; }
+        .quick-tip .tip-icon { flex-shrink: 0; font-size: 1.1rem; margin-top: 1px; }
+        .quick-tip strong { color: var(--text-primary); }
+
+        .peer-activity { background: var(--bg-card); border: 2px dashed var(--accent-cyan); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; }
+        .peer-activity .peer-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+        .peer-activity .peer-icon { font-size: 1.3rem; }
+        .peer-activity .peer-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-cyan); }
+        .peer-activity .peer-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        .peer-activity .peer-format { display: inline-block; padding: 0.2rem 0.6rem; background: rgba(6, 182, 212, 0.1); border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; color: var(--accent-cyan); margin-bottom: 1rem; }
+        .peer-activity .peer-instructions { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; }
+
+        .concept-diagram { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin: 2rem 0; }
+        .concept-diagram .diagram-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 1.5rem; text-align: center; }
+        .concept-diagram .diagram-flow { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+        .concept-diagram .diagram-node { background: var(--bg-card); border: 2px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; text-align: center; min-width: 120px; }
+        .concept-diagram .diagram-node.highlight { border-color: var(--accent-blue); box-shadow: 0 0 15px rgba(59, 130, 246, 0.1); }
+        .concept-diagram .diagram-node .node-icon { font-size: 1.5rem; margin-bottom: 0.35rem; display: block; }
+        .concept-diagram .diagram-node .node-label { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+        .concept-diagram .diagram-node .node-desc { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
+        .concept-diagram .diagram-arrow { color: var(--text-muted); font-size: 1.2rem; flex-shrink: 0; }
+
+        .section-progress { display: flex; justify-content: center; gap: 0.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+        .section-progress .progress-dot { position: relative; width: 12px; height: 12px; border-radius: 50%; background: var(--bg-tertiary); border: 2px solid var(--border); transition: all 0.3s ease; cursor: default; }
+        .section-progress .progress-dot.active { background: var(--accent-blue); border-color: var(--accent-blue); }
+        .section-progress .progress-dot.completed { background: var(--accent-green); border-color: var(--accent-green); }
+        .section-progress .progress-dot .dot-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--border); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; box-shadow: var(--shadow-sm); }
+        .section-progress .progress-dot:hover .dot-tooltip { opacity: 1; }
+
+        .instructor-note { border: 2px dashed var(--accent-purple); border-radius: var(--radius-md); margin: 1.5rem 0; background: rgba(139, 92, 246, 0.05); }
+        .instructor-note summary { padding: 1rem 1.5rem; font-size: 0.85rem; font-weight: 600; color: var(--accent-purple); cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.5rem; }
+        .instructor-note summary::-webkit-details-marker { display: none; }
+        .instructor-note summary::before { content: '\01F393'; }
+        .instructor-note summary::after { content: '\25B8'; margin-left: auto; transition: transform 0.2s; }
+        .instructor-note[open] summary::after { transform: rotate(90deg); }
+        .instructor-note .instructor-content { padding: 0 1.5rem 1.5rem; font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; }
+        body:not(.instructor-mode) .instructor-note { display: none; }
+        body.instructor-mode .instructor-note { display: block; }
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 0 1rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .container {
+    padding: 0 1rem 3rem;
+  }
+
+  .pipeline-step {
+    grid-template-columns: 36px 1fr;
+    gap: 0.75rem;
+  }
+
+  .step-owner {
+    display: none;
+  }
+
+  .time-block {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .go-live-item {
+    grid-template-columns: 36px 1fr;
+  }
+
+  .go-live-day {
+    display: none;
+  }
+
+  .ref-table {
+    font-size: 0.82rem;
+  }
+
+  .ref-table th,
+  .ref-table td {
+    padding: 0.65rem 0.75rem;
+  }
+
+            .analogy-box { grid-template-columns: 1fr; text-align: center; }
+            .analogy-box .analogy-connector { padding: 0.5rem 0; }
+            .before-after { grid-template-columns: 1fr; }
+            .exercise-block { padding: 1.5rem; }
+            .concept-diagram .diagram-flow { flex-direction: column; }
+            .concept-diagram .diagram-arrow { transform: rotate(90deg); }
+}
+
+@media (max-width: 480px) {
+  .time-box {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .time-box .separator {
+    display: none;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== Utility ========== */
+.text-gradient {
+  color: var(--accent-cyan);
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .nav-brand,
+  .hero h1,
+  .time-minutes,
+  .site-footer .footer-brand,
+  .text-gradient {
+    background: none !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+}
+  .dashboard-back { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.35rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--accent-blue, #3b82f6); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); text-decoration: none; transition: all 0.2s; flex-shrink: 0; }
+  .dashboard-back:hover { background: rgba(59,130,246,0.2); }
+
+        /* ── Utility classes ─────────────────────────────────────── */
+        .clr-primary { color: var(--text-primary); }
+        .clr-secondary { color: var(--text-secondary); }
+        .clr-muted { color: var(--text-muted); }
+        .clr-green { color: var(--accent-green); }
+        .clr-red { color: var(--accent-red); }
+        .clr-blue { color: var(--accent-blue); }
+        .clr-purple { color: var(--accent-purple); }
+        .clr-orange { color: var(--accent-orange); }
+        .clr-cyan { color: var(--accent-cyan); }
+        .mt-0 { margin-top: 0; }
+        .mt-05 { margin-top: 0.5rem; }
+        .mt-075 { margin-top: 0.75rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-15 { margin-top: 1.5rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-035 { margin-bottom: 0.35rem; }
+        .mb-05 { margin-bottom: 0.5rem; }
+        .mb-075 { margin-bottom: 0.75rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-15 { margin-bottom: 1.5rem; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .flex-center { display: flex; align-items: center; }
+        .fs-085 { font-size: 0.85rem; }
+        .section-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .hero-subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.05rem; }
+        .hero-subtitle-lg { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 500; }
+        .card-body-text { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .clr-primary-lg { color: var(--text-primary); font-size: 1.05rem; }
+        .resource-item { padding: .4rem 0; border-bottom: 1px dashed var(--border); color: var(--text-secondary); }
+        .py-03 { padding: 0.3rem 0; }
+        .bdr-green { border-color: var(--accent-green); }
+        .bdr-blue { border-color: var(--accent-blue); }
+        .bdr-purple { border-color: var(--accent-purple); }
+        .bt-green { border-top: 3px solid var(--accent-green); }
+        .bt-purple { border-top: 3px solid var(--accent-purple); }
+        .bg-orange { background: var(--accent-orange); }
+        .bg-green-subtle { background: rgba(16, 185, 129, 0.1); }
+
+    
+        /* ── Auto-extracted inline styles ──────────────────── */
+        .is-429 { border-left-color: var(--accent-yellow); }
+        .is-430 { margin-top: 1rem; font-weight: 600; }
+        .is-431 { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.35rem; font-weight: 600; }
+        .is-432 { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.1rem; }
+        .is-433 { margin: 0.5rem 0 0.75rem 1.5rem; list-style: disc; }
+        .is-434 { margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.1rem; }
+        .is-435 { border-left-color: var(--accent-yellow); margin-top: 1.5rem; }
+
+    
+
+        
+
+        /* (Ops Playbook CSS removed – not used in Day 15 v3) */
+
+        /* -- Role Filter Bar ----------------------------------------- */
+        .role-filter-bar {
+            position: sticky;
+            top: 56px;
+            z-index: 90;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0.45rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .role-filter-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .role-btn {
+            padding: 0.18rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: "JetBrains Mono", monospace;
+        }
+        .role-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .role-btn.active { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+        .role-hidden { display: none !important; }
+
+        /* (Ops Playbook Collapsible CSS removed) */
+
+/* ========== Journey Timeline Grid ========== */
+.journey-timeline {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.journey-step {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+  position: relative;
+}
+.journey-step:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.journey-step.current {
+  border-color: var(--accent-green);
+  background: var(--go-bg);
+}
+.journey-step .j-day {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  margin-bottom: 0.3rem;
+}
+.journey-step .j-icon { font-size: 1.5rem; display: block; margin-bottom: 0.3rem; }
+.journey-step .j-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
+}
+.journey-step .j-desc {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  line-height: 1.35;
+}
+.journey-step::after {
+  content: '\2192';
+  position: absolute;
+  right: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  z-index: 1;
+}
+.journey-step:last-child::after { display: none; }
+
+@media (max-width: 768px) {
+  .journey-timeline { grid-template-columns: repeat(3, 1fr); }
+  .journey-step:nth-child(3)::after { display: none; }
+}
+@media (max-width: 480px) {
+  .journey-timeline { grid-template-columns: repeat(2, 1fr); }
+  .journey-step::after { display: none; }
+}
+
+/* ========== CP → Slide Visual Flow ========== */
+.cp-flow {
+  display: grid;
+  grid-template-columns: auto 1fr 40px 1fr;
+  gap: 0.4rem 0.75rem;
+  margin: 1.5rem 0;
+  align-items: center;
+}
+.cp-flow .cp-day {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  background: rgba(6,182,212,0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+.cp-flow .cp-post {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+.cp-flow .cp-arrow {
+  color: var(--accent-green);
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-align: center;
+}
+.cp-flow .cp-slide {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 0.55rem 0.75rem;
+  background: var(--go-bg);
+  border: 1px solid var(--go-border);
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 640px) {
+  .cp-flow { grid-template-columns: 1fr; gap: 0.25rem; }
+  .cp-flow .cp-arrow { transform: rotate(90deg); padding: 0.15rem 0; }
+}
+
+/* ========== Decision Spectrum ========== */
+.decision-spectrum {
+  display: flex;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+.spectrum-seg {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  transition: all var(--transition);
+  border-right: 1px solid var(--border-primary);
+}
+.spectrum-seg:last-child { border-right: none; }
+.spectrum-seg:hover { transform: scaleY(1.05); }
+.spectrum-seg .sp-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+.spectrum-seg .sp-desc {
+  font-size: 0.62rem;
+  opacity: 0.8;
+  line-height: 1.3;
+}
+.sp-go       { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.sp-phase1   { background: rgba(6,182,212,0.12); color: var(--accent-cyan); }
+.sp-cond     { background: rgba(245,158,11,0.12); color: var(--accent-yellow); }
+.sp-pause    { background: rgba(249,115,22,0.12); color: var(--accent-orange); }
+.sp-nogo     { background: rgba(239,68,68,0.1); color: var(--accent-red); }
+
+@media (max-width: 640px) {
+  .decision-spectrum { flex-direction: column; }
+  .spectrum-seg { border-right: none; border-bottom: 1px solid var(--border-primary); }
+  .spectrum-seg:last-child { border-bottom: none; }
+}
+
+/* ========== Slide Preview Cards ========== */
+.slide-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.slide-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.25rem;
+  transition: all var(--transition);
+  position: relative;
+}
+.slide-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-green);
+}
+.slide-card .sc-num {
+  position: absolute;
+  top: -12px;
+  left: 1rem;
+  background: var(--gradient-1);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+.slide-card .sc-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.25rem 0 0.65rem;
+}
+.slide-card .sc-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.slide-card .sc-items li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 0.25rem 0 0.25rem 1.1rem;
+  position: relative;
+  line-height: 1.4;
+}
+.slide-card .sc-items li::before {
+  content: '\25B8';
+  position: absolute;
+  left: 0;
+  color: var(--accent-green);
+  font-weight: 700;
+}
+.slide-card .sc-source {
+  margin-top: 0.65rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-primary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent-cyan);
+}
+
+@media (max-width: 768px) {
+  .slide-cards { grid-template-columns: 1fr; }
+}
+
+/* ========== Capstone Section ========== */
+.capstone-section {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 2px solid var(--border-primary);
+}
+.danger-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-left: 4px solid var(--accent-red);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+.danger-box .d-icon { font-size: 1.3rem; flex-shrink: 0; }
+.danger-box p { font-size: 0.95rem; color: var(--accent-red); margin: 0; }
+
+.capstone-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+.capstone-table thead { background: var(--bg-tertiary); }
+.capstone-table th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-primary);
+}
+.capstone-table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  vertical-align: top;
+}
+.capstone-table tr:last-child td { border-bottom: none; }
+.capstone-table tbody tr {
+  background: var(--bg-card);
+  transition: background var(--transition);
+}
+.capstone-table tbody tr:hover { background: var(--bg-card-hover); }
+.capstone-table td:first-child {
+  color: var(--accent-green);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.cap-info-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(59,130,246,0.06);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+}
+.cap-info-box .d-icon { font-size: 1.3rem; flex-shrink: 0; }
+.cap-info-box p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ========== Maturity Continuum ========== */
+.maturity-continuum {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+
+.maturity-stage {
+  padding: 1.25rem 1rem;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-primary);
+  text-align: center;
+  position: relative;
+  transition: all var(--transition);
+}
+
+.maturity-stage:last-child {
+  border-right: none;
+}
+
+.maturity-stage:hover {
+  background: var(--bg-card-hover);
+}
+
+.maturity-stage .m-phase {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.maturity-stage .m-title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.maturity-stage:nth-child(1) .m-title { color: var(--accent-cyan); }
+.maturity-stage:nth-child(2) .m-title { color: var(--accent-blue); }
+.maturity-stage:nth-child(3) .m-title { color: var(--accent-green); }
+
+.maturity-stage .m-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.maturity-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.75rem 0 0;
+  gap: 0.5rem;
+}
+
+.maturity-arrow .arrow-line {
+  flex: 1;
+  height: 3px;
+  background: var(--gradient-hero);
+  border-radius: 2px;
+}
+
+.maturity-arrow .arrow-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  white-space: nowrap;
+}
+
+/* ========== Transformation Table ========== */
+.transform-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+}
+
+.transform-col {
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+}
+
+.transform-col.from-col {
+  border-right: 1px solid var(--border-primary);
+}
+
+.transform-col.arrow-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.75rem;
+  background: var(--bg-card);
+  font-size: 1.5rem;
+  color: var(--accent-green);
+  border-right: 1px solid var(--border-primary);
+}
+
+.transform-col h4 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.transform-col.from-col h4 { color: var(--text-tertiary); }
+.transform-col.to-col h4 { color: var(--accent-green); }
+
+.transform-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.transform-col ul li {
+  padding: 0.35rem 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.transform-col.from-col ul li::before { content: '\2796 '; margin-right: 0.25rem; }
+.transform-col.to-col ul li::before { content: '\2795 '; margin-right: 0.25rem; }
+
+/* ========== KAF Pillar Cards ========== */
+.kaf-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.kaf-pillar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.kaf-pillar:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-secondary);
+}
+
+.kaf-pillar .kp-icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.kaf-pillar .kp-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.kaf-pillar .kp-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .maturity-continuum { grid-template-columns: 1fr; }
+  .maturity-stage { border-right: none; border-bottom: 1px solid var(--border-primary); }
+  .maturity-stage:last-child { border-bottom: none; }
+  .transform-grid { grid-template-columns: 1fr; }
+  .transform-col.from-col { border-right: none; border-bottom: 1px solid var(--border-primary); }
+  .transform-col.arrow-col { border-right: none; border-bottom: 1px solid var(--border-primary); padding: 0.5rem; }
+  .kaf-pillars { grid-template-columns: 1fr 1fr; }
+}
+
+/* ========== Inline Style Replacements ========== */
+.section-number-orange { background: var(--gradient-3); }
+.section-number-blue { background: var(--gradient-2); }
+
+.code-plain { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+.code-sm { font-size: 0.85em; }
+
+.key-message-cyan { border-left-color: var(--accent-cyan); }
+.key-message-yellow { border-left-color: var(--accent-yellow); }
+.key-message-purple { border-left-color: var(--accent-purple); }
+.key-message-orange { border-left-color: var(--accent-orange); }
+.key-message-green { border-left-color: var(--accent-green); }
+.key-message-orange.mt-125 { margin-top: 1.25rem; }
+.key-message-cyan.mt-125 { margin-top: 1.25rem; }
+.key-message-green.mt-1 { margin-top: 1rem; }
+
+.key-message-list { margin: 0.75rem 0 0 1.25rem; line-height: 2; }
+.key-message-footnote { margin-top: 0.6rem; font-size: 0.82rem; color: var(--text-tertiary); }
+
+.section-h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-size: 1.05rem; }
+.section-h3-mt2 { margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.05rem; }
+.section-h3-mt2-gap { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.05rem; }
+.section-h3-mt25 { margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.05rem; }
+.section-h3-mt25-gap { margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.05rem; }
+.section-h4 { margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--text-primary); }
+
+.text-source { font-size: 0.82rem; color: var(--text-tertiary); }
+.overflow-x-auto { overflow-x: auto; }
+
+.time-block-active { background: var(--go-bg); }
+
+.warning-box-danger { border-left-color: var(--accent-red); border-color: var(--nogo-border); background: var(--nogo-bg); }
+.warning-box-danger h3 { color: var(--accent-red); }
+.warning-box-success { border-left-color: var(--accent-green); border-color: var(--go-border); background: var(--go-bg); }
+.warning-box-success h3 { color: var(--accent-green); }
+
+.quality-check-list { list-style: none; padding: 0; }
+.quality-check-list li { padding: 0.4rem 0; }
+.quality-check-list li::before { content: none; }
+
+.compare-card-blue { border-color: var(--accent-blue); }
+.compare-card-yellow { border-color: var(--accent-yellow); }
+
+.exercise-block-blue { border-color: var(--accent-blue); }
+.exercise-block-purple { border-color: var(--accent-purple); }
+
+.text-accent-green { color: var(--accent-green); }
+.text-accent-blue { color: var(--accent-blue); }
+.text-accent-red { color: var(--accent-red); }
+
+</style>
+</head>
+<body>
+
+<!-- ==================== Navigation ==================== -->
+<nav class="top-nav">
+  <span class="dashboard-back">&larr; Dashboard</span>
+  <span class="nav-brand">AI Academy 2026</span>
+  <div class="nav-links">
+    <a href="#checklist">Checklist</a>
+    <a href="#section-1">Plenary</a>
+    <a href="#section-2">Build</a>
+    <a href="#section-3">Boardroom</a>
+    <a href="#section-4">Wrap-up</a>
+    <a href="#capstone">Capstone</a>
+  </div>
+  <div class="theme-toggle">
+    <button class="theme-toggle-btn" id="theme-light" aria-label="Light theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </button>
+    <button class="theme-toggle-btn active" id="theme-dark" aria-label="Dark theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+    <!-- Role Filter Bar -->
+    <div class="role-filter-bar" id="role-filter" role="navigation" aria-label="Filter by role">
+        <span class="role-filter-label">My role:</span>
+        <button class="role-btn active" data-role="all">ALL</button>
+        <button class="role-btn" data-role="FDE">FDE</button>
+        <button class="role-btn" data-role="AI-SE">AI-SE</button>
+        <button class="role-btn" data-role="AI-DS">AI-DS</button>
+        <button class="role-btn" data-role="AI-DA">AI-DA</button>
+        <button class="role-btn" data-role="AI-PM">AI-PM</button>
+        <button class="role-btn" data-role="AI-FE">AI-FE</button>
+        <button class="role-btn" data-role="AI-SEC">AI-SEC</button>
+    </div>
+
+
+<!-- ==================== Hero ==================== -->
+<header class="hero" id="top">
+  <p class="hero-eyebrow">AI Academy 2026 &bull; Day 15</p>
+  <h1>Steering Committee &mdash; Go/No-Go</h1>
+  <p class="hero-sub">Five days. One client. Your checkpoint posts ARE your presentation. Defend it.</p>
+  <div class="time-box">
+    <strong>Friday, February 27, 2026</strong>
+    <span class="separator"></span>
+    Week 4, Day 5
+    <span class="separator"></span>
+    5 min Pillar 3 &rarr; 10 min context &rarr; 25 min build deck &rarr; 30 min boardroom &rarr; 15 min reflection &rarr; 5 min wrap-up
+  </div>
+  <div class="section-progress mt-15">
+    <div class="progress-dot" data-section="checklist"><span class="dot-tooltip">Checklist</span></div>
+    <div class="progress-dot" data-section="pillar-3"><span class="dot-tooltip">Pillar 3</span></div>
+    <div class="progress-dot" data-section="section-1"><span class="dot-tooltip">Context</span></div>
+    <div class="progress-dot" data-section="section-2"><span class="dot-tooltip">Build Deck</span></div>
+    <div class="progress-dot" data-section="section-3"><span class="dot-tooltip">Boardroom</span></div>
+    <div class="progress-dot" data-section="section-4"><span class="dot-tooltip">Reflection</span></div>
+    <div class="progress-dot" data-section="capstone"><span class="dot-tooltip">Capstone</span></div>
+  </div>
+</header>
+
+<!-- ==================== Main Content ==================== -->
+<main class="container">
+
+  <!-- ==================== Week 4 Checklist ==================== -->
+  <section class="section" id="checklist">
+    <h2><span class="section-number section-number-orange">&#10003;</span> Week 4 &mdash; Are You Ready?</h2>
+
+    <p>Before we start: how many of these do you have in your folder? Today is your last chance to close gaps before Build phase starts Monday.</p>
+
+    <div class="go-live-grid">
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">discovery-questions.md</span>
+        <span class="go-live-day">Day 11</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">discovery-[role].md</span>
+        <span class="go-live-day">Day 12</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">architecture-[role].md</span>
+        <span class="go-live-day">Day 13</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">governance-[role].md</span>
+        <span class="go-live-day">Day 14</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">Generated pitch deck (.pptx)</span>
+        <span class="go-live-day">Day 15 &mdash; today</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">Hans Muller Go/No-Go verdict received</span>
+        <span class="go-live-day">Day 15 &mdash; today</span>
+      </div>
+      <div class="go-live-item">
+        <div class="go-live-check pending">&#9744;</div>
+        <span class="go-live-label">Reflection posted in Teams channel</span>
+        <span class="go-live-day">Day 15 &mdash; today</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== Pillar 3: Technical Artifacts ==================== -->
+  <section class="section" id="pillar-3">
+    <h2><span class="section-number section-number-blue">&#128187;</span> Pillar 3: From Design to Code</h2>
+
+    <p>On Day 13 you built <strong>docs/</strong> &mdash; the delivery artifacts. On Day 14 you built <strong>governance/</strong> &mdash; the compliance and policy layer. Today we complete the picture with <strong>src/</strong> &mdash; the technical implementation that brings your architecture to life.</p>
+
+    <!-- Three Pillars Diagram -->
+    <div class="pillars-row">
+      <div class="pillar-box completed">
+        <div class="p-icon">&#128196;</div>
+        <div class="p-label">Pillar 1: <code class="code-plain">docs/</code></div>
+        <div class="p-sub">Day 11&ndash;13 &#10003;</div>
+      </div>
+      <div class="pillar-arrow">&rarr;</div>
+      <div class="pillar-box completed">
+        <div class="p-icon">&#9878;</div>
+        <div class="p-label">Pillar 2: <code class="code-plain">governance/</code></div>
+        <div class="p-sub">Day 14 &#10003;</div>
+      </div>
+      <div class="pillar-arrow">&rarr;</div>
+      <div class="pillar-box current">
+        <div class="p-icon">&#128187;</div>
+        <div class="p-label">Pillar 3: <code class="code-plain">src/</code></div>
+        <div class="p-sub">Day 15 &larr; TODAY</div>
+      </div>
+    </div>
+
+    <div class="key-message key-message-cyan">
+      <strong>Code is the last pillar, not the first.</strong> In consulting, you never write a line of code until <code class="code-sm">docs/</code> tells you WHAT to build and <code class="code-sm">governance/</code> tells you HOW safely to build it. Junior engineers start with code. Senior consultants start with documentation and governance &mdash; the code follows naturally.
+    </div>
+
+    <!-- Methodology -->
+    <h3 class="section-h3">The Sequence That Matters</h3>
+    <p>Once documentation and governance artifacts are in place, technical implementation follows a clear path:</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step">
+        <span class="step-num">1</span>
+        <span class="step-title">Read your architecture spec &mdash; <code class="code-sm">docs/architecture/</code> defines what you build</span>
+        <span class="step-owner">docs/</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">2</span>
+        <span class="step-title">Check governance constraints &mdash; <code class="code-sm">governance/policies/</code> defines what you CANNOT do</span>
+        <span class="step-owner">governance/</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">3</span>
+        <span class="step-title">Implement within guardrails &mdash; <code class="code-sm">src/</code> is the code that follows both</span>
+        <span class="step-owner">src/</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">4</span>
+        <span class="step-title">Validate against contracts &mdash; <code class="code-sm">tests/</code> proves compliance and correctness</span>
+        <span class="step-owner">tests/</span>
+      </div>
+    </div>
+
+    <!-- Per-Role Artifacts Table -->
+    <h3 class="section-h3">What Each Role Builds in <code class="code-sm">src/</code></h3>
+    <p>Every technical artifact traces back to a document and is constrained by a governance policy. Nothing exists in isolation.</p>
+
+    <div class="overflow-x-auto">
+      <table class="artifacts-table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Technical Artifact</th>
+            <th>Based on (docs/)</th>
+            <th>Constrained by (governance/)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-badge badge-fde">FDE</span></td>
+            <td><code>src/agent.py</code> &mdash; RAG pipeline, LLM orchestration</td>
+            <td><code>architecture/solution-design.md</code></td>
+            <td><code>policies/pii-protection.yaml</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-se">AI-SE</span></td>
+            <td><code>src/policy_engine.py</code> &mdash; Runtime enforcement</td>
+            <td><code>architecture/interface-contracts.md</code></td>
+            <td><code>policies/escalation-policy.yaml</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-ds">AI-DS</span></td>
+            <td><code>tests/golden_dataset/</code> &mdash; Evaluation data</td>
+            <td><code>discovery/consolidated-report.md</code></td>
+            <td><code>compliance/data-handling.md</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-da">AI-DA</span></td>
+            <td><code>monitoring/dashboards/</code> &mdash; KPI config</td>
+            <td><code>architecture/solution-design.md</code></td>
+            <td><code>operating-model/sla-definitions.md</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-pm">AI-PM</span></td>
+            <td><code>project-plan/</code> &mdash; Sprint backlog, milestones</td>
+            <td><code>discovery/ + architecture/</code></td>
+            <td><code>compliance/ai-inventory.md</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-fe">AI-FE</span></td>
+            <td><code>src/ui/</code> &mdash; Chat interface, streaming</td>
+            <td><code>architecture/interface-contracts.md</code></td>
+            <td><code>policies/data-display-policy.yaml</code></td>
+          </tr>
+          <tr>
+            <td><span class="role-badge badge-sec">AI-SEC</span></td>
+            <td><code>src/security/</code> &mdash; Threat mitigations</td>
+            <td><code>architecture/solution-design.md</code></td>
+            <td><code>compliance/eu-ai-act-classification.md</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- System Architecture Stack -->
+    <h3 class="section-h3">How It All Fits Together</h3>
+    <p>Each role owns a layer. Together they form the complete system. No layer works without the others.</p>
+
+    <div class="arch-stack">
+      <!-- Layer 1: UI -->
+      <div class="arch-layer full">
+        <div class="arch-cell" data-role="fe">
+          <div class="arch-cell-icon">&#128421;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-fe">AI-FE</span> User Interface</div>
+            <div class="arch-cell-desc"><code>src/ui/</code> &mdash; Chat interface, streaming responses, user-facing data display</div>
+          </div>
+        </div>
+      </div>
+      <div class="arch-arrow">&#9660; user query &#9660;</div>
+
+      <!-- Layer 2: Agent Core -->
+      <div class="arch-layer full">
+        <div class="arch-cell" data-role="fde">
+          <div class="arch-cell-icon">&#129504;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-fde">FDE</span> Agent Core &mdash; LLM Orchestrator</div>
+            <div class="arch-cell-desc"><code>src/agent.py</code> &mdash; RAG pipeline, tool routing, context assembly, response generation</div>
+          </div>
+        </div>
+      </div>
+      <div class="arch-arrow">&#9660; every call passes through &#9660;</div>
+
+      <!-- Layer 3: Policy + Security (split) -->
+      <div class="arch-layer split">
+        <div class="arch-cell" data-role="se">
+          <div class="arch-cell-icon">&#128737;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-se">AI-SE</span> Policy Engine</div>
+            <div class="arch-cell-desc"><code>src/policy_engine.py</code> &mdash; Runtime guardrails, escalation triggers, PII filtering</div>
+          </div>
+        </div>
+        <div class="arch-cell" data-role="sec">
+          <div class="arch-cell-icon">&#128274;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-sec">AI-SEC</span> Security Layer</div>
+            <div class="arch-cell-desc"><code>src/security/</code> &mdash; Threat mitigations, audit trail, access control, encryption</div>
+          </div>
+        </div>
+      </div>
+      <div class="arch-arrow">&#9660; logs &amp; metrics &#9660;</div>
+
+      <!-- Layer 4: Monitoring + Testing (split) -->
+      <div class="arch-layer split">
+        <div class="arch-cell" data-role="da">
+          <div class="arch-cell-icon">&#128202;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-da">AI-DA</span> Monitoring</div>
+            <div class="arch-cell-desc"><code>monitoring/dashboards/</code> &mdash; KPI tracking, SLA alerts, drift detection</div>
+          </div>
+        </div>
+        <div class="arch-cell" data-role="ds">
+          <div class="arch-cell-icon">&#129514;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-ds">AI-DS</span> Evaluation</div>
+            <div class="arch-cell-desc"><code>tests/golden_dataset/</code> &mdash; Quality benchmarks, regression tests, accuracy metrics</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 5: Project Plan -->
+      <div class="arch-layer full">
+        <div class="arch-cell" data-role="pm">
+          <div class="arch-cell-icon">&#128203;</div>
+          <div class="arch-cell-content">
+            <div class="arch-cell-title"><span class="role-badge badge-pm">AI-PM</span> Project Governance</div>
+            <div class="arch-cell-desc"><code>project-plan/</code> &mdash; Sprint backlog, milestones, ROI tracking, stakeholder reporting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="arch-stack-caption">Every layer depends on the layers above and below it. Remove any one and the system has a gap.</p>
+
+    <div class="key-message key-message-yellow">
+      <strong>Today you will NOT write code.</strong> But you will present a plan that proves you KNOW what to build, why, and under what constraints. <strong>Week 5 starts the Build phase</strong> &mdash; Monday you open VS Code + Claude Code and the architecture document becomes your spec, the governance document becomes your guardrails.
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note &mdash; Pillar 3 Intro</summary>
+      <div class="instructor-content">
+        <p><strong>5 minutes max.</strong> This is a bridge, not a deep-dive. The goal is to close the loop on the three-pillar promise from Day 13 and Day 14. Show the diagram, point to the table, emphasize the sequence: docs &rarr; governance &rarr; src. Then move to Go/No-Go context.</p>
+        <p>Key line: "You now understand all three pillars. The documents tell you what. The governance tells you how safely. The code &mdash; which starts Monday &mdash; is the execution. Today you prove you understand the whole picture by defending it to the CIO."</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Section 1: Plenary ==================== -->
+  <section class="section" id="section-1">
+    <h2><span class="section-number">1</span> Context &mdash; Why We're Here</h2>
+
+    <p>Four days ago you met <strong>Hans Muller</strong>, CIO of EuroHealth Insurance AG. You asked him questions (Day 11), wrote a discovery report (Day 12), designed your architecture (Day 13), and built governance artifacts (Day 14). Today all of that work becomes <strong>Kyndryl's official implementation proposal</strong> &mdash; a pitch deck that you will defend in front of Hans himself.</p>
+
+    <div class="key-message key-message-purple">
+      <strong>This is Kyndryl's official proposal.</strong> You are not students pitching a homework assignment. You are <strong>Kyndryl consultants</strong> presenting a formal implementation recommendation to EuroHealth's CIO. Your deck represents Kyndryl's professional assessment: the discovery findings, the architecture design, the governance framework, and the technical plan. The steering committee &mdash; Hans Muller &mdash; decides whether Kyndryl gets the green light to proceed.
+    </div>
+
+    <div class="key-message key-message-cyan">
+      <strong>How today works:</strong> You will use the <strong>Pitch Deck Generator</strong> to turn your checkpoint posts into a professional 7-slide PowerPoint. Then you will enter <strong>The Boardroom</strong> &mdash; an AI-powered simulation where Hans Muller reviews your deck, asks tough questions, and delivers a Go/No-Go verdict. No peer review logistics. Just you and the CIO.
+    </div>
+
+    <!-- Journey Timeline Visual -->
+    <div class="journey-timeline">
+      <div class="journey-step">
+        <span class="j-day">DAY 10</span>
+        <span class="j-icon">&#128680;</span>
+        <span class="j-label">What NOT To Do</span>
+        <span class="j-desc">Audited a failed prototype</span>
+      </div>
+      <div class="journey-step">
+        <span class="j-day">DAY 11</span>
+        <span class="j-icon">&#10067;</span>
+        <span class="j-label">Ask Questions</span>
+        <span class="j-desc">Discovery questions for CIO</span>
+      </div>
+      <div class="journey-step">
+        <span class="j-day">DAY 12</span>
+        <span class="j-icon">&#128279;</span>
+        <span class="j-label">First Dependency</span>
+        <span class="j-desc">"I need [ROLE] for [X]"</span>
+      </div>
+      <div class="journey-step">
+        <span class="j-day">DAY 13</span>
+        <span class="j-icon">&#128736;</span>
+        <span class="j-label">Architecture</span>
+        <span class="j-desc">Interface contracts built</span>
+      </div>
+      <div class="journey-step">
+        <span class="j-day">DAY 14</span>
+        <span class="j-icon">&#128737;</span>
+        <span class="j-label">Governance</span>
+        <span class="j-desc">"You need MY component"</span>
+      </div>
+      <div class="journey-step current">
+        <span class="j-day">DAY 15</span>
+        <span class="j-icon">&#127919;</span>
+        <span class="j-label">Defend It</span>
+        <span class="j-desc">Go/No-Go presentation</span>
+      </div>
+    </div>
+
+    <!-- CP → Slide Visual Mapping -->
+    <h3 class="section-h3-mt2">Your Checkpoints &rarr; Your Slides</h3>
+
+    <div class="cp-flow">
+      <span class="cp-day">Day 11</span>
+      <span class="cp-post">Discovery questions + KPI proposals</span>
+      <span class="cp-arrow">&rarr;</span>
+      <span class="cp-slide">Slide 5: Success Metrics</span>
+
+      <span class="cp-day">Day 12</span>
+      <span class="cp-post">"#1 finding from Hans" + discovery report</span>
+      <span class="cp-arrow">&rarr;</span>
+      <span class="cp-slide">Slide 2: What &amp; Why</span>
+
+      <span class="cp-day">Day 13</span>
+      <span class="cp-post">Component + tech choice + interface contracts</span>
+      <span class="cp-arrow">&rarr;</span>
+      <span class="cp-slide">Slide 3: How &amp; Dependencies</span>
+
+      <span class="cp-day">Day 14</span>
+      <span class="cp-post">EU AI Act classification + governance obligation</span>
+      <span class="cp-arrow">&rarr;</span>
+      <span class="cp-slide">Slide 4: Governance</span>
+    </div>
+
+    <!-- Agent Behavior Governance -->
+    <div class="key-message key-message-orange mt-125">
+      <strong>Beyond Compliance: Agent Behavior Governance</strong><br>
+      EU AI Act coverage is necessary but not sufficient. KAF expects you to govern <em>agent behavior</em>, not just models. Include language like:
+      <ul class="key-message-list">
+        <li><strong>Policy-as-code constraints</strong> &mdash; guardrails encoded directly into agent runtime</li>
+        <li><strong>Escalation thresholds</strong> &mdash; human-in-the-loop triggers defined per agent type</li>
+        <li><strong>Full agent decision logs</strong> &mdash; every action audit-ready, replayable, attributable</li>
+      </ul>
+      <p class="key-message-footnote">This connects AI-Native Security, Data Sovereignty, and the LLM Orchestrator into one consistent governance model.</p>
+    </div>
+
+    <!-- Before/After Pitch -->
+    <div class="before-after">
+      <div class="before-panel">
+        <div class="panel-label">&#10060; Weak Pitch</div>
+        <div class="panel-content">
+          "We think this AI solution will be really helpful. The technology is exciting and we believe it could save time. We haven't finalized the numbers yet, but the team is confident."
+        </div>
+      </div>
+      <div class="after-panel">
+        <div class="panel-label">&#9989; Strong Pitch</div>
+        <div class="panel-content">
+          "Our L1 auto-resolve pipeline will handle 40% of IT tickets, saving 2.1 FTE (EUR 168K/year). Latency: 1.8s on-prem. FRIA complete. We request Go for Phase 1: 300 users, EUR 120K, 10 weeks."
+        </div>
+      </div>
+    </div>
+
+    <!-- No-Go Normalization -->
+    <div class="key-message key-message-yellow">
+      <strong>No-Go is a normal outcome.</strong> A No-Go with clear conditions is <em>infinitely</em> more useful than a reluctant Go that hides problems. The best consultants <em>welcome</em> a tough committee.
+    </div>
+
+    <!-- Go/No-Go Criteria -->
+    <h3 class="section-h3-mt2-gap">Go vs No-Go Criteria</h3>
+
+    <div class="compare-grid">
+      <div class="compare-card go">
+        <h3>GO</h3>
+        <ul>
+          <li>Clear, realistic design</li>
+          <li>Technology choices justified</li>
+          <li>Governance addressed</li>
+          <li>Cross-role dependencies identified</li>
+          <li>Risks named with mitigations</li>
+        </ul>
+      </div>
+      <div class="compare-card nogo">
+        <h3>NO-GO</h3>
+        <ul>
+          <li>Ignores constraints (cloud for on-prem)</li>
+          <li>No governance consideration</li>
+          <li>No connection to other roles</li>
+          <li>Risks not addressed</li>
+          <li>"It will be fine" without evidence</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Decision Spectrum -->
+    <h3 class="section-h3">The Decision Spectrum</h3>
+
+    <div class="decision-spectrum">
+      <div class="spectrum-seg sp-go">
+        <span class="sp-label">Go</span>
+        <span class="sp-desc">Proceed as planned</span>
+      </div>
+      <div class="spectrum-seg sp-phase1">
+        <span class="sp-label">Go Phase 1</span>
+        <span class="sp-desc">Reduced scope first</span>
+      </div>
+      <div class="spectrum-seg sp-cond">
+        <span class="sp-label">Conditions</span>
+        <span class="sp-desc">Fix issues, then Go</span>
+      </div>
+      <div class="spectrum-seg sp-pause">
+        <span class="sp-label">Pause</span>
+        <span class="sp-desc">Needs more research</span>
+      </div>
+      <div class="spectrum-seg sp-nogo">
+        <span class="sp-label">No-Go</span>
+        <span class="sp-desc">Fix &amp; resubmit</span>
+      </div>
+    </div>
+
+    <div class="quick-tip">
+      <span class="tip-icon">&#128161;</span>
+      <span><strong>"Go with Conditions"</strong> is the most common real-world outcome. Never present just Go and No-Go &mdash; always offer the full spectrum.</span>
+    </div>
+
+    <!-- ========== Kyndryl Agentic AI — Pitch Ammunition ========== -->
+    <h3 class="section-h3-mt25">Kyndryl's Agentic AI &mdash; Your Pitch Ammunition</h3>
+    <p>Hans Muller has heard a hundred AI pitches. What he hasn't heard is one grounded in <strong>Kyndryl's Agentic AI Framework</strong>. Use this language in your deck &mdash; it is what real Kyndryl consultants present to enterprise CIOs.</p>
+
+    <div class="key-message key-message-purple">
+      <strong>The Agentic AI market is projected to reach $47.1 billion by 2030</strong> (up from $5.1B in 2024). By 2028, <em>15% of day-to-day work decisions</em> will be made autonomously by AI agents. <strong>89% of surveyed CIOs</strong> consider agent-based AI a strategic priority. Hans is one of them.<br><br>
+      <span class="text-source">Source: Gartner &amp; PwC AI People Readiness Report 2025</span>
+    </div>
+
+    <!-- Transformation: Static → Dynamic -->
+    <h4 class="section-h4">The Transformation Hans Wants</h4>
+    <p>EuroHealth is stuck in static workflows. Your proposal must show the path to <strong>AI-driven intelligence</strong>.</p>
+
+    <div class="transform-grid">
+      <div class="transform-col from-col">
+        <h4>FROM: Static Processes</h4>
+        <ul>
+          <li>Rigid step-by-step procedures</li>
+          <li>Manual approvals and bottlenecks</li>
+          <li>Fixed roles and reactive responses</li>
+          <li>Human-dependent, error-prone operations</li>
+        </ul>
+      </div>
+      <div class="transform-col arrow-col">&rarr;</div>
+      <div class="transform-col to-col">
+        <h4>TO: AI-Driven Intelligence</h4>
+        <ul>
+          <li>Layered autonomous agents with defined roles</li>
+          <li>Autonomous execution and seamless flow</li>
+          <li>Dynamic coordination and predictive optimization</li>
+          <li>Intelligent automation and integrated ecosystems</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Agentic Control Model -->
+    <div class="key-message key-message-cyan mt-125">
+      <strong>Agentic Control Model</strong> &mdash; Our solution uses a layered agent model that answers Hans's implicit question: <em>&ldquo;What type of autonomy am I actually approving?&rdquo;</em>
+      <ul class="key-message-list">
+        <li><strong>Observer Agents</strong> &mdash; monitor signals, KPIs, and anomalies (no action, only alert)</li>
+        <li><strong>Decision Agents</strong> &mdash; recommend actions under policy constraints (human reviews before execution)</li>
+        <li><strong>Execution Agents</strong> &mdash; act only after approval or within pre-approved guardrails</li>
+      </ul>
+      <p class="key-message-footnote">This layered model reduces perceived risk, demonstrates KAF maturity, and shows exactly how autonomy is controlled at each level.</p>
+    </div>
+
+    <!-- KAF 5 Pillars -->
+    <h4 class="section-h4">Kyndryl Agentic AI Framework &mdash; 5 Pillars</h4>
+    <p>When you describe your architecture (Slide 3), reference these pillars. Hans knows this framework &mdash; it is what Kyndryl sells.</p>
+
+    <div class="kaf-pillars">
+      <div class="kaf-pillar">
+        <div class="kp-icon">&#128268;</div>
+        <div class="kp-title">Integration</div>
+        <div class="kp-desc">Connects with existing data and security frameworks. Unified semantic layer.</div>
+      </div>
+      <div class="kaf-pillar">
+        <div class="kp-icon">&#128200;</div>
+        <div class="kp-title">Scalability</div>
+        <div class="kp-desc">Modular agent design. Scales autonomously with shifting workloads.</div>
+      </div>
+      <div class="kaf-pillar">
+        <div class="kp-icon">&#129504;</div>
+        <div class="kp-title">LLM Orchestrator</div>
+        <div class="kp-desc">Central AI brain. Coordinates all agents, adapts remediation paths in real time. <strong>Does not replace accountability &mdash; enforces it.</strong> All agent decisions are attributable, replayable, and policy-bound.</div>
+      </div>
+      <div class="kaf-pillar">
+        <div class="kp-icon">&#128274;</div>
+        <div class="kp-title">Data Sovereignty</div>
+        <div class="kp-desc">Zero Trust architecture. AI respects data locality across cloud and on-prem.</div>
+      </div>
+      <div class="kaf-pillar">
+        <div class="kp-icon">&#128737;</div>
+        <div class="kp-title">AI-Native Security</div>
+        <div class="kp-desc">Defence-in-Depth. Automated audit trail, policy enforcement by design.</div>
+      </div>
+    </div>
+
+    <!-- AI Maturity Continuum -->
+    <h4 class="section-h4">Where Is EuroHealth on the Maturity Continuum?</h4>
+    <p>Position your proposal on this continuum. Hans wants to know: <strong>where is EuroHealth today, and where will your solution take them?</strong></p>
+
+    <div class="maturity-continuum">
+      <div class="maturity-stage">
+        <div class="m-phase">Phase 1</div>
+        <div class="m-title">AI-Ready</div>
+        <div class="m-desc">Start small. Targeted pilots in existing workflows. Early wins build sponsorship and confidence.</div>
+      </div>
+      <div class="maturity-stage">
+        <div class="m-phase">Phase 2</div>
+        <div class="m-title">AI-Enabled</div>
+        <div class="m-desc">Core platforms and governance in place. Programs expand across domains with human oversight.</div>
+      </div>
+      <div class="maturity-stage">
+        <div class="m-phase">Phase 3</div>
+        <div class="m-title">AI-Native</div>
+        <div class="m-desc">AI-first design of decisions and workflows. Agents orchestrated enterprise-wide under policy.</div>
+      </div>
+    </div>
+    <div class="maturity-arrow">
+      <span class="arrow-label">Increasing Value &rarr;</span>
+      <span class="arrow-line"></span>
+    </div>
+
+    <!-- Value Proposition Highlights -->
+    <button class="deep-dive-toggle" onclick="toggleDeepDive(this)" aria-expanded="false">
+      <span class="toggle-arrow">&#9654;</span> Kyndryl Value Proposition &mdash; Use These in Your Deck
+    </button>
+    <div class="deep-dive-content">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon">&#9889;</div>
+          <h4>Accelerated Transformation</h4>
+          <p>Unifying tools, data, and agents into a single scalable platform accelerates AI adoption.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#128737;</div>
+          <h4>Secure Governance</h4>
+          <p>Compliance and auditability with automated checkpoints creating a regulator-ready audit trail. Governance applies not only to models, but to <strong>agent behavior</strong> across the lifecycle.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#128101;</div>
+          <h4>Human-Centric</h4>
+          <p>Humans provide oversight, judgment, and creativity. Agents handle complexity. Every action is traceable.</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">&#128176;</div>
+          <h4>Cost-Aware Execution</h4>
+          <p>Automatic direction to most efficient agents, LLMs, or tools based on real-time cost and performance.</p>
+        </div>
+      </div>
+      <div class="key-message key-message-green mt-1">
+        <strong>The pitch Hans wants to hear:</strong> "Our agentic AI solution moves EuroHealth from AI-Ready to AI-Enabled within 6 months. Modular agent design means we start with [YOUR COMPONENT], prove value in Phase 1, and scale without re-architecture."
+      </div>
+    </div>
+
+    <!-- 7-Slide Deck Structure -->
+    <h3 class="section-h3-mt2">Your Deck &mdash; 7 Slides, Built From Checkpoints</h3>
+    <p>The <strong>Pitch Deck Generator</strong> walks you through 7 steps &mdash; one per slide. Each step tells you which Day's checkpoint to pull from. If you did the checkpoints all week, the generator turns them into a professional deck in seconds.</p>
+
+    <div class="pipeline-flow">
+      <div class="pipeline-step">
+        <span class="step-num">1</span>
+        <span class="step-title">Title &mdash; Name, role, date</span>
+        <span class="step-owner">YOU</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">2</span>
+        <span class="step-title">What &amp; Why &mdash; Problem + Hans finding + quantified benefit</span>
+        <span class="step-owner">Day 11&ndash;12</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">3</span>
+        <span class="step-title">How &amp; Dependencies &mdash; Component + tech choice + contracts + agentic control model</span>
+        <span class="step-owner">Day 13</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">4</span>
+        <span class="step-title">Governance &mdash; EU AI Act articles + obligation + gap + agent behavior governance</span>
+        <span class="step-owner">Day 14</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">5</span>
+        <span class="step-title">Success Metrics &mdash; 3 KPIs with targets and baselines</span>
+        <span class="step-owner">Day 11&ndash;12</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">6</span>
+        <span class="step-title">Risks &amp; Mitigations &mdash; Top risks with specific fixes</span>
+        <span class="step-owner">Day 12, 14</span>
+      </div>
+      <div class="pipeline-step">
+        <span class="step-num">7</span>
+        <span class="step-title">The Decision &mdash; Your ask: Go / Phase 1 / Conditions</span>
+        <span class="step-owner">YOU</span>
+      </div>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note &mdash; Framing the Gate</summary>
+      <div class="instructor-content">
+        <strong>The real-world pattern:</strong> Present &rarr; Get verdict &rarr; Fix gaps &rarr; Re-present. This is not failure &mdash; this is the standard consulting cycle. Steering committees decide in the first 90 seconds &mdash; coach students to lead with their strongest evidence.
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Section 2: Build Your Pitch Deck ==================== -->
+  <section class="section" id="section-2">
+    <h2><span class="section-number">2</span> Build Your Pitch Deck</h2>
+
+    <!-- Session Time Split -->
+    <div class="time-split">
+      <div class="time-block">
+        <div class="time-label">
+          <span class="time-minutes">10</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-desc">
+          <h4>Context</h4>
+          <p>Story arc, Hans, criteria</p>
+        </div>
+      </div>
+      <div class="time-block time-block-active">
+        <div class="time-label">
+          <span class="time-minutes">25</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-desc">
+          <h4>Build Deck &larr; YOU ARE HERE</h4>
+          <p>Fill wizard &rarr; generate PowerPoint</p>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-label">
+          <span class="time-minutes">30</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-desc">
+          <h4>&#127919; The Boardroom</h4>
+          <p>Defend your deck to Hans Muller</p>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-label">
+          <span class="time-minutes">15</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-desc">
+          <h4>Reflection</h4>
+          <p>Hans verdict vs self-verdict</p>
+        </div>
+      </div>
+      <div class="time-block">
+        <div class="time-label">
+          <span class="time-minutes">10</span>
+          <span class="time-unit">minutes</span>
+        </div>
+        <div class="time-desc">
+          <h4>Wrap-up</h4>
+          <p>Examples + Monday preview</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform requirement warning -->
+    <div class="warning-box warning-box-danger">
+      <h3>&#9888; Use the Online Platform for Sprint A &amp; B</h3>
+      <p>The Pitch Deck Generator and The Boardroom <strong>require the live platform</strong> at <strong class="text-accent-blue">www.kyndrylai.online</strong>. They will <strong>not work</strong> from the offline OneDrive copy &mdash; the AI simulation needs a server connection to function. Make sure you are logged in at kyndrylai.online before starting.</p>
+    </div>
+
+    <!-- Main Exercise — Deck Generator -->
+    <div class="exercise-block">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#9997;</div>
+        <div>
+          <div class="exercise-label">Sprint A (9:10&ndash;9:35, 25 min)</div>
+          <div class="exercise-title">Generate Your Go/No-Go Pitch Deck</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9202; 25 minutes</span>
+        <span>&#128100; Individual</span>
+        <span>&#127919; Deliverable: 7-slide PowerPoint deck</span>
+      </div>
+      <ol class="exercise-steps">
+        <li>Open the <strong class="text-accent-green">&#9889; Pitch Deck Generator</strong>.</li>
+        <li>Follow the <strong>7-step wizard</strong>. Each step creates one slide of your deck.</li>
+        <li>Pull your answers from <strong>checkpoint posts</strong> (Days 11&ndash;14). The form tells you which day each field comes from.</li>
+        <li>Click <strong>&#9889; Generate Pitch Deck</strong> &mdash; your branded PowerPoint downloads instantly.</li>
+        <li>Your data is automatically saved for <strong>The Boardroom</strong> (next section).</li>
+      </ol>
+    </div>
+
+    <div class="quick-tip">
+      <span class="tip-icon">&#128161;</span>
+      <span><strong>This is the wow moment.</strong> Five days of work &mdash; discovery, architecture, governance &mdash; all converging into one professional presentation in seconds. This is how enterprise consultants operate: structured inputs, automated outputs.</span>
+    </div>
+
+    <!-- Quality Check -->
+    <div class="warning-box warning-box-success">
+      <h3>&#9745; Before The Boardroom &mdash; Quality Check</h3>
+      <ul class="quality-check-list">
+        <li>&#9744; Slide 2 has a <strong>quantified benefit</strong> (a number, not "it will help")</li>
+        <li>&#9744; Slide 3 references your <strong>real tech choice</strong> from Day 13</li>
+        <li>&#9744; Slide 4 has your <strong>EU AI Act articles</strong> from Day 14</li>
+        <li>&#9744; Slide 5 KPIs have <strong>specific targets</strong> (not "improve efficiency")</li>
+        <li>&#9744; Slide 6 names <strong>specific risks</strong> with <strong>specific mitigations</strong></li>
+        <li>&#9744; Slide 7 has an <strong>explicit ask</strong> (Go / Go Phase 1 / Go with Conditions)</li>
+      </ul>
+    </div>
+
+    <!-- Optional Challenge -->
+    <button class="deep-dive-toggle" onclick="toggleDeepDive(this)" aria-expanded="false">
+      <span class="toggle-arrow">&#9654;</span> Advanced Challenge: Budget Cut Scenario
+    </button>
+    <div class="deep-dive-content">
+      <div class="scenario-box">
+        <div class="scenario-header">
+          <span class="scenario-icon">&#127916;</span>
+          <div>
+            <div class="scenario-label">Optional Challenge</div>
+            <div class="scenario-title">The CFO Cuts Your Budget to EUR 120K</div>
+          </div>
+        </div>
+        <div class="scenario-section">
+          <p>Which features do you drop? What is the ROI impact? When Hans asks about this in The Boardroom, answer: "At EUR 120K, we deliver [X] and [Y] (80% of value for 67% of cost). [Z] moves to Phase 2."</p>
+        </div>
+      </div>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note &mdash; Managing the Clock</summary>
+      <div class="instructor-content">
+        The Pitch Deck Generator eliminates design time. Students focus on <strong>content quality</strong>, not formatting. Most common failure: vague inputs that produce vague slides. At 9:30: "If your KPI says 'improve efficiency' instead of '40% L1 deflection', Hans will eat you alive. Be specific."
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Section 3: The Boardroom — Hans Muller ==================== -->
+  <section class="section" id="section-3">
+    <h2><span class="section-number">3</span> The Boardroom &mdash; Hans Muller</h2>
+
+    <p>Your pitch deck is ready. Now defend it. Hans Muller, CIO of EuroHealth Insurance AG, has read your slides and has questions. He is skeptical, budget-conscious, and under board pressure. He cares about his team. He does not accept hand-waving.</p>
+
+    <!-- Hans Character Card -->
+    <div class="compare-grid">
+      <div class="compare-card compare-card-blue">
+        <h3>&#128100; Hans Muller, CIO</h3>
+        <ul>
+          <li>55 years old, CIO for 8 years</li>
+          <li>Budget: EUR 180K / 6 months</li>
+          <li>Deadline: August 2, 2026</li>
+          <li><em>"Show me the math, not the hope."</em></li>
+        </ul>
+      </div>
+      <div class="compare-card compare-card-yellow">
+        <h3>&#9888; What Hans Challenges</h3>
+        <ul>
+          <li>Vague claims without numbers</li>
+          <li>Missing compliance plan</li>
+          <li>No change management for Jan's team</li>
+          <li>On-prem constraints ignored</li>
+          <li><em>"Stefan will not approve that."</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Boardroom Exercise -->
+    <div class="exercise-block exercise-block-blue">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#127919;</div>
+        <div>
+          <div class="exercise-label">Sprint B (9:35&ndash;10:05, 30 min)</div>
+          <div class="exercise-title">Defend Your Proposal to Hans Muller</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9202; 30 minutes</span>
+        <span>&#128100; Individual</span>
+        <span>&#127919; Outcome: Go / No-Go verdict from Hans</span>
+      </div>
+      <ol class="exercise-steps">
+        <li>Open <strong class="text-accent-blue">&#127919; The Boardroom</strong>.</li>
+        <li>Your deck data is <strong>automatically loaded</strong> from the generator.</li>
+        <li>Click <strong>"Enter The Boardroom"</strong> &mdash; Hans will greet you and ask his first question.</li>
+        <li>Answer each question honestly and specifically. Hans asks <strong>5&ndash;7 questions</strong>.</li>
+        <li>After the final question, Hans deliberates and delivers his <strong>verdict</strong> with scores.</li>
+      </ol>
+    </div>
+
+    <!-- Verdict Examples -->
+    <div class="before-after">
+      <div class="before-panel">
+        <div class="panel-label">&#10060; Weak Defense</div>
+        <div class="panel-content">
+          Hans: "Walk me through that 30% figure."<br>
+          You: "We estimated it based on industry averages."<br>
+          <em>Hans will push harder. He wants YOUR methodology, not a benchmark.</em>
+        </div>
+      </div>
+      <div class="after-panel">
+        <div class="panel-label">&#9989; Strong Defense</div>
+        <div class="panel-content">
+          Hans: "Walk me through that 30% figure."<br>
+          You: "10K tickets, 40% L1 eligible, 75% AI-resolvable = 3K deflected. At 2.1 FTE savings &times; EUR 80K = EUR 168K/year."<br>
+          <em>Hans: "Fair enough. Next question."</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-tip">
+      <span class="tip-icon">&#128161;</span>
+      <span><strong>"Go with Conditions"</strong> is the most common real-world outcome. Hans will respect an honest assessment. Unconditional "Go" after one week of work is suspicious.</span>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note &mdash; The Boardroom</summary>
+      <div class="instructor-content">
+        The Hans Muller AI simulator scales to 200 students simultaneously &mdash; no peer matching needed. Hans asks role-specific questions based on each student's actual deck content. Circulate and observe: students who get No-Go should be told "Good. What condition turns it into Go? Fix it this weekend." Show 2&ndash;3 interesting verdicts at wrap-up.
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Section 4: Reflection + Wrap-up ==================== -->
+  <section class="section" id="section-4">
+    <h2><span class="section-number">4</span> Reflection + Wrap-up</h2>
+
+    <!-- Sprint C: Reflection -->
+    <div class="exercise-block exercise-block-purple">
+      <div class="exercise-header">
+        <div class="exercise-icon">&#128173;</div>
+        <div>
+          <div class="exercise-label">Sprint C (10:05&ndash;10:20, 15 min)</div>
+          <div class="exercise-title">Reflection &mdash; Your Verdict vs Hans's Verdict</div>
+        </div>
+      </div>
+      <div class="exercise-meta">
+        <span>&#9202; 15 minutes</span>
+        <span>&#128100; Individual</span>
+      </div>
+      <ol class="exercise-steps">
+        <li><strong>Compare:</strong> Did your self-verdict (Slide 7) match Hans's verdict? If you said "Go" but Hans said "Go with Conditions" &mdash; what did he see that you missed?</li>
+        <li><strong>Review scores:</strong> Strengths, Risk Awareness, Readiness &mdash; which was lowest? That is your priority.</li>
+        <li><strong>Identify:</strong> What is your single biggest gap going into Build phase?</li>
+        <li><strong>Post in your role's Teams channel:</strong> <em>"Hans gave me [VERDICT]. My biggest gap: ___. I will fix it by: ___."</em></li>
+      </ol>
+    </div>
+
+    <!-- Week 4 Summary Stats -->
+    <h3 class="section-h3-mt25-gap">What You Built This Week</h3>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>Discovery Questions</h4>
+        <p>Understanding the client's problem</p>
+        <span class="stat-day">Day 11</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>Discovery Report</h4>
+        <p>Role-specific analysis</p>
+        <span class="stat-day">Day 12</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>Architecture Spec</h4>
+        <p>Design + interface contracts</p>
+        <span class="stat-day">Day 13</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>Governance</h4>
+        <p>EU AI Act compliance</p>
+        <span class="stat-day">Day 14</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>Go/No-Go Deck</h4>
+        <p>Executive communication</p>
+        <span class="stat-day">Day 15</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9989;</div>
+        <h4>CIO Defense</h4>
+        <p>Hans Muller Go/No-Go verdict</p>
+        <span class="stat-day">Day 15</span>
+      </div>
+    </div>
+
+    <!-- Weekend + Monday -->
+    <div class="step-guide">
+      <div class="step-guide-item done">
+        <div class="step-guide-title">Weekend: Fix Your Gaps</div>
+        <div class="step-guide-desc">No-Go? Fix it. Conditions? Address them. Self-verdict mismatch? Figure out why.</div>
+      </div>
+      <div class="step-guide-item active">
+        <div class="step-guide-title">Monday: Code Starts</div>
+        <div class="step-guide-desc">VS Code + Claude Code. Your architecture doc = spec. Governance doc = constraints.</div>
+      </div>
+      <div class="step-guide-item">
+        <div class="step-guide-title">Week 5: Build Phase</div>
+        <div class="step-guide-desc">Plans become working software. RAG pipelines, dashboards, governance checks.</div>
+      </div>
+    </div>
+
+    <div class="next-preview">
+      <div class="preview-label">Coming Next</div>
+      <h3>Week 5 &mdash; Build Phase Begins</h3>
+      <p>Monday: VS Code + Claude Code live. First lines of code. The planning phase is over.</p>
+    </div>
+
+    <details class="instructor-note">
+      <summary>Instructor Note &mdash; Wrap-up (10:20&ndash;10:30)</summary>
+      <div class="instructor-content">
+        Ask: "Who got Go from Hans? Who got Go with Conditions? Who got No-Go?" Show 2&ndash;3 interesting verdicts on screen. Highlight how Hans challenged different roles differently. Point out: students who prepared specific numbers got better outcomes than those who were vague. Close: "Hans is tough but fair. The real steering committee will be tougher. Fix your gaps this weekend."
+      </div>
+    </details>
+  </section>
+
+  <!-- ==================== Week 4 Capstone ==================== -->
+  <section class="section capstone-section" id="capstone">
+    <h2><span class="section-number section-number-orange">&#127942;</span> AI Academy 2026 &mdash; Week 4 Capstone Assignment</h2>
+
+    <div class="danger-box">
+      <span class="d-icon">&#128197;</span>
+      <p><strong>Due: Monday March 2, 09:00 CET</strong></p>
+    </div>
+
+    <p>Your Week 4 Capstone consolidates everything from the discovery + co-design phase. Each role submits a capstone artifact that demonstrates end-to-end consulting skill: from discovery to architecture to governance to defense.</p>
+
+    <table class="capstone-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Capstone Artifact</th>
+          <th>Based on</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FDE</td>
+          <td>RAG pipeline architecture + Go/No-Go defense with interface contracts</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-SE</td>
+          <td>Deployment architecture + CI/CD plan + governance integration</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-DS</td>
+          <td>Evaluation framework + data pipeline + cross-role metrics alignment</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-FE</td>
+          <td>AI-native UI design + streaming architecture + data handling policy</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-PM</td>
+          <td>Project plan + ROI model + Go/No-Go recommendation with phasing</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-DA</td>
+          <td>KPI dashboard design + monitoring architecture + alerting policy</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+        <tr>
+          <td>AI-SEC</td>
+          <td>Threat model + EU AI Act compliance plan + governance gap resolution</td>
+          <td>Days 11&ndash;15</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cap-info-box">
+      <span class="d-icon">&#128221;</span>
+      <p>The capstone template and submission instructions will be shared separately. Your deliverables from Day 11&ndash;15 (discovery, architecture, governance, Go/No-Go slides) form the foundation &mdash; the capstone integrates them into one coherent artifact.</p>
+    </div>
+
+    <div class="key-message">
+      <strong>This is your consulting portfolio piece.</strong> When you come back Monday, you start building code. The capstone is the <em>last written plan</em> before implementation begins. Make it count.
+    </div>
+  </section>
+
+</main>
+
+<!-- ==================== Back to Top ==================== -->
+<button class="back-to-top" onclick="scrollToTop()" aria-label="Back to top">&#8593;</button>
+
+<!-- ==================== Footer ==================== -->
+<footer class="site-footer">
+  <span class="footer-brand">AI Academy 2026</span> &bull; Day 15: Steering Committee &mdash; Go/No-Go &bull; Week 4, Day 5
+</footer>
+
+<!-- ==================== JavaScript ==================== -->
+<script>
+(function() {
+  'use strict';
+
+  // ---- Theme Toggle ----
+  var html = document.documentElement;
+  var lightBtn = document.getElementById('theme-light');
+  var darkBtn = document.getElementById('theme-dark');
+  var isInIframe = window !== window.parent;
+
+  if (isInIframe) html.classList.add('in-iframe');
+
+  function normalizeTheme(theme) {
+    return theme === 'light' ? 'light' : 'dark';
+  }
+
+  function getStoredTheme() {
+    try {
+      return normalizeTheme(localStorage.getItem('theme'));
+    } catch (e) {
+      return 'dark';
+    }
+  }
+
+  function setTheme(t) {
+    var theme = normalizeTheme(t);
+    html.setAttribute('data-theme', theme);
+    if (!isInIframe) {
+      try {
+        localStorage.setItem('theme', theme);
+      } catch (e) {}
+    }
+    if (theme === 'light') { lightBtn.classList.add('active'); darkBtn.classList.remove('active'); }
+    else { darkBtn.classList.add('active'); lightBtn.classList.remove('active'); }
+  }
+
+  setTheme(getStoredTheme());
+
+  lightBtn.addEventListener('click', function() { setTheme('light'); });
+  darkBtn.addEventListener('click', function() { setTheme('dark'); });
+
+  if (isInIframe) {
+    window.addEventListener('message', function(e) {
+      if (e.data && e.data.type === 'theme-change') setTheme(e.data.theme);
+    });
+  }
+
+  // ---- Scroll: Back to Top button ----
+  var backBtn = document.querySelector('.back-to-top');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 400) {
+      backBtn.classList.add('visible');
+    } else {
+      backBtn.classList.remove('visible');
+    }
+  });
+
+  window.scrollToTop = function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ---- Scroll: Active nav link ----
+  var sections = document.querySelectorAll('.section[id]');
+  var navLinks = document.querySelectorAll('.nav-links a');
+
+  function updateActiveNav() {
+    var scrollPos = window.scrollY + 120;
+    sections.forEach(function(section, i) {
+      var top = section.offsetTop;
+      var bottom = top + section.offsetHeight;
+      if (scrollPos >= top && scrollPos < bottom) {
+        navLinks.forEach(function(link) { link.style.color = ''; link.style.background = ''; });
+        if (navLinks[i]) {
+          navLinks[i].style.color = 'var(--text-primary)';
+          navLinks[i].style.background = 'var(--bg-tertiary)';
+        }
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav);
+  updateActiveNav();
+
+  // ---- Deep Dive Toggle ----
+  window.toggleDeepDive = function(btn) {
+    var content = btn.nextElementSibling;
+    if (!content) return;
+    var isOpen = content.classList.contains('visible');
+    content.classList.toggle('visible');
+    btn.classList.toggle('open');
+    btn.setAttribute('aria-expanded', !isOpen);
+  };
+
+})();
+
+(function() { var p = new URLSearchParams(window.location.search); if (p.get('mode') === 'instructor') document.body.classList.add('instructor-mode'); })();
+(function() { var dots = document.querySelectorAll('.section-progress .progress-dot'); if (!dots.length) return; var ts = []; dots.forEach(function(d) { var id = d.getAttribute('data-section'); if (id) { var el = document.getElementById(id); if (el) ts.push({dot:d,el:el}); } }); function up() { var s = window.scrollY + window.innerHeight*0.4; ts.forEach(function(i) { var t=i.el.offsetTop, b=t+i.el.offsetHeight; if(s>=b){i.dot.classList.add('completed');i.dot.classList.remove('active');}else if(s>=t){i.dot.classList.add('active');i.dot.classList.remove('completed');}else{i.dot.classList.remove('active','completed');}}); } window.addEventListener('scroll',up); up(); })();
+</script>
+
+    <script>
+    // -- Role Filter ---------------------------------------------------------
+    (function () {
+        var stored = localStorage.getItem('aa-role') || 'all';
+        var btns = document.querySelectorAll('.role-btn');
+        var sections = document.querySelectorAll('[data-role-section]');
+
+        function applyRole(role) {
+            btns.forEach(function (b) {
+                b.classList.toggle('active', b.dataset.role === role);
+            });
+            sections.forEach(function (el) {
+                if (role === 'all') {
+                    el.classList.remove('role-hidden');
+                } else {
+                    var roles = el.dataset.roleSection.split(',');
+                    el.classList.toggle('role-hidden', roles.indexOf(role) === -1);
+                }
+            });
+            localStorage.setItem('aa-role', role);
+            if (role !== 'all') {
+                localStorage.setItem('mentor-widget-selected-role', role);
+            }
+        }
+
+        btns.forEach(function (btn) {
+            btn.addEventListener('click', function () { applyRole(btn.dataset.role); });
+        });
+
+        applyRole(stored);
+    })();
+    </script>
+</body>
+</html>

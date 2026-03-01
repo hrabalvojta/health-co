@@ -1,0 +1,3886 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <script src="/auth-guard.js"></script>
+    <meta name="course-day" content="11">
+    <script src="/unlock-guard.js"></script>
+    <noscript><meta http-equiv="refresh" content="0;url=/login"></noscript>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Academy 2026 - Day 11: Welcome Back</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES — DARK THEME (default)
+           ============================================ */
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1f26;
+            --bg-tertiary: #242b35;
+            --bg-card: #1a1f26;
+            --bg-code: #0d1117;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #2d3748;
+            --gradient-1: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --gradient-2: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+            --gradient-3: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
+        /* ============================================
+           LIGHT THEME OVERRIDES
+           ============================================ */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-code: #1e293b;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ============================================
+           RESET + BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ============================================
+           NAVIGATION
+           ============================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 20, 25, 0.85);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="light"] .nav {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .nav-brand {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-brand span {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .theme-toggle { display: flex; align-items: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 100px; padding: 0.3rem; margin-left: 0.5rem; }
+        .in-iframe .theme-toggle { display: none !important; }
+        .theme-toggle-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; border: none; background: transparent; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
+        .theme-toggle-btn.active { background: var(--accent-blue); color: white; }
+
+        /* ============================================
+           MAIN CONTENT
+           ============================================ */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.25rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .time-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .time-box .icon {
+            font-size: 1rem;
+        }
+
+        .time-box strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           SECTIONS
+           ============================================ */
+        .section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-1);
+            border-radius: var(--radius-md);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           INFO / WARNING / DANGER BOXES
+           ============================================ */
+        .info-box,
+        .warning-box,
+        .danger-box {
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 4px solid var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--accent-orange);
+            color: var(--text-primary);
+        }
+
+        .danger-box {
+            background: rgba(239, 68, 68, 0.08);
+            border-left: 4px solid var(--accent-red);
+            color: var(--text-primary);
+        }
+
+        .box-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box .box-title { color: var(--accent-blue); }
+        .warning-box .box-title { color: var(--accent-orange); }
+        .danger-box .box-title { color: var(--accent-red); }
+
+        /* ============================================
+           KEY MESSAGE
+           ============================================ */
+        .key-message {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+        }
+
+        .key-message .quote-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .key-message p {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .key-message .attribution {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* ============================================
+           TREND CARDS
+           ============================================ */
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .trend-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        .trend-card-link:hover .trend-card {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .trend-card-link:hover .trend-highlight::after {
+            content: ' \2197';
+        }
+
+        .trend-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trend-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .trend-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .trend-card-link:nth-child(1) .trend-card::before { background: var(--accent-blue); }
+        .trend-card-link:nth-child(2) .trend-card::before { background: var(--accent-orange); }
+        .trend-card-link:nth-child(3) .trend-card::before { background: var(--accent-purple); }
+
+        .trend-card .trend-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .trend-card-link:nth-child(1) .trend-number { background: var(--accent-blue); }
+        .trend-card-link:nth-child(2) .trend-number { background: var(--accent-orange); }
+        .trend-card-link:nth-child(3) .trend-number { background: var(--accent-purple); }
+
+        .trend-card .trend-date {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            margin-left: 0.75rem;
+        }
+
+        .trend-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .trend-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .trend-card .trend-highlight {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .trend-card-link:nth-child(1) .trend-highlight {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+        .trend-card-link:nth-child(2) .trend-highlight {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+        }
+        .trend-card-link:nth-child(3) .trend-highlight {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+        }
+
+        /* ============================================
+           CLIENT BRIEF CARD
+           ============================================ */
+        .brief-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brief-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+        }
+
+        .brief-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brief-card-header .brief-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-md);
+            font-size: 1.5rem;
+        }
+
+        .brief-card-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .brief-card-header .brief-label {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .brief-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .brief-field {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+        }
+
+        .brief-field .field-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+
+        .brief-field .field-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .brief-field .field-value small {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .brief-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .brief-stat {
+            text-align: center;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .brief-stat .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            letter-spacing: -0.02em;
+        }
+
+        .brief-stat .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-top: 0.25rem;
+        }
+
+        .brief-breakdown {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .breakdown-item {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .breakdown-item:nth-child(1) {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+        .breakdown-item:nth-child(2) {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+        }
+        .breakdown-item:nth-child(3) {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+        }
+        .breakdown-item:nth-child(4) {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .breakdown-item .pct {
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .brief-success {
+            margin-top: 1.5rem;
+        }
+
+        .brief-success h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.75rem;
+        }
+
+        .brief-success ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .brief-success li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .brief-success li::before {
+            content: '\2713';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .brief-constraints {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .brief-constraints h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.75rem;
+        }
+
+        .constraint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .constraint-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .constraint-item .constraint-icon {
+            color: var(--accent-red);
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ============================================
+           METRICS DASHBOARD
+           ============================================ */
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0.5rem 0;
+        }
+
+        .metric-arrow {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .metric-target {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ============================================
+           PIE CHART
+           ============================================ */
+        .pie-chart-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .pie-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .pie-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           CONSTRAINTS VISUAL GRID
+           ============================================ */
+        .constraints-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .constraint-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .constraint-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .constraint-icon {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .constraint-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .constraint-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ============================================
+           TIMELINE FLOW
+           ============================================ */
+        .timeline-flow {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .timeline-flow .chart-title {
+            margin-bottom: 1.5rem;
+        }
+
+        /* ============================================
+           CODE BLOCK
+           ============================================ */
+        .code-block {
+            background: var(--bg-code);
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .code-header .code-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .code-header .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-header .code-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .code-header .code-dots span:nth-child(1) { background: #ef4444; }
+        .code-header .code-dots span:nth-child(2) { background: #f59e0b; }
+        .code-header .code-dots span:nth-child(3) { background: #10b981; }
+
+        .code-block pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+        }
+
+        .code-block code {
+            font-family: inherit;
+        }
+
+        .code-copy-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f1f5f9;
+        }
+
+        /* ============================================
+           OPERATING MODEL VISUAL
+           ============================================ */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin: 2rem 0;
+        }
+
+        .model-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .model-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .model-card .model-pct {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .model-card:nth-child(1) .model-pct { color: var(--accent-blue); }
+        .model-card:nth-child(2) .model-pct { color: var(--accent-green); }
+        .model-card:nth-child(3) .model-pct { color: var(--accent-purple); }
+        .model-card:nth-child(4) .model-pct { color: var(--accent-orange); }
+
+        .model-card .model-role {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .model-card .model-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .model-card .model-bar {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 1rem;
+            background: var(--bg-tertiary);
+            overflow: hidden;
+        }
+
+        .model-card .model-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        .model-card:nth-child(1) .model-bar-fill { width: 10%; background: var(--accent-blue); }
+        .model-card:nth-child(2) .model-bar-fill { width: 70%; background: var(--accent-green); }
+        .model-card:nth-child(3) .model-bar-fill { width: 15%; background: var(--accent-purple); }
+        .model-card:nth-child(4) .model-bar-fill { width: 5%; background: var(--accent-orange); }
+
+        /* ============================================
+           PIPELINE / ROADMAP
+           ============================================ */
+        .pipeline-flow {
+            display: flex;
+            gap: 0;
+            margin: 2rem 0;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .pipeline-step {
+            flex: 1;
+            min-width: 180px;
+            position: relative;
+            text-align: center;
+        }
+
+        .pipeline-step .step-node {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem 1rem;
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pipeline-step.active .step-node {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .pipeline-step .step-day {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .pipeline-step.active .step-day {
+            color: var(--accent-blue);
+        }
+
+        .pipeline-step .step-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .pipeline-step .step-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .pipeline-connector {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            padding: 0 0.25rem;
+        }
+
+        /* ============================================
+           DEEP DIVE (COLLAPSIBLE)
+           ============================================ */
+        .deep-dive {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .deep-dive-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s ease;
+        }
+
+        .deep-dive-toggle:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .deep-dive-toggle .toggle-icon {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .deep-dive.open .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .deep-dive-content {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .deep-dive.open .deep-dive-content {
+            display: block;
+        }
+
+        /* ============================================
+           NEXT PREVIEW
+           ============================================ */
+        .next-preview {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-3);
+        }
+
+        .next-preview .preview-badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+            padding: 0.3rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .next-preview h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .next-preview p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           TAKEAWAYS
+           ============================================ */
+        .takeaway-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .takeaway-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .takeaway-list li:last-child {
+            border-bottom: none;
+        }
+
+        .takeaway-list .takeaway-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .takeaway-list .takeaway-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .takeaway-list .takeaway-text strong {
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           BACK TO TOP
+           ============================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .footer .footer-brand {
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* ============================================
+           ROLE TAGS
+           ============================================ */
+        .role-tag {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .role-fde { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        .role-aise { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
+        .role-aids { background: rgba(139, 92, 246, 0.1); color: var(--accent-purple); }
+        .role-aida { background: rgba(6, 182, 212, 0.1); color: var(--accent-cyan); }
+        .role-aipm { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
+        .role-aife { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
+        .role-aisec { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+
+        /* ============================================
+           EXERCISE BLOCK
+           ============================================ */
+        .exercise-block {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-green);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .exercise-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-2);
+        }
+        .exercise-block .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-block .exercise-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+        }
+        .exercise-block .exercise-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-green);
+        }
+        .exercise-block .exercise-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .exercise-block .exercise-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        .exercise-block .exercise-meta span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .exercise-block .exercise-steps {
+            list-style: none;
+            padding: 0;
+            counter-reset: exercise-step;
+        }
+        .exercise-block .exercise-steps li {
+            counter-increment: exercise-step;
+            position: relative;
+            padding: 0.75rem 0 0.75rem 2.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .exercise-block .exercise-steps li:last-child { border-bottom: none; }
+        .exercise-block .exercise-steps li::before {
+            content: counter(exercise-step);
+            position: absolute;
+            left: 0; top: 0.75rem;
+            width: 24px; height: 24px;
+            background: var(--accent-green);
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================
+           CHECKPOINT (Self-Assessment Quiz)
+           ============================================ */
+        .checkpoint {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .checkpoint::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+        .checkpoint .checkpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .checkpoint .checkpoint-icon { font-size: 1.2rem; }
+        .checkpoint .checkpoint-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-blue);
+        }
+        .checkpoint .checkpoint-question {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .checkpoint .checkpoint-options {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+        .checkpoint .checkpoint-options li {
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            cursor: default;
+        }
+        .checkpoint .checkpoint-options li:hover { border-color: var(--accent-blue); }
+        .checkpoint details { margin-top: 1rem; }
+        .checkpoint details summary {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+        .checkpoint details .checkpoint-answer {
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: var(--radius-sm);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           ANALOGY BOX
+           ============================================ */
+        .analogy-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .analogy-box .analogy-left,
+        .analogy-box .analogy-right {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+        .analogy-box .analogy-left {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+        .analogy-box .analogy-right {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .analogy-box .analogy-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .analogy-box .analogy-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .analogy-box .analogy-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .analogy-box .analogy-connector {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           BEFORE-AFTER
+           ============================================ */
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .before-after .before-panel,
+        .before-after .after-panel {
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+        .before-after .before-panel {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .before-after .after-panel {
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .before-after .panel-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        .before-after .before-panel .panel-label { color: var(--accent-red); }
+        .before-after .after-panel .panel-label { color: var(--accent-green); }
+        .before-after .panel-content {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           SCENARIO BOX
+           ============================================ */
+        .scenario-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-orange);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .scenario-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--gradient-3);
+        }
+        .scenario-box .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .scenario-box .scenario-icon { font-size: 1.3rem; }
+        .scenario-box .scenario-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-orange);
+        }
+        .scenario-box .scenario-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .scenario-box .scenario-section {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.75rem;
+        }
+        .scenario-box .scenario-section:last-child { margin-bottom: 0; }
+        .scenario-box .scenario-section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+        .scenario-box .scenario-section p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           STEP GUIDE
+           ============================================ */
+        .step-guide {
+            margin: 2rem 0;
+            padding-left: 2rem;
+            border-left: 3px solid var(--border);
+            position: relative;
+        }
+        .step-guide .step-guide-item {
+            position: relative;
+            padding: 1rem 0 1.5rem 1.5rem;
+        }
+        .step-guide .step-guide-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 1.25rem;
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            border: 3px solid var(--bg-primary);
+            transform: translateX(-50%);
+            margin-left: -1.5px;
+        }
+        .step-guide .step-guide-item.done::before { background: var(--accent-green); }
+        .step-guide .step-guide-item.active::before {
+            background: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        .step-guide .step-guide-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .step-guide .step-guide-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           QUICK TIP
+           ============================================ */
+        .quick-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .quick-tip .tip-icon { flex-shrink: 0; font-size: 1.1rem; margin-top: 1px; }
+        .quick-tip strong { color: var(--text-primary); }
+
+        /* ============================================
+           PEER ACTIVITY
+           ============================================ */
+        .peer-activity {
+            background: var(--bg-card);
+            border: 2px dashed var(--accent-cyan);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .peer-activity .peer-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .peer-activity .peer-icon { font-size: 1.3rem; }
+        .peer-activity .peer-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-cyan);
+        }
+        .peer-activity .peer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .peer-activity .peer-format {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+        .peer-activity .peer-instructions {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           CONCEPT DIAGRAM
+           ============================================ */
+        .concept-diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        .concept-diagram .diagram-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .concept-diagram .diagram-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .concept-diagram .diagram-node {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 120px;
+        }
+        .concept-diagram .diagram-node.highlight {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+        .concept-diagram .diagram-node .node-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.35rem;
+            display: block;
+        }
+        .concept-diagram .diagram-node .node-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .concept-diagram .diagram-node .node-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+        .concept-diagram .diagram-arrow {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .concept-diagram .diagram-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .concept-diagram .diagram-stack .diagram-node {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* ============================================
+           SECTION PROGRESS
+           ============================================ */
+        .section-progress {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .section-progress .progress-dot {
+            position: relative;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .section-progress .progress-dot.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+        .section-progress .progress-dot.completed {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+        .section-progress .progress-dot .dot-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.65rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        .section-progress .progress-dot:hover .dot-tooltip { opacity: 1; }
+
+        /* ============================================
+           INSTRUCTOR NOTE
+           ============================================ */
+        .instructor-note {
+            border: 2px dashed var(--accent-purple);
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            background: rgba(139, 92, 246, 0.05);
+        }
+        .instructor-note summary {
+            padding: 1rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .instructor-note summary::-webkit-details-marker { display: none; }
+        .instructor-note summary::before { content: '\01F393'; }
+        .instructor-note summary::after {
+            content: '\25B8';
+            margin-left: auto;
+            transition: transform 0.2s;
+        }
+        .instructor-note[open] summary::after { transform: rotate(90deg); }
+        .instructor-note .instructor-content {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        body:not(.instructor-mode) .instructor-note { display: none; }
+        body.instructor-mode .instructor-note { display: block; }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .nav-inner {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 6rem 0 2.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-meta {
+                gap: 0.75rem;
+            }
+
+            .time-box {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.8rem;
+            }
+
+            .trend-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brief-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .brief-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .model-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pipeline-flow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .pipeline-connector {
+                justify-content: center;
+                transform: rotate(90deg);
+                padding: 0.25rem 0;
+            }
+
+            .pipeline-step .step-node {
+                margin: 0;
+            }
+
+            .section-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .brief-card {
+                padding: 1.5rem;
+            }
+
+            .key-message {
+                padding: 1.5rem;
+            }
+
+            .key-message p {
+                font-size: 1.1rem;
+            }
+
+            .constraint-list {
+                grid-template-columns: 1fr;
+            }
+
+            .code-block pre {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+
+            .next-preview {
+                padding: 1.5rem;
+            }
+
+            .analogy-box {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .analogy-box .analogy-connector {
+                padding: 0.5rem 0;
+            }
+            .before-after {
+                grid-template-columns: 1fr;
+            }
+            .exercise-block {
+                padding: 1.5rem;
+            }
+            .concept-diagram .diagram-flow {
+                flex-direction: column;
+            }
+            .concept-diagram .diagram-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brief-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .model-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .breakdown-item {
+                min-width: 70px;
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .breakdown-item .pct {
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================
+           IFRAME DETECTION
+           ============================================ */
+        body.in-iframe .theme-toggle {
+            display: none;
+        }
+
+        body.in-iframe .nav {
+            position: static;
+        }
+
+        body.in-iframe .hero {
+            padding-top: 2rem;
+        }
+
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .nav, .theme-toggle, .back-to-top { display: none !important; }
+            .hero { padding-top: 2rem; }
+            .section { page-break-inside: avoid; }
+            body { background: #fff; color: #000; }
+        }
+        .dashboard-back { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.35rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--accent-blue, #3b82f6); background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); text-decoration: none; transition: all 0.2s; flex-shrink: 0; }
+        .dashboard-back:hover { background: rgba(59,130,246,0.2); }
+    
+        /* ── Utility classes ─────────────────────────────────────── */
+        .clr-primary { color: var(--text-primary); }
+        .clr-secondary { color: var(--text-secondary); }
+        .clr-muted { color: var(--text-muted); }
+        .clr-green { color: var(--accent-green); }
+        .clr-red { color: var(--accent-red); }
+        .clr-blue { color: var(--accent-blue); }
+        .clr-purple { color: var(--accent-purple); }
+        .clr-orange { color: var(--accent-orange); }
+        .clr-cyan { color: var(--accent-cyan); }
+        .mt-0 { margin-top: 0; }
+        .mt-05 { margin-top: 0.5rem; }
+        .mt-075 { margin-top: 0.75rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-15 { margin-top: 1.5rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-035 { margin-bottom: 0.35rem; }
+        .mb-05 { margin-bottom: 0.5rem; }
+        .mb-075 { margin-bottom: 0.75rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-15 { margin-bottom: 1.5rem; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .flex-center { display: flex; align-items: center; }
+        .fs-085 { font-size: 0.85rem; }
+        .section-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .hero-subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.05rem; }
+        .hero-subtitle-lg { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 500; }
+        .card-body-text { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .clr-primary-lg { color: var(--text-primary); font-size: 1.05rem; }
+        .resource-item { padding: .4rem 0; border-bottom: 1px dashed var(--border); color: var(--text-secondary); }
+        .py-03 { padding: 0.3rem 0; }
+        .bdr-green { border-color: var(--accent-green); }
+        .bdr-blue { border-color: var(--accent-blue); }
+        .bdr-purple { border-color: var(--accent-purple); }
+        .bt-green { border-top: 3px solid var(--accent-green); }
+        .bt-purple { border-top: 3px solid var(--accent-purple); }
+        .bg-orange { background: var(--accent-orange); }
+        .bg-green-subtle { background: rgba(16, 185, 129, 0.1); }
+
+        .link-blue { color: var(--accent-blue); text-decoration: none; }
+        .clr-danger { color: var(--accent-danger); }
+        .clr-green-bold { color: var(--accent-green); font-weight: 600; }
+        .clr-emerald { color: #10b981; }
+        .bt-blue { border-top: 3px solid var(--accent-blue); }
+        .bt-orange { border-top: 3px solid var(--accent-orange); }
+        .bg-red { background: var(--accent-red); }
+        .bg-blue { background: var(--accent-blue); }
+        .bg-purple { background: var(--accent-purple); }
+        .bg-green { background: var(--accent-green); }
+        .bg-gradient-2 { background: var(--gradient-2); }
+        .pl-15 { padding-left: 1.5rem; }
+        .list-secondary { padding-left: 1.25rem; color: var(--text-secondary); line-height: 2; }
+        .resource-intro { font-size: .82rem; color: var(--text-secondary); margin-bottom: .75rem; }
+        .card-meta { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+        .font-mono-sm { font-family: var(--font-mono); font-size: 0.85em; }
+        .pad-05-secondary { padding: 0.5rem; color: var(--text-secondary); }
+        .section-title { color: var(--text-primary); font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; }
+        .progress-bar-fill { width: 0; background: linear-gradient(90deg, #10b981, #06b6d4); }
+        .w-0 { width: 0%; }
+
+    
+        /* ── Auto-extracted inline styles ──────────────────── */
+        .is-408 { padding-left: 1.25rem; margin: 0; }
+        .sub-list { margin-top: 0.75rem; padding-left: 1.25rem; color: var(--text-secondary); }
+        .is-409 { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.5rem; margin-top: 1rem; }
+        .sec-mb1-105 { color: var(--text-secondary); margin-bottom: 1rem; font-size: 1.05rem; }
+        .code-tag { background: var(--bg-code); padding: 0.15rem 0.4rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--accent-cyan); }
+        .mt1-muted { margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem; }
+        .subtitle-2 { color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.05rem; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; }
+
+        /* ── SVG Chart Styles ────────────────────────── */
+        .svg-chart {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            margin: 2rem 0;
+            display: block;
+        }
+
+        .chart-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-flow {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .timeline-flow svg { display: block; margin: 0 auto; }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-arrow {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .metric-target {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .kaf-flowchart {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .kaf-flowchart svg { display: block; margin: 1rem auto; }
+
+        .pie-chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .pie-chart-container svg { display: block; margin: 0 auto; }
+
+        .pie-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .pie-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .constraints-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .constraint-card {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .constraint-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .constraint-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--accent-red);
+            margin-bottom: 0.5rem;
+        }
+
+        .constraint-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .metrics-dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .constraints-visual {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================
+           OPS PLAYBOOK MASTER TABLE
+           ============================================ */
+        .ops-master-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+        .ops-master-table thead th {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.65rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+        }
+        .ops-master-table tbody td {
+            padding: 0.85rem 1rem;
+            border-top: 1px solid var(--border);
+            vertical-align: middle;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            transition: background 0.15s ease;
+        }
+        .ops-master-table tbody tr:hover td {
+            background: var(--bg-tertiary);
+        }
+        .ops-master-table tbody td:first-child {
+            border-left: 4px solid var(--rule-color, var(--border));
+            padding-left: 1.25rem;
+        }
+        .ops-rule-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .ops-rule-icon { font-size: 1.05rem; line-height: 1; }
+        .ops-limit-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/index.html" class="dashboard-back">&larr; Dashboard</a>
+            <a href="#top" class="nav-brand">AI Academy 2026 <span>/ Day 11</span></a>
+            <ul class="nav-links">
+                <li><a href="#welcome" data-section="welcome">Welcome</a></li>
+                <li><a href="#trends" data-section="trends">Trends</a></li>
+                <li><a href="#kaf" data-section="kaf">KAF Lens</a></li>
+                <li><a href="#client" data-section="client">Client Brief</a></li>
+                <li><a href="#deliverable" data-section="deliverable">Deliverable</a></li>
+                <li><a href="#model" data-section="model">Model</a></li>
+                <li><a href="#ops-playbook-master" data-section="ops-playbook-master">Ops Playbook</a></li>
+                <li><a href="#roadmap" data-section="roadmap">Roadmap</a></li>
+                <li><a href="#takeaways" data-section="takeaways">Takeaways</a></li>
+            </ul>
+            <div class="theme-toggle">
+                <button class="theme-toggle-btn" id="theme-light" aria-label="Light theme">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                </button>
+                <button class="theme-toggle-btn active" id="theme-dark" aria-label="Dark theme">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main" id="top">
+
+        <!-- ============================================
+             HERO
+             ============================================ -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                AI Academy 2026 &bull; Day 11
+            </div>
+            <h1>Welcome Back &mdash;<br>The World Shifted While We Were Away</h1>
+            <p class="hero-subtitle">
+                Monday, February 23, 2026 &mdash; Week 4, Day 1. From today, everything changes.
+                No more exercises. You produce real artifacts for a real client brief.
+            </p>
+            <div class="hero-meta">
+                <span class="time-box">
+                    <span class="icon">&#9201;</span>
+                    <strong>90 min</strong>&nbsp;total
+                </span>
+                <span class="time-box">
+                    <span class="icon">&#127908;</span>
+                    <strong>15'</strong>&nbsp;Plenary
+                </span>
+                <span class="time-box">
+                    <span class="icon">&#128187;</span>
+                    <strong>60'</strong>&nbsp;Work
+                </span>
+                <span class="time-box">
+                    <span class="icon">&#127919;</span>
+                    <strong>15'</strong>&nbsp;Wrap-up
+                </span>
+            </div>
+
+            <!-- Section Progress -->
+            <div class="section-progress mt-2">
+                <div class="progress-dot" data-section="welcome"><span class="dot-tooltip">Welcome</span></div>
+                <div class="progress-dot" data-section="trends"><span class="dot-tooltip">Trends</span></div>
+                <div class="progress-dot" data-section="kaf"><span class="dot-tooltip">KAF Lens</span></div>
+                <div class="progress-dot" data-section="client"><span class="dot-tooltip">Client Brief</span></div>
+                <div class="progress-dot" data-section="deliverable"><span class="dot-tooltip">Deliverable</span></div>
+                <div class="progress-dot" data-section="model"><span class="dot-tooltip">Model</span></div>
+                <div class="progress-dot" data-section="ops-playbook-master"><span class="dot-tooltip">Ops Playbook</span></div>
+                <div class="progress-dot" data-section="roadmap"><span class="dot-tooltip">Roadmap</span></div>
+                <div class="progress-dot" data-section="takeaways"><span class="dot-tooltip">Takeaways</span></div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 1: WELCOME BACK + ENERGY RESET
+             ============================================ -->
+        <section class="section" id="welcome">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Welcome Back + Energy Reset</h2>
+            </div>
+
+            <div class="key-message">
+                <div class="quote-icon">&#10077;</div>
+                <p>From today, everything changes. No more exercises. You produce <strong>REAL artifacts</strong> for a <strong>REAL client brief</strong>.</p>
+                <div class="attribution">What you create this week could be a template you use on your first client engagement.</div>
+            </div>
+
+            <details class="instructor-note">
+                <summary>Instructor Note &mdash; Welcome Back</summary>
+                <div class="instructor-content">
+                    <p>Welcome back. I hope you practiced during break. If you didn't &mdash; that's OK, we start fresh today. But if you DID &mdash; you're ahead and you'll feel it immediately.</p>
+                </div>
+            </details>
+
+            <!-- Before-After: Week 1-3 vs Week 4+ -->
+            <div class="before-after">
+                <div class="before-panel">
+                    <div class="panel-label">&#10060; Weeks 1&ndash;3: Foundations</div>
+                    <div class="panel-content">
+                        <ul class="is-408">
+                            <li>Learning concepts &amp; terminology</li>
+                            <li>Practice exercises with known answers</li>
+                            <li>AI Tutor as teacher</li>
+                            <li>Individual skill building</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="after-panel">
+                    <div class="panel-label">&#9989; Week 4+: Application</div>
+                    <div class="panel-content">
+                        <ul class="is-408">
+                            <li>Producing real client artifacts</li>
+                            <li>Open-ended deliverables, no single right answer</li>
+                            <li>AI Tutor as working partner</li>
+                            <li>Cross-role collaboration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">Important Note</div>
+                <p>Today, cross-role interaction is asynchronous via channels. On Day 24 (Dress Rehearsal), you will work as a team in real-time for the first time. That will show whether your individual Discovery questions create a system &mdash; or just a collection of unrelated items.</p>
+            </div>
+
+            <!-- Week 1-3 vs Week 4+ Timeline Visualization -->
+            <div class="timeline-flow">
+                <div class="chart-title">Learning Path: Week 1-3 → Week 4+</div>
+                <svg class="svg-chart" viewBox="0 0 900 280" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                    <title>Week 1-3 vs Week 4+ Progression Timeline</title>
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="var(--accent-red)" />
+                        </marker>
+                        <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="var(--accent-green)" />
+                        </marker>
+                    </defs>
+
+                    <!-- Week 1-3 Section -->
+                    <g id="weeks-1-3">
+                        <!-- Header box -->
+                        <rect x="20" y="10" width="340" height="50" fill="rgba(239, 68, 68, 0.15)" stroke="var(--accent-red)" stroke-width="2" rx="8" />
+                        <text x="190" y="42" font-weight="700" font-size="16" text-anchor="middle" fill="var(--accent-red)">WEEK 1-3: FOUNDATIONS</text>
+
+                        <!-- Timeline line -->
+                        <line x1="40" y1="85" x2="360" y2="85" stroke="var(--accent-red)" stroke-width="2" />
+
+                        <!-- Stage 1: Learning -->
+                        <circle cx="70" cy="85" r="8" fill="var(--accent-red)" />
+                        <rect x="50" y="105" width="40" height="35" fill="var(--bg-secondary)" stroke="var(--accent-red)" stroke-width="1" rx="4" />
+                        <text x="70" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Learning</text>
+
+                        <!-- Stage 2: Practice -->
+                        <circle cx="160" cy="85" r="8" fill="var(--accent-red)" />
+                        <rect x="140" y="105" width="40" height="35" fill="var(--bg-secondary)" stroke="var(--accent-red)" stroke-width="1" rx="4" />
+                        <text x="160" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Practice</text>
+
+                        <!-- Stage 3: Exercises -->
+                        <circle cx="250" cy="85" r="8" fill="var(--accent-red)" />
+                        <rect x="225" y="105" width="50" height="35" fill="var(--bg-secondary)" stroke="var(--accent-red)" stroke-width="1" rx="4" />
+                        <text x="250" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Exercises</text>
+
+                        <!-- Stage 4: Build Skills -->
+                        <circle cx="330" cy="85" r="8" fill="var(--accent-red)" />
+                        <rect x="300" y="105" width="60" height="35" fill="var(--bg-secondary)" stroke="var(--accent-red)" stroke-width="1" rx="4" />
+                        <text x="330" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Build Skills</text>
+                    </g>
+
+                    <!-- Transition Arrow -->
+                    <g id="transition">
+                        <line x1="380" y1="85" x2="460" y2="85" stroke="var(--text-muted)" stroke-width="3" marker-end="url(#arrowhead)" />
+                        <text x="420" y="110" font-size="12" text-anchor="middle" fill="var(--text-muted)" font-weight="600">SHIFT</text>
+                    </g>
+
+                    <!-- Week 4+ Section -->
+                    <g id="weeks-4-plus">
+                        <!-- Header box -->
+                        <rect x="520" y="10" width="340" height="50" fill="rgba(16, 185, 129, 0.15)" stroke="var(--accent-green)" stroke-width="2" rx="8" />
+                        <text x="690" y="42" font-weight="700" font-size="16" text-anchor="middle" fill="var(--accent-green)">WEEK 4+: APPLICATION</text>
+
+                        <!-- Timeline line -->
+                        <line x1="540" y1="85" x2="860" y2="85" stroke="var(--accent-green)" stroke-width="2" />
+
+                        <!-- Stage 1: Discover -->
+                        <circle cx="570" cy="85" r="8" fill="var(--accent-green)" />
+                        <rect x="550" y="105" width="40" height="35" fill="var(--bg-secondary)" stroke="var(--accent-green)" stroke-width="1" rx="4" />
+                        <text x="570" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Discover</text>
+
+                        <!-- Stage 2: Architect -->
+                        <circle cx="660" cy="85" r="8" fill="var(--accent-green)" />
+                        <rect x="635" y="105" width="50" height="35" fill="var(--bg-secondary)" stroke="var(--accent-green)" stroke-width="1" rx="4" />
+                        <text x="660" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Architect</text>
+
+                        <!-- Stage 3: Deliver -->
+                        <circle cx="750" cy="85" r="8" fill="var(--accent-green)" />
+                        <rect x="725" y="105" width="50" height="35" fill="var(--bg-secondary)" stroke="var(--accent-green)" stroke-width="1" rx="4" />
+                        <text x="750" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Deliver</text>
+
+                        <!-- Stage 4: Real Client -->
+                        <circle cx="830" cy="85" r="8" fill="var(--accent-green)" />
+                        <rect x="800" y="105" width="60" height="35" fill="var(--bg-secondary)" stroke="var(--accent-green)" stroke-width="1" rx="4" />
+                        <text x="830" y="130" font-size="11" font-weight="700" text-anchor="middle" fill="var(--text-primary)">Real Client</text>
+                    </g>
+
+                    <!-- Key insight -->
+                    <rect x="50" y="170" width="800" height="90" fill="rgba(59, 130, 246, 0.08)" stroke="var(--accent-blue)" stroke-width="1" rx="6" />
+                    <text x="450" y="195" font-size="13" font-weight="700" text-anchor="middle" fill="var(--accent-blue)">Key Shift: From Learning Concepts to Applying Real Skills</text>
+                    <text x="450" y="220" font-size="11" text-anchor="middle" fill="var(--text-secondary)">Weeks 1-3 build foundational knowledge through structured learning.</text>
+                    <text x="450" y="240" font-size="11" text-anchor="middle" fill="var(--text-secondary)">Weeks 4+ apply that knowledge to real client problems with guidance.</text>
+                </svg>
+            </div>
+
+            <div class="deep-dive">
+                <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span>What changed from Week 1-3 to Week 4?</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="deep-dive-content">
+                    <p><strong>Weeks 1-3</strong> were about foundations: understanding the AI landscape, prompt engineering, agentic patterns, and your role. You learned concepts.</p>
+                    <p class="mt-075"><strong>Week 4+</strong> is about application. You have a real client scenario. You will produce deliverables that mirror what Kyndryl consultants produce on actual engagements. Your AI Tutor becomes your working partner, not just your teacher.</p>
+                </div>
+            </div>
+
+            <div class="quick-tip">
+                <span class="tip-icon">&#128161;</span>
+                <span><strong>Mindset shift:</strong> From today, every deliverable you create could be a template you use on your first real client engagement.</span>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 2: THREE THINGS THAT HAPPENED
+             ============================================ -->
+        <section class="section" id="trends">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Four Things That Shifted the Game</h2>
+            </div>
+
+            <p class="hero-subtitle">
+                <strong class="clr-primary">The rules changed while we were away.</strong> Four developments that redefine how you approach this project &mdash; and what &ldquo;value&rdquo; means for a Kyndryl engagement in 2026:
+            </p>
+
+            <div class="trend-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                <!-- Trend 1 -->
+                <a href="https://www.kyndryl.com/mx/es/about-us/news/2026/02/policy-as-code-agentic-ai-governance" target="_blank" rel="noopener noreferrer" class="trend-card-link">
+                <div class="trend-card">
+                    <div class="flex-center">
+                        <span class="trend-number">1</span>
+                        <span class="trend-date">Feb 11, 2026</span>
+                    </div>
+                    <h3>Kyndryl Policy as Code</h3>
+                    <p>Our agents now run inside policy guardrails. If it's not in the code, the agent can't do it. This is the governance layer that ServiceNow doesn't ship out of the box.</p>
+                    <span class="trend-highlight">Governance built into the pipeline</span>
+                </div>
+                </a>
+
+                <!-- Trend 2 -->
+                <a href="https://www.kyndryl.com/us/en/services/cyber-resilience/security-operations/cyber-defense-operations-center" target="_blank" rel="noopener noreferrer" class="trend-card-link">
+                <div class="trend-card">
+                    <div class="flex-center">
+                        <span class="trend-number">2</span>
+                        <span class="trend-date">Feb 19, 2026</span>
+                    </div>
+                    <h3>Cyber Defense Operations Center Live</h3>
+                    <p>Kyndryl launched its first Cyber Defense Operations Center in Bengaluru &mdash; unifying network and security ops with KAF embedded directly in production. Not a demo. Not a slide deck. A running system.</p>
+                    <span class="trend-highlight">KAF running in production NOW</span>
+                </div>
+                </a>
+
+                <!-- Trend 3 -->
+                <a href="https://www.kyndryl.com/us/en/about-us/news/2026/02/ai-impact-summit-keynote-martin-schroeter" target="_blank" rel="noopener noreferrer" class="trend-card-link">
+                <div class="trend-card">
+                    <div class="flex-center">
+                        <span class="trend-number">3</span>
+                        <span class="trend-date">Feb 19, 2026</span>
+                    </div>
+                    <h3>Our CEO at India AI Impact Summit</h3>
+                    <p>Martin Schroeter at the biggest AI summit ever: &ldquo;The innovation is real. The challenge is readiness.&rdquo; 75% of AI projects stall after PoC. Clients don't need more AI &mdash; they need someone to industrialize what they already have.</p>
+                    <span class="trend-highlight">Industrialization &gt; Innovation</span>
+                </div>
+                </a>
+
+                <!-- Trend 4 -->
+                <a href="https://www.europarl.europa.eu/thinktank/en/document/EPRS_BRI(2026)782651" target="_blank" rel="noopener noreferrer" class="trend-card-link">
+                <div class="trend-card">
+                    <div class="flex-center">
+                        <span class="trend-number">4</span>
+                        <span class="trend-date">Digital Omnibus</span>
+                    </div>
+                    <h3>EU AI Act: Deadline Moves to Dec 2027</h3>
+                    <p>The Digital Omnibus pushes high-risk AI obligations from August 2026 to <strong>December 2027</strong>. Standards aren't ready &mdash; not because compliance is optional. The window to build governance foundations is open NOW. Clients who wait will scramble.</p>
+                    <span class="trend-highlight">The compliance window is open &mdash; not closed</span>
+                </div>
+                </a>
+            </div>
+
+            <!-- CEO Quote -->
+            <div class="key-message">
+                <div class="quote-icon">&#128172;</div>
+                <p>&ldquo;The innovation is real. The challenge is readiness. AI today is not yet industrialised &mdash; infrastructure, data, operations and people must be prepared to support it at scale.&rdquo;</p>
+                <div class="attribution">Martin Schroeter, CEO Kyndryl &mdash; India AI Impact Summit, February 19, 2026</div>
+            </div>
+
+            <!-- The Real Question -->
+            <div class="danger-box">
+                <div class="box-title">The question that changed</div>
+                <p><strong>Before break:</strong> &ldquo;How do we build an AI helpdesk for EuroHealth?&rdquo;<br>
+                <strong>After break:</strong> &ldquo;EuroHealth already has ServiceNow with AI agents built in (Moveworks, acquired Dec 2025). They can auto-resolve tickets themselves. So why are they calling Kyndryl?&rdquo;<br><br>
+                <strong>Answer:</strong> Because ticket resolution is a feature, not a transformation. They need someone who can industrialize their AI &mdash; build governance, adapt to regulation, scale across departments, and make the whole thing production-safe. That's what Kyndryl does. That's what YOU are learning to do.</p>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">What this means for your discovery</div>
+                <p><strong>Your EuroHealth discovery must go beyond &ldquo;how do we build a chatbot.&rdquo;</strong> The client likely already has AI ticket resolution via ServiceNow. Your questions must uncover: (1) What they can't do with their current platform &mdash; governance, cross-department scaling, regulatory adaptation. (2) Where policy-as-code changes the game &mdash; enforceable guardrails, not PDF policies. (3) How fast they can adapt when regulations change &mdash; days vs. months. (4) Why they need Kyndryl, not just more ServiceNow licenses. That's your value proposition. Discover it.</p>
+            </div>
+
+            <!-- Checkpoint: Policy-as-Code -->
+            <div class="checkpoint">
+                <div class="checkpoint-header">
+                    <span class="checkpoint-icon">&#9989;</span>
+                    <span class="checkpoint-label">Knowledge Check</span>
+                </div>
+                <div class="checkpoint-question">What does "Policy-as-Code" mean in the context of agentic AI?</div>
+                <ul class="checkpoint-options">
+                    <li>A) Writing company policies in a Word document and sharing them with the AI team</li>
+                    <li>B) Encoding governance rules as enforceable guardrails that run inside the agent pipeline</li>
+                    <li>C) Using AI to generate compliance documentation automatically</li>
+                    <li>D) Creating a policy chatbot that answers governance questions</li>
+                </ul>
+                <details>
+                    <summary>Reveal Answer</summary>
+                    <div class="checkpoint-answer">
+                        <strong>B) Encoding governance rules as enforceable guardrails that run inside the agent pipeline.</strong> Policy-as-Code means rules move from documents into an executable layer &mdash; the agent literally cannot violate them because they are enforced in code, not just written in a PDF. This is Kyndryl's differentiator: governance by design, not afterthought.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ============================================
+             KAF LENS
+             ============================================ -->
+        <section class="section" id="kaf">
+            <div class="section-header">
+                <div class="section-number bg-gradient-2">K</div>
+                <h2>KAF Lens &mdash; How Kyndryl Thinks About This</h2>
+            </div>
+
+            <p class="hero-subtitle">
+                <strong class="clr-primary">How does Kyndryl structure every AI solution?</strong> This project must be designed as an agentic workflow, not a chatbot. In Kyndryl's Agentic AI Framework (KAF), every solution maps to these components:
+            </p>
+
+            <!-- Analogy: Triage Nurse = Agent Router -->
+            <div class="analogy-box">
+                <div class="analogy-left">
+                    <span class="analogy-emoji">&#129657;</span>
+                    <div class="analogy-title">Hospital Triage Nurse</div>
+                    <div class="analogy-desc">Assesses patient, checks vitals, routes to the right specialist. Follows strict protocols. Escalates emergencies.</div>
+                </div>
+                <div class="analogy-connector">is like</div>
+                <div class="analogy-right">
+                    <span class="analogy-emoji">&#129302;</span>
+                    <div class="analogy-title">Agent Router (Agentic Core)</div>
+                    <div class="analogy-desc">Classifies ticket, checks policy, routes to the right handler. Follows guardrails. Escalates to human when needed.</div>
+                </div>
+            </div>
+
+            <div class="model-grid">
+                <div class="model-card text-left">
+                    <div class="section-icon">&#9881;</div>
+                    <div class="model-role">Agentic Core</div>
+                    <div class="model-desc card-body-text">Orchestration, step planning, and tool-use &mdash; not just Q&amp;A. The agent decides <em>what</em> to do, <em>in what order</em>, and <em>which tools</em> to call.</div>
+                </div>
+                <div class="model-card text-left">
+                    <div class="section-icon">&#128230;</div>
+                    <div class="model-role">Agentic Ingestion</div>
+                    <div class="model-desc card-body-text">Knowledge sources, business rules, processes, and integrations are "ingested" into the solution &mdash; not hardcoded.</div>
+                </div>
+                <div class="model-card text-left">
+                    <div class="section-icon">&#128220;</div>
+                    <div class="model-role">Policy-as-Code</div>
+                    <div class="model-desc card-body-text">Rules and compliance move from documents into an enforceable layer &mdash; guardrails by design, not afterthought.</div>
+                </div>
+                <div class="model-card text-left">
+                    <div class="section-icon">&#128737;</div>
+                    <div class="model-role">Digital Trust / Run Safe</div>
+                    <div class="model-desc card-body-text">Audit logs, monitoring, validation, and safe production operations. Every action the agent takes must be traceable.</div>
+                </div>
+                <div class="model-card text-left">
+                    <div class="section-icon">&#9995;</div>
+                    <div class="model-role">Human-in-the-Loop</div>
+                    <div class="model-desc card-body-text">Clear decision points where a human takes control. Not "optional" &mdash; mandatory for high-risk and regulated workflows.</div>
+                </div>
+                <div class="model-card text-left">
+                    <div class="section-icon">&#128279;</div>
+                    <div class="model-role">Interoperability (MCP / A2A)</div>
+                    <div class="model-desc card-body-text">Agents connect to tools (MCP) and to each other (A2A). Identity, authentication, and authorization at every boundary.</div>
+                </div>
+            </div>
+
+            <div class="quick-tip">
+                <span class="tip-icon">&#128161;</span>
+                <span><strong>KAF-native thinking:</strong> Every discovery question you write should connect to at least one KAF component. A good discovery packet shows you think in frameworks, not just features.</span>
+            </div>
+
+            <div class="deep-dive">
+                <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span>Governance tiers: Personal / Team / Enterprise agents</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="deep-dive-content">
+                    <p>KAF distinguishes three governance tiers for agents:</p>
+                    <ul class="sub-list">
+                        <li class="mb-05"><strong class="clr-primary">Personal agents</strong> &mdash; used by a single user, low risk, minimal approval needed.</li>
+                        <li class="mb-05"><strong class="clr-primary">Team agents</strong> &mdash; shared within a department, moderate risk, team lead approval + registry entry.</li>
+                        <li class="mb-05"><strong class="clr-primary">Enterprise agents</strong> &mdash; customer-facing or cross-department, high risk, full governance approval, audit trail, monitoring.</li>
+                    </ul>
+                    <p class="mt-075"><strong>EuroHealth's helpdesk agent is clearly an enterprise agent.</strong> That means full governance, registry, approval workflow, and production monitoring from Day 1. Your discovery must account for this.</p>
+                </div>
+            </div>
+
+            <!-- Checkpoint: KAF Tier Classification -->
+            <div class="checkpoint">
+                <div class="checkpoint-header">
+                    <span class="checkpoint-icon">&#9989;</span>
+                    <span class="checkpoint-label">Knowledge Check</span>
+                </div>
+                <div class="checkpoint-question">EuroHealth's helpdesk agent handles customer tickets across 8 EU countries. Which KAF governance tier does it fall into?</div>
+                <ul class="checkpoint-options">
+                    <li>A) Personal agent &mdash; used by individual support staff</li>
+                    <li>B) Team agent &mdash; shared within the IT department</li>
+                    <li>C) Enterprise agent &mdash; customer-facing, cross-department, high risk</li>
+                </ul>
+                <details>
+                    <summary>Reveal Answer</summary>
+                    <div class="checkpoint-answer">
+                        <strong>C) Enterprise agent.</strong> It handles customer data across 8 EU countries, integrates with ServiceNow, must comply with EU AI Act, and requires full audit trails. Enterprise tier means: full governance approval, registry entry, monitoring, and production safety from Day 1.
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 3: THE CLIENT - EUROHEALTH INSURANCE
+             ============================================ -->
+        <section class="section" id="client">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>The Client: EuroHealth Insurance</h2>
+            </div>
+
+            <p class="hero-subtitle">
+                <strong class="clr-primary">Meet your client.</strong> This is not a case study. Not an exercise. A simulation that mirrors what you would face at a real Kyndryl engagement.
+            </p>
+
+            <!-- Scenario: EuroHealth Introduction -->
+            <div class="scenario-box">
+                <div class="scenario-header">
+                    <span class="scenario-icon">&#127970;</span>
+                    <div>
+                        <div class="scenario-label">Real-World Scenario</div>
+                        <div class="scenario-title">EuroHealth Insurance &mdash; The Situation</div>
+                    </div>
+                </div>
+                <div class="scenario-section">
+                    <div class="scenario-section-label">Context</div>
+                    <p>EuroHealth Insurance AG, a mid-size insurer based in Frankfurt, operates across 8 EU countries with 3,000 employees. Their IT helpdesk used to handle 15,000 tickets/month with 12 full-time agents and a CSAT score of 3.2/5 &mdash; well below industry benchmark.</p>
+                </div>
+                <div class="scenario-section">
+                    <div class="scenario-section-label">Recent Transformation (2025)</div>
+                    <p>In late 2025, EuroHealth rolled out ServiceNow&rsquo;s AI capabilities including Moveworks (acquired by ServiceNow, Dec 2025). The automated monitoring and AI-assisted ticket resolution <strong>reduced L1 ticket volume by ~35%</strong> and improved routing accuracy. Basic password resets and simple config questions are now handled autonomously. Headcount stayed at 12 FTE (works council agreement), but staff shifted to managing AI tools and handling escalations.</p>
+                    <p style="margin-top: 0.75rem;"><strong>But the transformation created new problems:</strong> fragmented monitoring across ServiceNow, legacy tools, and departmental AI experiments. No unified governance. No audit trail for AI decisions. Shadow AI spreading &mdash; HR built their own chatbot, Claims has an unapproved LangChain prototype. CISO Stefan Weber flagged it to the board. The board wants an EU AI Act compliance framework by Q3 2026.</p>
+                </div>
+                <div class="scenario-section">
+                    <div class="scenario-section-label">Why They&rsquo;re Calling Kyndryl</div>
+                    <p>The CIO, Hans Muller, doesn&rsquo;t need another AI tool &mdash; he has tools. He needs someone who can <strong>industrialize what they already have:</strong> unify the fragmented AI landscape, build enforceable governance, create a scalable agentic platform that adapts to regulatory changes in days (not months), and make the whole thing auditable and production-safe. On-premises, EU AI Act governance-ready, operational within 6 months, &euro;180K budget.</p>
+                </div>
+                <div class="scenario-section">
+                    <div class="scenario-section-label">Your Mission</div>
+                    <p>You are a Kyndryl consulting team. Over the next 3 weeks, you will produce the discovery packet, architecture, governance framework, and Go/No-Go recommendation that would convince Hans Muller to sign. Your discovery must show him: we understand that this is not a chatbot project &mdash; it&rsquo;s an industrialization engagement.</p>
+                </div>
+            </div>
+
+            <div class="brief-card">
+                <div class="brief-card-header">
+                    <div class="brief-icon">&#127970;</div>
+                    <div>
+                        <div class="brief-label">Client Brief</div>
+                        <h3>EuroHealth Insurance AG, Frankfurt</h3>
+                    </div>
+                </div>
+
+                <!-- Operating Model -->
+                <div style="margin-bottom: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border);">
+                    <div class="chart-title">Operating Model: How This Works</div>
+                    <svg class="svg-chart" viewBox="0 0 700 120" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                        <title>Operating Model Time Distribution</title>
+
+                        <!-- Background -->
+                        <rect x="50" y="20" width="600" height="60" fill="var(--bg-tertiary)" stroke="var(--border)" stroke-width="1" rx="4" />
+
+                        <!-- Lecturer 10% -->
+                        <rect x="50" y="20" width="60" height="60" fill="var(--accent-blue)" rx="4" />
+                        <text x="80" y="55" font-size="11" font-weight="700" text-anchor="middle" fill="white">10%</text>
+                        <text x="80" y="90" font-size="9" text-anchor="middle" fill="var(--text-secondary)">Lecturer</text>
+
+                        <!-- AI Tutor 70% -->
+                        <rect x="110" y="20" width="420" height="60" fill="var(--accent-green)" rx="4" />
+                        <text x="320" y="55" font-size="13" font-weight="700" text-anchor="middle" fill="white">70% AI Tutor</text>
+                        <text x="320" y="90" font-size="9" text-anchor="middle" fill="var(--text-secondary)">Individual Work</text>
+
+                        <!-- Peers 15% -->
+                        <rect x="530" y="20" width="90" height="60" fill="var(--accent-purple)" rx="4" />
+                        <text x="575" y="55" font-size="11" font-weight="700" text-anchor="middle" fill="white">15%</text>
+                        <text x="575" y="90" font-size="9" text-anchor="middle" fill="var(--text-secondary)">Peers</text>
+
+                        <!-- Mentor 5% -->
+                        <rect x="620" y="20" width="30" height="60" fill="var(--accent-orange)" rx="4" />
+                        <text x="635" y="55" font-size="9" font-weight="700" text-anchor="middle" fill="white">5%</text>
+                        <text x="635" y="90" font-size="8" text-anchor="middle" fill="var(--text-secondary)">M</text>
+                    </svg>
+                </div>
+
+                <!-- Key metrics -->
+                <div class="brief-stats">
+                    <div class="brief-stat">
+                        <div class="stat-value">3,000</div>
+                        <div class="stat-label">Employees</div>
+                    </div>
+                    <div class="brief-stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">EU Countries</div>
+                    </div>
+                    <div class="brief-stat">
+                        <div class="stat-value">~10K</div>
+                        <div class="stat-label">Tickets/Mo (post-AI)</div>
+                    </div>
+                    <div class="brief-stat">
+                        <div class="stat-value">3.6/5</div>
+                        <div class="stat-label">CSAT (up from 3.2)</div>
+                    </div>
+                    <div class="brief-stat">
+                        <div class="stat-value">&euro;2.4M</div>
+                        <div class="stat-label">IT Ops (headcount flat)</div>
+                    </div>
+                    <div class="brief-stat">
+                        <div class="stat-value" style="color: var(--accent-red);">0</div>
+                        <div class="stat-label">AI Governance Framework</div>
+                    </div>
+                </div>
+
+                <!-- Risk Exposure Dashboard -->
+                <div class="metrics-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-label">AI Governance Registry</div>
+                        <div class="metric-value" style="color: var(--accent-red);">None</div>
+                        <div class="metric-arrow">🚨</div>
+                        <div class="metric-target">No inventory of AI systems in production</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Shadow AI Incidents</div>
+                        <div class="metric-value" style="color: var(--accent-red);">3 depts</div>
+                        <div class="metric-arrow">⚠️</div>
+                        <div class="metric-target">HR, Claims, Finance &mdash; unapproved AI tools</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Audit Trail for AI Decisions</div>
+                        <div class="metric-value" style="color: var(--accent-red);">Partial</div>
+                        <div class="metric-arrow">📋</div>
+                        <div class="metric-target">ServiceNow only &mdash; other AI tools unlogged</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Regulatory Adaptation Speed</div>
+                        <div class="metric-value" style="color: var(--accent-orange);">~3 months</div>
+                        <div class="metric-arrow">🐌</div>
+                        <div class="metric-target">Time to update processes after regulatory change</div>
+                    </div>
+                </div>
+
+                <!-- Infrastructure Fragmentation Map -->
+                <div class="pie-chart-container">
+                    <h4 style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Current AI Landscape &mdash; Fragmented &amp; Ungoverned</h4>
+                    <svg class="svg-chart" viewBox="0 0 700 320" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                        <title>EuroHealth AI Infrastructure Fragmentation</title>
+
+                        <!-- Governed -->
+                        <text x="10" y="25" font-size="11" font-weight="700" fill="var(--accent-green)">&#x2713; GOVERNED</text>
+
+                        <g id="servicenow">
+                            <rect x="10" y="35" width="680" height="55" fill="rgba(34,197,94,0.1)" stroke="var(--accent-green)" stroke-width="1.5" rx="6" />
+                            <text x="30" y="58" font-size="13" font-weight="700" fill="var(--text-primary)">ServiceNow + Moveworks</text>
+                            <text x="30" y="78" font-size="11" fill="var(--text-secondary)">IT helpdesk automation &#8226; L1 ticket deflection ~35% &#8226; Audit trail &#x2713; &#8226; Monitoring &#x2713;</text>
+                            <text x="590" y="65" font-size="10" font-weight="700" fill="var(--accent-green)">PRODUCTION</text>
+                        </g>
+
+                        <!-- Partially governed -->
+                        <text x="10" y="120" font-size="11" font-weight="700" fill="var(--accent-orange)">&#x26A0; PARTIALLY GOVERNED</text>
+
+                        <g id="legacy-monitoring">
+                            <rect x="10" y="130" width="340" height="55" fill="rgba(245,158,11,0.1)" stroke="var(--accent-orange)" stroke-width="1.5" rx="6" />
+                            <text x="30" y="153" font-size="13" font-weight="700" fill="var(--text-primary)">Legacy Monitoring Tools</text>
+                            <text x="30" y="173" font-size="11" fill="var(--text-secondary)">Nagios, custom scripts &#8226; No ServiceNow integration</text>
+                        </g>
+
+                        <g id="backup">
+                            <rect x="360" y="130" width="330" height="55" fill="rgba(245,158,11,0.1)" stroke="var(--accent-orange)" stroke-width="1.5" rx="6" />
+                            <text x="380" y="153" font-size="13" font-weight="700" fill="var(--text-primary)">Backup &amp; DR Systems</text>
+                            <text x="380" y="173" font-size="11" fill="var(--text-secondary)">Mixed vendors &#8226; Inconsistent policies across 8 countries</text>
+                        </g>
+
+                        <!-- Ungoverned -->
+                        <text x="10" y="215" font-size="11" font-weight="700" fill="var(--accent-red)">&#x2717; UNGOVERNED &mdash; SHADOW AI</text>
+
+                        <g id="shadow-hr">
+                            <rect x="10" y="225" width="220" height="55" fill="rgba(239,68,68,0.1)" stroke="var(--accent-red)" stroke-width="1.5" rx="6" stroke-dasharray="6,3" />
+                            <text x="30" y="248" font-size="12" font-weight="700" fill="var(--text-primary)">HR Chatbot</text>
+                            <text x="30" y="268" font-size="10" fill="var(--text-secondary)">Built internally &#8226; No audit &#8226; PII risk</text>
+                        </g>
+
+                        <g id="shadow-claims">
+                            <rect x="240" y="225" width="220" height="55" fill="rgba(239,68,68,0.1)" stroke="var(--accent-red)" stroke-width="1.5" rx="6" stroke-dasharray="6,3" />
+                            <text x="260" y="248" font-size="12" font-weight="700" fill="var(--text-primary)">Claims LangChain PoC</text>
+                            <text x="260" y="268" font-size="10" fill="var(--text-secondary)">Unapproved &#8226; Accesses policy DB</text>
+                        </g>
+
+                        <g id="shadow-finance">
+                            <rect x="470" y="225" width="220" height="55" fill="rgba(239,68,68,0.1)" stroke="var(--accent-red)" stroke-width="1.5" rx="6" stroke-dasharray="6,3" />
+                            <text x="490" y="248" font-size="12" font-weight="700" fill="var(--text-primary)">Finance GPT Usage</text>
+                            <text x="490" y="268" font-size="10" fill="var(--text-secondary)">Personal accounts &#8226; Data leakage risk</text>
+                        </g>
+
+                        <!-- Bottom label -->
+                        <text x="350" y="310" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent-red)">CISO flagged to board: &ldquo;We have AI in production with zero governance.&rdquo;</text>
+                    </svg>
+
+                    <p style="margin-top: 1.5rem; text-align: center; font-size: 0.95rem; color: var(--text-secondary);">
+                        <strong class="clr-primary">&#127919; Kyndryl&rsquo;s Target:</strong> Unify this landscape under one governed agentic platform &mdash; Policy-as-Code guardrails, unified monitoring, full audit trail, EU AI Act compliance framework.
+                    </p>
+                </div>
+
+                <!-- What they want -->
+                <div class="brief-meta mt-15">
+                    <div class="brief-field">
+                        <div class="field-label">What They Actually Need</div>
+                        <div class="field-value">Governed Agentic Platform
+                            <small>Unify fragmented AI landscape. Policy-as-Code governance. EU AI Act compliance framework. Starting with IT helpdesk (Phase 1), scaling company-wide.</small>
+                        </div>
+                    </div>
+                    <div class="brief-field">
+                        <div class="field-label">What They Asked For</div>
+                        <div class="field-value">AI Helpdesk Improvement
+                            <small>Push ServiceNow/Moveworks further &mdash; better L2/L3 routing, full audit trail, on-prem governance layer. But the real ask is bigger.</small>
+                        </div>
+                    </div>
+                    <div class="brief-field">
+                        <div class="field-label">Languages</div>
+                        <div class="field-value">EN / DE / CZ
+                            <small>Three languages from Day 1. Multilingual support is a hard requirement.</small>
+                        </div>
+                    </div>
+                    <div class="brief-field">
+                        <div class="field-label">Budget &amp; Timeline</div>
+                        <div class="field-value">&euro;180K / 6 months
+                            <small>Phase 1 only. IT department: 300 users. Proof that Kyndryl can industrialize their AI.</small>
+                        </div>
+                    </div>
+                    <div class="brief-field">
+                        <div class="field-label">Deployment</div>
+                        <div class="field-value">On-Premises Only
+                            <small>GDPR + internal policy. No cloud option for Phase 1.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Constraints -->
+                <div class="brief-constraints">
+                    <h4>Hard Constraints</h4>
+                    <div class="constraints-visual">
+                        <div class="constraint-card">
+                            <div class="constraint-icon">💰</div>
+                            <div class="constraint-label">Budget</div>
+                            <div class="constraint-value">€180K / 6 months</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Fixed. No overruns.</div>
+                        </div>
+                        <div class="constraint-card">
+                            <div class="constraint-icon">🏢</div>
+                            <div class="constraint-label">Deployment</div>
+                            <div class="constraint-value">On-Premises Only</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">GDPR + Internal Policy</div>
+                        </div>
+                        <div class="constraint-card">
+                            <div class="constraint-icon">⚖️</div>
+                            <div class="constraint-label">Compliance</div>
+                            <div class="constraint-value">EU AI Act</div>
+                            <div style="font-size: 0.75rem; color: var(--accent-red); margin-top: 0.5rem; font-weight: 600;">Dec 2027 deadline &mdash; board wants framework by Q3 2026</div>
+                        </div>
+                        <div class="constraint-card">
+                            <div class="constraint-icon">🔒</div>
+                            <div class="constraint-label">Data</div>
+                            <div class="constraint-value">No Employee PII</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Training data only</div>
+                        </div>
+                        <div class="constraint-card">
+                            <div class="constraint-icon">🔀</div>
+                            <div class="constraint-label">Infrastructure</div>
+                            <div class="constraint-value">Fragmented</div>
+                            <div style="font-size: 0.75rem; color: var(--accent-orange); margin-top: 0.5rem; font-weight: 600;">ServiceNow + legacy monitoring + shadow AI &mdash; no unified view</div>
+                        </div>
+                        <div class="constraint-card">
+                            <div class="constraint-icon">👥</div>
+                            <div class="constraint-label">Phase 1 Scope</div>
+                            <div class="constraint-value">300 Users</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">IT Department only</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success criteria -->
+                <div class="brief-success">
+                    <h4>Success Criteria</h4>
+                    <ul>
+                        <li><strong>Governance:</strong> AI registry covering 100% of AI systems in production &mdash; no more shadow AI</li>
+                        <li><strong>Compliance:</strong> EU AI Act governance framework approved by board &mdash; ready for Q3 2026 review</li>
+                        <li><strong>Audit:</strong> Full audit trail for all AI-assisted decisions across unified platform</li>
+                        <li><strong>Operations:</strong> Regulatory adaptation time reduced from ~3 months to &lt;2 weeks</li>
+                        <li><strong>Helpdesk (Phase 1):</strong> ServiceNow/Moveworks enhanced with Policy-as-Code &mdash; CSAT from 3.6 to 4.2+</li>
+                        <li><strong>Infrastructure:</strong> Unified monitoring across ServiceNow, legacy tools, and departmental AI</li>
+                        <li><strong>Platform:</strong> Scalable agentic architecture ready for Phase 2 (HR, Claims, Finance)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <div class="box-title">Read carefully</div>
+                <p>This is <strong>not</strong> a greenfield chatbot project. EuroHealth went through a partial transformation &mdash; ServiceNow automated monitoring rollout, Moveworks for ticket deflection &mdash; and it worked for L1. But it also <strong>created new problems:</strong> fragmented infrastructure, shadow AI across departments, zero governance, and a CISO who told the board they have AI in production with no audit trail. The &euro;180K is not for building another AI tool. It&rsquo;s for proving that Kyndryl can take their fragmented AI landscape and turn it into a governed, production-grade, auditable platform &mdash; starting with helpdesk, scaling company-wide. Your discovery questions must show Hans Muller you understand <em>that</em> difference.</p>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 4: TODAY'S DELIVERABLE
+             ============================================ -->
+        <section class="section" id="deliverable">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Today's Deliverable</h2>
+            </div>
+
+            <p class="sec-mb1-105">
+                <strong class="clr-primary">Discovery Packet v1</strong> from your role's perspective &mdash; 10 discovery questions with KAF mapping, assumptions/risks, and proposed KPIs. These are the questions you would ask in the first client meeting with Hans Muller, the CIO of EuroHealth.
+            </p>
+
+            <!-- Exercise Block 1: Discovery Packet — SPRINTS -->
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-icon">⚡</div>
+                    <div>
+                        <div class="exercise-label">Hands-On Exercise</div>
+                        <div class="exercise-title">Write Your Discovery Packet v1 (3 Sprints)</div>
+                    </div>
+                </div>
+                <div class="exercise-meta">
+                    <span>&#9201; 60 minutes</span>
+                    <span>📋 Role-based Teams channel</span>
+                    <span class="role-tag role-fde">All Roles</span>
+                </div>
+
+                <div class="timeline-flow">
+                    <div class="chart-title">3-Sprint Workflow: 60 Minutes Total</div>
+                    <svg class="svg-chart" viewBox="0 0 800 160" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                        <title>Day 11 Sprint Timeline</title>
+
+                        <!-- Background timeline -->
+                        <line x1="50" y1="80" x2="750" y2="80" stroke="var(--border)" stroke-width="2" />
+
+                        <!-- Sprint 1 -->
+                        <circle cx="150" cy="80" r="12" fill="var(--accent-blue)" />
+                        <rect x="80" y="30" width="140" height="35" fill="rgba(59, 130, 246, 0.1)" stroke="var(--accent-blue)" stroke-width="1.5" rx="4" />
+                        <text x="150" y="45" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent-blue)">Sprint 1</text>
+                        <text x="150" y="60" font-size="9" text-anchor="middle" fill="var(--text-secondary)">20 min • Discover</text>
+                        <text x="150" y="115" font-size="10" font-weight="600" text-anchor="middle" fill="var(--text-secondary)">⚡ Checkpoint 1</text>
+                        <text x="150" y="135" font-size="8" text-anchor="middle" fill="var(--text-muted)">Post #1 Question</text>
+
+                        <!-- Arrow to Sprint 2 -->
+                        <line x1="200" y1="80" x2="250" y2="80" stroke="var(--border)" stroke-width="2" marker-end="url(#arrowhead2)" />
+                        <defs>
+                            <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="var(--border)" />
+                            </marker>
+                        </defs>
+
+                        <!-- Sprint 2 -->
+                        <circle cx="400" cy="80" r="12" fill="var(--accent-orange)" />
+                        <rect x="325" y="30" width="150" height="35" fill="rgba(245, 158, 11, 0.1)" stroke="var(--accent-orange)" stroke-width="1.5" rx="4" />
+                        <text x="400" y="45" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent-orange)">Sprint 2</text>
+                        <text x="400" y="60" font-size="9" text-anchor="middle" fill="var(--text-secondary)">15 min • Continue</text>
+                        <text x="400" y="115" font-size="10" font-weight="600" text-anchor="middle" fill="var(--accent-orange)">⚡ Checkpoint 2</text>
+                        <text x="400" y="135" font-size="8" text-anchor="middle" fill="var(--text-muted)">What Did You Steal?</text>
+
+                        <!-- Arrow to Sprint 3 -->
+                        <line x1="450" y1="80" x2="500" y2="80" stroke="var(--border)" stroke-width="2" marker-end="url(#arrowhead2)" />
+
+                        <!-- Sprint 3 -->
+                        <circle cx="650" cy="80" r="12" fill="var(--accent-green)" />
+                        <rect x="580" y="30" width="140" height="35" fill="rgba(16, 185, 129, 0.1)" stroke="var(--accent-green)" stroke-width="1.5" rx="4" />
+                        <text x="650" y="45" font-size="11" font-weight="700" text-anchor="middle" fill="var(--accent-green)">Sprint 3</text>
+                        <text x="650" y="60" font-size="9" text-anchor="middle" fill="var(--text-secondary)">10 min • Refine</text>
+                        <text x="650" y="115" font-size="10" font-weight="600" text-anchor="middle" fill="var(--accent-green)">📤 Submit</text>
+                        <text x="650" y="135" font-size="8" text-anchor="middle" fill="var(--text-muted)">Upload Packet</text>
+                    </svg>
+                </div>
+
+                <div class="info-box">
+                    <div class="box-title">How the 60 Minutes Break Down</div>
+                    <p>You work <strong>alone with AI Tutor</strong>, but your <strong>role's Teams channel is your peer group</strong>. Post drafts, ask questions, solve problems together. Your mentor reads and DMs coaching directly to you.</p>
+                </div>
+
+                <h4 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Sprint 1: Individual Discovery (9:15–9:35, 20 min)</h4>
+                <ol class="exercise-steps">
+                    <li>Copy the AI Tutor starting prompt below and replace <code class="code-tag">[YOUR ROLE]</code> with your actual role (FDE, AI-SE, AI-DS, AI-DA, AI-PM, AI-FE, or AI-SEC)</li>
+                    <li>Paste into the <strong>AI Tutor</strong> and draft 10 discovery questions &mdash; each must reference a specific detail from the client brief</li>
+                    <li>In your role's Teams channel, post your draft question titles: <code class="code-tag">"My Q1: [question]"</code></li>
+                    <li>Read what your peers are posting — learn from their approach</li>
+                </ol>
+
+                <h4 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Sprint 2: Problem-Solving in Channel (9:35–9:50, 15 min)</h4>
+                <ol class="exercise-steps" style="counter-reset: exercise-step 4;">
+                    <li>Post any <strong>BLOCKERS</strong> or <strong>UNCERTAINTIES</strong> to your role's Teams channel:<br><code class="code-tag">🔴 I don't know how to ask about GDPR without sounding generic</code> or <br><code class="code-tag">🔴 The brief says on-prem. Does that rule out cloud-based integrations?</code></li>
+                    <li>Your <strong>peers answer</strong> with suggestions and ideas</li>
+                    <li>Your <strong>mentor reads</strong> the channel and sends you <strong>direct messages (DMs)</strong> with coaching: <br><code class="code-tag">"Try asking the tutor: 'What specific GDPR controls are relevant for…'"</code> or <br><code class="code-tag">"You're asking good questions about infra. Help your colleague with X."</code></li>
+                </ol>
+
+                <h4 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Sprint 3: Refine + Peer Feedback (9:50–10:10, 20 min)</h4>
+                <ol class="exercise-steps" style="counter-reset: exercise-step 6;">
+                    <li>Refine your 10 questions based on feedback from Sprint 2</li>
+                    <li>Map each question to a KAF component (Core / Ingestion / Policy-as-Code / Run Safe / HITL / Interop)</li>
+                    <li>Add red flags, assumptions/risks, and 3 KPI proposals</li>
+                    <li>Post your <strong>final version</strong> in the Teams channel</li>
+                    <li>Read your peers' final questions and give constructive feedback: <br><code class="code-tag">"Q3 is strong because… Q7 could be more specific if…"</code></li>
+                </ol>
+
+                <h4 style="margin-top: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Buffer: Final Push (10:10–10:15, 5 min)</h4>
+                <ol class="exercise-steps" style="counter-reset: exercise-step 10;">
+                    <li>Save as <code class="code-tag">discovery-pack-[role].md</code> and upload to shared folder</li>
+                </ol>
+
+                <div class="warning-box" style="margin-top: 1.5rem;">
+                    <div class="box-title">Remember: You Work Alone, Learn Together</div>
+                    <p>Your <strong>deliverable is individual</strong>. But your <strong>process is collaborative</strong>. Use your role's Teams channel to solve problems, not to divide the work. Every question in your packet must be YOUR thinking, informed by peer discussion.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="box-title">Run Safe: Tooling Discipline</div>
+                <p><strong>Never paste sensitive data, internal IDs, or PII into any LLM</strong> — even in simulated exercises. We are training production habits. In KAF, Run Safe means every interaction follows the same hygiene rules: controlled environment, no data leakage, guardrails by design.</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="code-label">AI Tutor Starting Prompt</span>
+                    <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+                </div>
+                <pre><code>I'm a [YOUR ROLE] in a Kyndryl AI consulting team. We have a client
+brief for EuroHealth Insurance. Key context: they already have
+ServiceNow with AI capabilities (Moveworks). They're NOT calling
+us to build a chatbot — they need us to industrialize their AI:
+governance, compliance, cross-department scaling, production ops.
+
+Constraints: on-prem, no PII in training data, audit trail required,
+EU AI Act governance-ready (Dec 2027 deadline, board wants framework
+by Q3 2026). Budget: €180K / 6 months.
+
+I need to prepare 10 discovery questions for the first meeting
+with the CIO. My questions must uncover:
+1) What they CAN'T do today with ServiceNow alone — gaps in
+   governance, scaling, regulatory adaptation
+2) Policy-as-Code readiness: what rules must be enforceable
+   in code, not just documented
+3) Operational maturity: how fast they adapt processes when
+   regulations or policies change (days? months?)
+4) Agentic workflow needs: what steps the agent must plan +
+   what tools / integrations it needs (MCP connectors)
+5) Digital Trust / Run Safe: audit logs, monitoring, validation
+6) Human-in-the-loop: checkpoints requiring human confirmation
+7) My role-specific focus: [ROLE-SPECIFIC FOCUS]
+   - FDE: infra, LLM hosting, API integrations
+   - AI-SE: deployment, CI/CD, monitoring
+   - AI-DS: data quality, KB structure, evaluation
+   - AI-DA: metrics, reporting, dashboards
+   - AI-PM: business priorities, budget, stakeholders
+   - AI-FE: user devices, accessibility, UI
+   - AI-SEC: security posture, compliance, threats
+
+For each question, include:
+- Why it matters (1–2 sentences)
+- Red flag (what a bad answer would tell us)
+- Which KAF component it covers (Core / Ingestion /
+  Policy-as-Code / Run Safe / HITL / Interop)</code></pre>
+            </div>
+
+            <div class="deep-dive">
+                <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span>What makes a good discovery question?</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="deep-dive-content">
+                    <p><strong>Good discovery questions</strong> are specific, reference the brief, and reveal information that changes your approach. They show the client you have read the brief and understand their problem.</p>
+                    <ul class="sub-list">
+                        <li class="mb-05"><strong class="clr-green">Good:</strong> "You already have ServiceNow with Moveworks. What specifically can't you do today that made you reach out to Kyndryl?"</li>
+                        <li class="mb-05"><strong class="clr-red">Bad:</strong> "What's your tech stack?" &mdash; A CIO hears this from every vendor. And you should already know they use ServiceNow.</li>
+                        <li><strong class="clr-green">Good:</strong> "When the EU AI Act guidance changed last month, how long did it take your team to update your AI governance processes? Days? Weeks? Are they updated yet?"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="deep-dive">
+                <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span>Deliverable format: discovery-pack-[role].md</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="deep-dive-content">
+                    <div class="code-block mt-05">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="code-label">discovery-pack-[role].md</span>
+                        </div>
+                        <pre><code># Discovery Packet v1 — [Role Name]
+## Student: [Name]
+## Date: February 23, 2026
+## Client: EuroHealth Insurance AG
+
+---
+
+## Part 1: Discovery Questions (10)
+
+### Question 1: [Question text]
+**Why this matters:** [1-2 sentences]
+**Red flag (bad answer):** [What it would tell us]
+**KAF component:** [Core / Ingestion / Policy-as-Code /
+  Run Safe / HITL / Interop]
+
+### Question 2: ...
+(repeat for all 10 questions)
+
+> Minimum coverage: at least 2 questions on Policy-as-Code,
+> at least 1 on MCP/A2A interoperability,
+> at least 1 on Human-in-the-loop checkpoints.
+
+---
+
+## Part 2: KAF Mapping (mini)
+| KAF Component      | Covered by Q# | Notes                  |
+|---------------------|---------------|------------------------|
+| Agentic Core        |               |                        |
+| Agentic Ingestion   |               |                        |
+| Policy-as-Code      |               |                        |
+| Digital Trust       |               |                        |
+| Human-in-the-Loop   |               |                        |
+| Interop (MCP/A2A)   |               |                        |
+
+---
+
+## Part 3: Assumptions / Risks / Open Items (3-5)
+1. [Assumption or risk]
+2. ...
+
+---
+
+## Part 4: What We Will Measure (3 KPI proposals)
+1. [e.g., L1 deflection rate: 50% target]
+2. [e.g., Misroute reduction: 80% target]
+3. [e.g., CSAT delta: 3.2 → 4.0+]
+
+---
+
+## Part 5: Agent Classification
+- **Governance tier:** Personal / Team / Enterprise
+- **Registry/reuse potential:** [How would we register
+  and share this agent across Kyndryl?]
+
+---
+
+## Dependencies on Other Roles:
+- I need [Role X] to ask about [topic] because...
+
+## Questions I Deliberately Did NOT Ask (and why):
+- [Question] — because that's [other role]'s territory</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deep-dive">
+                <button class="deep-dive-toggle" onclick="toggleDeepDive(this)">
+                    <span>Peer Review Rubric (5-point KAF checklist)</span>
+                    <span class="toggle-icon">&#9660;</span>
+                </button>
+                <div class="deep-dive-content">
+                    <p class="mb-1">When reviewing a peer's discovery packet, check these five dimensions:</p>
+                    <ol class="list-secondary">
+                        <li><strong class="clr-primary">Policy-as-Code coverage</strong> &mdash; At least 2 questions address enforceable rules, guardrails, or audit requirements.</li>
+                        <li><strong class="clr-primary">Interoperability (MCP/A2A)</strong> &mdash; At least 1 question covers integrations, connectors, identity, or authentication boundaries.</li>
+                        <li><strong class="clr-primary">Run Safe / Digital Trust</strong> &mdash; Questions address audit logging, monitoring, incident readiness, or production safety.</li>
+                        <li><strong class="clr-primary">Human-in-the-Loop</strong> &mdash; At least 1 question identifies decision checkpoints, escalation paths, or human override requirements.</li>
+                        <li><strong class="clr-primary">Business Outcomes &amp; KPIs</strong> &mdash; Proposed KPIs are specific, measurable, and tied to the client brief (deflection rate, misroute %, CSAT).</li>
+                    </ol>
+                    <p class="mt1-muted">Score each dimension: 0 = missing, 1 = present but shallow, 2 = strong and specific. Total: /10.</p>
+                </div>
+            </div>
+
+            <div class="quick-tip">
+                <span class="tip-icon">&#128161;</span>
+                <span><strong>Try it now:</strong> After writing your discovery questions, re-read the client brief one more time. Did you miss any constraint? The best consultants find the hidden requirements.</span>
+            </div>
+
+            <!-- Exercise Block 2: Self-Review -->
+            <div class="exercise-block">
+                <div class="exercise-header">
+                    <div class="exercise-icon">&#128269;</div>
+                    <div>
+                        <div class="exercise-label">Self-Review Exercise</div>
+                        <div class="exercise-title">Audit Your Discovery Packet Against KAF</div>
+                    </div>
+                </div>
+                <div class="exercise-meta">
+                    <span>&#9201; 10 minutes</span>
+                    <span>&#127919; Individual</span>
+                </div>
+                <ol class="exercise-steps">
+                    <li>Open your completed discovery packet</li>
+                    <li>Fill in the KAF Mapping table in Part 2 &mdash; does every KAF component have at least one question?</li>
+                    <li>Check: do you have at least 2 questions on Policy-as-Code?</li>
+                    <li>Check: do you have at least 1 question on MCP/A2A interoperability?</li>
+                    <li>If any component is missing, add a question before submitting</li>
+                </ol>
+            </div>
+
+            <!-- Peer Activity: Channel-Based Interaction -->
+            <div class="peer-activity">
+                <div class="peer-header">
+                    <span class="peer-icon">&#129309;</span>
+                    <div>
+                        <div class="peer-label">Peer Interaction Model</div>
+                        <div class="peer-title">Structured Channel Checkpoints (No Pairing Required)</div>
+                    </div>
+                </div>
+                <div class="peer-format">Role Channel &bull; Built into Sprints</div>
+                <div class="peer-instructions">
+                    <p><strong>No pairing. No breakout rooms. Everything happens in your role&rsquo;s Teams channel.</strong></p>
+
+                    <p class="mt-075"><strong>&mdash; Checkpoint 1 (after Sprint 1):</strong> Post your #1 question into your role&rsquo;s channel. Just the question + one sentence on why it matters. Two sentences max. With 25&ndash;30 people per channel, this creates an instant &ldquo;wall&rdquo; of questions &mdash; you see what everyone else is thinking.</p>
+
+                    <p class="mt-075"><strong>&mdash; Sprint 2 (built-in):</strong> Before continuing your own work, read 3 peer questions and react to at least one. Use &#128077; (good question) or &#129300; (CIO wouldn&rsquo;t care) or a short comment. Then continue your remaining 5 questions. Post any blockers: &ldquo;&#128308; I don&rsquo;t know how to ask about X...&rdquo;</p>
+
+                    <p class="mt-075"><strong>&mdash; Checkpoint 2 (after Sprint 2):</strong> Post: &ldquo;I stole this from [name]: [the question or idea you got from a peer].&rdquo; This creates positive interdependence &mdash; not competition, but &ldquo;what did I learn from you.&rdquo;</p>
+
+                    <p class="mt-075"><strong>&mdash; Sprint 3 (built-in):</strong> Finalize your packet, then post into <strong>another role&rsquo;s</strong> channel: &ldquo;Here&rsquo;s how MY role would build on YOUR best question.&rdquo; Example: an AI-SEC sees an FDE&rsquo;s infrastructure question and adds: &ldquo;Before we decide on on-prem LLM hosting, we need to know who governs model access &mdash; that&rsquo;s a Policy-as-Code question.&rdquo;</p>
+                </div>
+            </div>
+
+            <!-- Checkpoint: Discovery Quality -->
+            <div class="checkpoint">
+                <div class="checkpoint-header">
+                    <span class="checkpoint-icon">&#9989;</span>
+                    <span class="checkpoint-label">Knowledge Check</span>
+                </div>
+                <div class="checkpoint-question">Which of these is the BEST discovery question for a first meeting with Hans Muller (CIO)?</div>
+                <ul class="checkpoint-options">
+                    <li>A) "What's your tech stack?"</li>
+                    <li>B) "You rolled out ServiceNow AI last year. What specifically can't you do today that made you reach out to Kyndryl?"</li>
+                    <li>C) "Do you want to use GPT-4 or Claude?"</li>
+                    <li>D) "How many employees do you have?"</li>
+                </ul>
+                <details>
+                    <summary>Reveal Answer</summary>
+                    <div class="checkpoint-answer">
+                        <strong>B)</strong> This is the strongest question because it acknowledges what the client already has (ServiceNow AI), shows you did your homework, and directly uncovers the gap between their current tools and what they need Kyndryl for. A CIO hears &ldquo;What&rsquo;s your tech stack?&rdquo; from every vendor &mdash; and you already know the answer is ServiceNow. The real question is: what can&rsquo;t ServiceNow do alone?
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 5: OPERATING MODEL
+             ============================================ -->
+        <section class="section" id="model">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Operating Model: Role-Based Problem-Solving</h2>
+            </div>
+
+            <p class="hero-subtitle">
+                This is the <strong class="clr-primary">first day</strong> of the new operating model. You work <strong>individually with AI Tutor</strong>, but your <strong>role's Teams channel is your peer group</strong>. Here's how it breaks down:
+            </p>
+
+            <div class="model-grid">
+                <div class="model-card">
+                    <div class="model-pct">10%</div>
+                    <div class="model-role">Lecturer sets direction</div>
+                    <div class="model-desc">Plenary opening + wrap-up</div>
+                    <div class="model-bar"><div class="model-bar-fill"></div></div>
+                </div>
+                <div class="model-card">
+                    <div class="model-pct">70%</div>
+                    <div class="model-role">AI Tutor + You</div>
+                    <div class="model-desc">Individual work in sprints</div>
+                    <div class="model-bar"><div class="model-bar-fill"></div></div>
+                </div>
+                <div class="model-card">
+                    <div class="model-pct">15%</div>
+                    <div class="model-role">Peers solve problems</div>
+                    <div class="model-desc">Role-based Teams channel</div>
+                    <div class="model-bar"><div class="model-bar-fill"></div></div>
+                </div>
+                <div class="model-card">
+                    <div class="model-pct">5%</div>
+                    <div class="model-role">Mentor coaches</div>
+                    <div class="model-desc">DM coaching (async)</div>
+                    <div class="model-bar"><div class="model-bar-fill"></div></div>
+                </div>
+            </div>
+
+            <div class="quick-tip">
+                <span class="tip-icon">&#128161;</span>
+                <span><strong>Key principle:</strong> You work individually. Your role's Teams channel is your peer learning group. Your mentor coaches you directly via DM with practice wisdom — "At a client, I would ask…" not "Use this tool."</span>
+            </div>
+
+            <div class="info-box">
+                <div class="box-title">How the Mentor Works in This Model</div>
+                <ul style="margin: 1rem 0 0 0; list-style-position: inside;">
+                    <li><strong>Reads your channel:</strong> Sees what you and peers are discussing</li>
+                    <li><strong>Sends DM coaching:</strong> Direct messages to YOU with targeted guidance: <br><code style="background: var(--bg-code); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: var(--accent-cyan);">"You're stuck on X. Try asking tutor: 'What if…?'"</code></li>
+                    <li><strong>Spots strengths:</strong> If you're doing well, mentor asks: <code style="background: var(--bg-code); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: var(--accent-cyan);">"Help your colleague with Y — they're struggling there."</code></li>
+                    <li><strong>No office hours calls:</strong> Coaching is async in chat + DM, not voice meetings</li>
+                </ul>
+            </div>
+
+            <details class="instructor-note">
+                <summary>Instructor Note &mdash; Operating Model</summary>
+                <div class="instructor-content">
+                    <p>Students work <strong>individually with AI Tutor</strong> during sprints. Their role's Teams channel is where <strong>peer problem-solving</strong> happens (students help students). <strong>Mentors monitor the channel</strong> and send <strong>DM coaching</strong> — targeted, async, practice-based. No group calls during work time. You are a coach, not a teacher.</p>
+                </div>
+            </details>
+        </section>
+
+        <!-- ============================================
+             OPS PLAYBOOK — COURSE-WIDE OPERATING RULES
+             ============================================ -->
+        <section class="section" id="ops-playbook-master">
+            <div class="section-header">
+                <div class="section-number" style="background: var(--gradient-3);">📋</div>
+                <h2>Ops Playbook &mdash; Course-Wide Operating Rules</h2>
+            </div>
+
+            <p class="hero-subtitle">
+                These rules apply to <strong class="clr-primary">every session from Day 11 to Day 25</strong>.
+                Bookmark this page &mdash; all other days reference this playbook.
+                <em>Pods start on Day 12; Day 11 uses individual role channels.</em>
+            </p>
+
+            <div class="table-responsive">
+                <table class="ops-master-table" aria-label="Course-wide operating rules">
+                    <thead>
+                        <tr>
+                            <th scope="col">Rule</th>
+                            <th scope="col">Who</th>
+                            <th scope="col">What</th>
+                            <th scope="col">When</th>
+                            <th scope="col">Key Number / Limit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="--rule-color: var(--accent-blue);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">🧱</span><span>Pods</span></div></td>
+                            <td>5&ndash;6 learners per pod</td>
+                            <td>Fixed teams for the entire course. Buddy review is deterministic &mdash; review the next pod member in circular order.</td>
+                            <td>Starting Day 12, every session</td>
+                            <td><span class="ops-limit-badge">No pod changes</span></td>
+                        </tr>
+                        <tr style="--rule-color: var(--accent-orange);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">⚡</span><span>Sprints</span></div></td>
+                            <td>Everyone</td>
+                            <td>Sprint A (Work) &rarr; Sprint B (Peer Review) &rarr; Sprint C (Publish). Post checkpoint after each sprint.</td>
+                            <td>20 / 20 / 17 min</td>
+                            <td><span class="ops-limit-badge">Time = rule</span></td>
+                        </tr>
+                        <tr style="--rule-color: var(--accent-green);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">🚦</span><span>Pod Status</span></div></td>
+                            <td>Pod leader posts, everyone owns</td>
+                            <td>🟢 Green (on track) &bull; 🟡 Yellow (risk identified) &bull; 🔴 Red (blocked). Post in pod Teams thread.</td>
+                            <td>Every 15 min</td>
+                            <td><span class="ops-limit-badge">Red &gt; 5 min &rarr; escalate</span></td>
+                        </tr>
+                        <tr style="--rule-color: var(--accent-cyan);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">📄</span><span>Artifacts</span></div></td>
+                            <td>Everyone</td>
+                            <td>At least 1 artifact update and 1 review comment per day. If blocked &gt; 5 min, escalate via pod thread &mdash; do not wait.</td>
+                            <td>Per session</td>
+                            <td><span class="ops-limit-badge">dayXX-role-artifact-vN</span></td>
+                        </tr>
+                        <tr style="--rule-color: var(--accent-purple);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">💬</span><span>M365 Standard</span></div></td>
+                            <td>Whole pod</td>
+                            <td>1 Teams thread per pod and 1 shared folder per day. All artifacts go there. No DMs for artifacts &mdash; single source of truth.</td>
+                            <td>Per session</td>
+                            <td><span class="ops-limit-badge">Single source of truth</span></td>
+                        </tr>
+                        <tr style="--rule-color: var(--text-muted);">
+                            <td><div class="ops-rule-name"><span class="ops-rule-icon">🎯</span><span>Mentor</span></div></td>
+                            <td>Mentor monitors, students escalate</td>
+                            <td>Reads pod thread and sends targeted DM coaching. No group calls during work time. Escalate to mentor via thread after 5 min Red &mdash; never wait for plenary rescue.</td>
+                            <td>Async throughout</td>
+                            <td><span class="ops-limit-badge">DM-only, not voice</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="quick-tip">
+                <span class="tip-icon">&#128204;</span>
+                <span><strong>First time seeing this?</strong> Read all 6 rules now. Starting Day 12, you will be measured against them &mdash; not in a quiz, but in how fast your pod delivers and how clearly you escalate.</span>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 6: WEEK 4 ROADMAP
+             ============================================ -->
+        <section class="section" id="roadmap">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Week 4 Roadmap</h2>
+            </div>
+
+            <p class="subtitle-2">
+                Five days. Five deliverables. Each one builds on the last. By Friday, you will have a complete project assessment.
+            </p>
+
+            <div class="pipeline-flow">
+                <div class="pipeline-step active">
+                    <div class="step-node">
+                        <div class="step-day">Day 11 &bull; Mon</div>
+                        <div class="step-title">Discovery Packet</div>
+                        <div class="step-subtitle">Questions + KAF mapping + KPIs</div>
+                    </div>
+                </div>
+                <div class="pipeline-connector">&rarr;</div>
+                <div class="pipeline-step">
+                    <div class="step-node">
+                        <div class="step-day">Day 12 &bull; Tue</div>
+                        <div class="step-title">Client Meeting</div>
+                        <div class="step-subtitle">Roleplay with the CIO</div>
+                    </div>
+                </div>
+                <div class="pipeline-connector">&rarr;</div>
+                <div class="pipeline-step">
+                    <div class="step-node">
+                        <div class="step-day">Day 13 &bull; Wed</div>
+                        <div class="step-title">Architecture</div>
+                        <div class="step-subtitle">Technical solution design</div>
+                    </div>
+                </div>
+                <div class="pipeline-connector">&rarr;</div>
+                <div class="pipeline-step">
+                    <div class="step-node">
+                        <div class="step-day">Day 14 &bull; Thu</div>
+                        <div class="step-title">Governance</div>
+                        <div class="step-subtitle">Compliance + risk framework</div>
+                    </div>
+                </div>
+                <div class="pipeline-connector">&rarr;</div>
+                <div class="pipeline-step">
+                    <div class="step-node">
+                        <div class="step-day">Day 15 &bull; Fri</div>
+                        <div class="step-title">Go / No-Go</div>
+                        <div class="step-subtitle">Final recommendation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================
+             SECTION 7: TAKEAWAYS
+             ============================================ -->
+        <section class="section" id="takeaways">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Takeaways</h2>
+            </div>
+
+            <ul class="takeaway-list">
+                <li>
+                    <span class="takeaway-icon">&#9889;</span>
+                    <span class="takeaway-text"><strong>From today, you produce real artifacts.</strong> No more practice exercises. What you build this week is what a Kyndryl consultant would build on a real engagement.</span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">&#128200;</span>
+                    <span class="takeaway-text"><strong>The rules shifted during break.</strong> Policy-as-Code is in production at our Cyber Defense Center. Our CEO told the world's biggest AI summit that readiness &mdash; not innovation &mdash; is the challenge. The EU AI Act deadline moved to Dec 2027. And ServiceNow acquired Moveworks. Your client already has AI. They need Kyndryl to industrialize it.</span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">&#128218;</span>
+                    <span class="takeaway-text"><strong>Don't read the brief as a chatbot project.</strong> EuroHealth isn't paying &euro;180K for ticket deflection &mdash; ServiceNow can do that. They're paying for governance, compliance, operational transformation. Your discovery questions must show you understand the difference.</span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">📋</span>
+                    <span class="takeaway-text"><strong>Join your role's Teams channel.</strong> This is where your peer group works. Post drafts, ask problems, get peer feedback. Your mentor reads and sends DM coaching. <strong>You work alone. You learn together.</strong></span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">⚡</span>
+                    <span class="takeaway-text"><strong>Think in sprints: 20 min individual work → 15 min problem-solving → 20 min refine.</strong> Each sprint builds on the last. By 10:10, your 10 questions are ready. By 10:15, you've submitted.</span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">&#129309;</span>
+                    <span class="takeaway-text"><strong>Your AI Tutor is your working partner.</strong> 70% of your time is individual work with your AI. Use the starting prompt. Iterate. Push beyond the first answer. Ask for specifics. Reference the brief.</span>
+                </li>
+                <li>
+                    <span class="takeaway-icon">&#127919;</span>
+                    <span class="takeaway-text"><strong>Today's deliverable: Discovery Packet v1.</strong> 10 questions with KAF mapping, assumptions/risks, and 3 KPI proposals. Specific to your role, grounded in the brief, and good enough to present to a real CIO. Submit <code class="font-mono">discovery-pack-[role].md</code> before wrap-up.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- ============================================
+             NEXT PREVIEW
+             ============================================ -->
+        <section class="section" id="next">
+            <div class="next-preview">
+                <div class="preview-badge">Up Next &mdash; Day 12</div>
+                <h3>Live Roleplay: First Client Meeting with Hans Muller, CIO</h3>
+                <p>
+                    Tomorrow, we simulate the first client meeting. The instructor plays Hans Muller, CIO of EuroHealth Insurance. He will answer your questions live for 10 minutes. Then you write your discovery report.
+                </p>
+                <p class="mt-1">
+                    <strong class="clr-primary">Bring your best questions</strong> &mdash; and be ready to think on your feet when the client's answer is not what you expected.
+                </p>
+            </div>
+        </section>
+
+    </div><!-- /.main -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p><span class="footer-brand">AI Academy 2026</span> &bull; Kyndryl &bull; Day 11: Welcome Back</p>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()" aria-label="Back to top">&#8593;</button>
+
+    <script>
+        /* Theme toggle */
+        const html = document.documentElement;
+        const lightBtn = document.getElementById('theme-light');
+        const darkBtn = document.getElementById('theme-dark');
+        const isInIframe = window !== window.parent;
+        if (isInIframe) html.classList.add('in-iframe');
+        setTheme(localStorage.getItem('theme') || 'dark');
+        function setTheme(t) {
+            html.setAttribute('data-theme', t);
+            if (!isInIframe) localStorage.setItem('theme', t);
+            if (t === 'light') { lightBtn.classList.add('active'); darkBtn.classList.remove('active'); }
+            else { darkBtn.classList.add('active'); lightBtn.classList.remove('active'); }
+        }
+        lightBtn.addEventListener('click', () => setTheme('light'));
+        darkBtn.addEventListener('click', () => setTheme('dark'));
+        if (isInIframe) {
+            window.addEventListener('message', function(e) {
+                if (e.data && e.data.type === 'theme-change') setTheme(e.data.theme);
+            });
+        }
+
+        // ============================================
+        // SMOOTH SCROLL NAVIGATION
+        // ============================================
+        document.querySelectorAll('.nav-links a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // ============================================
+        // ACTIVE SECTION TRACKING
+        // ============================================
+        var sections = document.querySelectorAll('.section[id]');
+        var navLinks = document.querySelectorAll('.nav-links a[data-section]');
+
+        function updateActiveNav() {
+            var scrollPos = window.scrollY + 100;
+
+            sections.forEach(function(section) {
+                var top = section.offsetTop;
+                var height = section.offsetHeight;
+                var id = section.getAttribute('id');
+
+                if (scrollPos >= top && scrollPos < top + height) {
+                    navLinks.forEach(function(link) {
+                        link.classList.remove('active');
+                        if (link.getAttribute('data-section') === id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
+
+        // ============================================
+        // BACK TO TOP
+        // ============================================
+        var backToTopBtn = document.getElementById('backToTop');
+
+        function handleBackToTop() {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', handleBackToTop);
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================
+        // DEEP DIVE TOGGLE
+        // ============================================
+        function toggleDeepDive(button) {
+            var container = button.parentElement;
+            container.classList.toggle('open');
+        }
+
+        // ============================================
+        // COPY CODE
+        // ============================================
+        function copyCode(button) {
+            var codeBlock = button.closest('.code-block');
+            var code = codeBlock.querySelector('code');
+            var text = code.textContent;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    button.textContent = 'Copied!';
+                    setTimeout(function() {
+                        button.textContent = 'Copy';
+                    }, 2000);
+                }).catch(function() {
+                    fallbackCopy(text, button);
+                });
+            } else {
+                fallbackCopy(text, button);
+            }
+        }
+
+        // ============================================
+        // INSTRUCTOR MODE
+        // ============================================
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'instructor') {
+                document.body.classList.add('instructor-mode');
+            }
+        })();
+
+        // ============================================
+        // SECTION PROGRESS SCROLL HANDLER
+        // ============================================
+        (function() {
+            var progressDots = document.querySelectorAll('.section-progress .progress-dot');
+            if (!progressDots.length) return;
+            var trackedSections = [];
+            progressDots.forEach(function(dot) {
+                var targetId = dot.getAttribute('data-section');
+                if (targetId) {
+                    var el = document.getElementById(targetId);
+                    if (el) trackedSections.push({ dot: dot, el: el });
+                }
+            });
+            function updateProgress() {
+                var scrollPos = window.scrollY + window.innerHeight * 0.4;
+                trackedSections.forEach(function(item) {
+                    var top = item.el.offsetTop;
+                    var bottom = top + item.el.offsetHeight;
+                    if (scrollPos >= bottom) {
+                        item.dot.classList.add('completed');
+                        item.dot.classList.remove('active');
+                    } else if (scrollPos >= top) {
+                        item.dot.classList.add('active');
+                        item.dot.classList.remove('completed');
+                    } else {
+                        item.dot.classList.remove('active', 'completed');
+                    }
+                });
+            }
+            window.addEventListener('scroll', updateProgress);
+            updateProgress();
+        })();
+
+        function fallbackCopy(text, button) {
+            var textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                button.textContent = 'Copied!';
+                setTimeout(function() {
+                    button.textContent = 'Copy';
+                }, 2000);
+            } catch (e) {
+                button.textContent = 'Failed';
+                setTimeout(function() {
+                    button.textContent = 'Copy';
+                }, 2000);
+            }
+            document.body.removeChild(textarea);
+        }
+    </script>
+
+    <!-- AI Mentor Widget — change data-role per student role: FDE, AI-SE, AI-DS, AI-DA, AI-PM, AI-FE, AI-SEC -->
+    <script src="/mentor-widget.js" data-role="FDE" data-lesson="Day 11 - Welcome Back" data-day="11"></script>
+</body>
+</html>
