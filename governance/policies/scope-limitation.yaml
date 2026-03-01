@@ -1,0 +1,21 @@
+policy:
+  name: scope-limitation
+  version: "1.0"
+  description: Restrict agent to IT helpdesk topics only
+  owner: AI-SEC
+  last_reviewed: "2026-02-25"
+  rules:
+    - id: block-non-it-topics
+      description: Redirect queries outside IT helpdesk scope
+      if: query.topic NOT IN [password_reset, vpn_setup, software_install, printer_issue, network_access, email_config, hardware_request, account_lockout]
+      then: redirect
+      respond: "I can only help with IT helpdesk topics. For other questions, please contact the relevant department."
+      log: "Out-of-scope query redirected"
+
+    - id: block-medical-queries
+      description: Never answer health or medical questions
+      if: query.topic IN [medical, health, insurance_claim, diagnosis]
+      then: block
+      respond: "I am not qualified to answer medical or insurance claim questions. Please contact your claims department directly."
+      log: "Medical/claims query blocked"
+      escalate_to: claims_department

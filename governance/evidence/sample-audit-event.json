@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "event_id": "evt-20260226-000001",
+  "event_type": "policy_decision",
+  "timestamp_utc": "2026-02-26T12:30:15Z",
+  "environment": "prod",
+  "service": "eurohealth-helpdesk",
+  "release_version": "v1.3.0",
+  "trace_id": "trace-9af1b0c2-77f4-4d8f-a8bb-75c407a4b123",
+  "query_hash": 48192013,
+  "decision": "block",
+  "policy": "pii-protection",
+  "rule_id": "block-salary-data",
+  "reason": "PII attempt blocked - salary data",
+  "confidence": 0.82,
+  "escalated_to": "human_agent",
+  "user_role": "helpdesk_agent",
+  "data_sources": [
+    "confluence/hr",
+    "servicenow/kb"
+  ],
+  "pii_detected": true,
+  "retention_class": "regulated_365d"
+}

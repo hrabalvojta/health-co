@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:eurohealth:audit-log-schema:v1.0.0",
+  "title": "EuroHealth AI Helpdesk Audit Log Event",
+  "description": "Structured record-keeping schema for policy decisions and operational governance events.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_type",
+    "timestamp_utc",
+    "environment",
+    "service",
+    "release_version",
+    "trace_id",
+    "query_hash",
+    "decision",
+    "policy",
+    "rule_id",
+    "reason"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{12,128}$"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "policy_decision",
+        "policy_engine_error",
+        "human_override",
+        "deployment_gate",
+        "incident_escalation"
+      ]
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "dev",
+        "test",
+        "prod"
+      ]
+    },
+    "service": {
+      "type": "string",
+      "const": "eurohealth-helpdesk"
+    },
+    "release_version": {
+      "type": "string",
+      "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+([.-][A-Za-z0-9]+)?$"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]{8,128}$"
+    },
+    "query_hash": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "block",
+        "redact",
+        "redirect",
+        "escalate"
+      ]
+    },
+    "policy": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rule_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 400
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "escalated_to": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "user_role": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 80
+    },
+    "data_sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120
+      },
+      "uniqueItems": true,
+      "maxItems": 30
+    },
+    "pii_detected": {
+      "type": "boolean"
+    },
+    "retention_class": {
+      "type": "string",
+      "enum": [
+        "standard_180d",
+        "regulated_365d",
+        "incident_730d"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "enum": [
+              "block",
+              "redact",
+              "redirect",
+              "escalate"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "policy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rule_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "human_override"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "escalated_to"
+        ],
+        "properties": {
+          "escalated_to": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+policy:
+  name: pii-protection
+  version: "1.0"
+  description: Block responses containing employee PII
+  owner: AI-SEC
+  last_reviewed: "2026-02-25"
+  rules:
+    - id: block-salary-data
+      description: Prevent disclosure of salary information
+      if: response.contains(salary, compensation, pay_grade)
+      then: block
+      substitute: "I cannot share personal salary information. Please contact HR directly."
+      log: "PII attempt blocked — salary data"
+      escalate_to: human_agent
+
+    - id: block-personal-id
+      description: Prevent disclosure of personal identification numbers
+      if: response.contains(personal_id, birth_number, rodne_cislo)
+      then: block
+      substitute: "I cannot share personal identification numbers."
+      log: "PII attempt blocked — personal ID"
+      escalate_to: human_agent
+
+    - id: redact-contact-info
+      description: Redact personal contact details from responses
+      if: response.contains(personal_phone, personal_email, home_address)
+      then: redact
+      log: "PII redacted — personal contact info"
