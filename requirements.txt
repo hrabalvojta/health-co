@@ -1,0 +1,4 @@
+# EuroHealth AI Helpdesk — Runtime dependencies
+# Keep this file aligned with imports in src/ and tests/.
+
+pyyaml==6.0.2

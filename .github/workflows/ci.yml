@@ -1,0 +1,107 @@
+# EuroHealth AI Helpdesk — CI Pipeline (AI-SE Role)
+# Day 16 MVP: Lint, test, and validate policies on every push
+
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install flake8 yamllint
+
+      - name: Run flake8 (Python lint)
+        run: |
+          flake8 --max-line-length=120 --exclude=venv,__pycache__ .
+
+      - name: Validate YAML policies
+        run: |
+          yamllint -d "{extends: default, rules: {line-length: {max: 150}}}" governance/policies/*.yaml
+
+      - name: Validate PDP policies
+        run: |
+          test -d governance/policies
+          test -f governance/policies/content-freshness.yaml
+          test -f governance/policies/data-retention.yaml
+          test -f governance/policies/escalation-rules.yaml
+          test -f governance/policies/pii-protection.yaml
+          test -f governance/policies/scope-limitation.yaml  
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt 
+          pip install pytest pytest-cov
+
+      - name: Run tests
+        run: |
+          python -m pytest tests/ -v --tb=short
+
+      - name: Run coverage
+        run: | 
+          python -m pytest -q tests/ --maxfail=1 --cov=src --cov-report=xml
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml
+
+  secrets-scan:
+    name: Secrets Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for committed secrets
+        run: |
+          # Fail if .env file is tracked
+          if git ls-files --error-unmatch .env 2>/dev/null; then
+            echo "ERROR: .env file is tracked by git!"
+            exit 1
+          fi
+          echo "No .env files committed. Good."
+
+      - name: Check for hardcoded API keys
+        run: |
+          # Simple pattern check for common secret patterns
+          if grep -rn "sk-[a-zA-Z0-9]\{20,\}" --include="*.py" --include="*.yaml" .; then
+            echo "ERROR: Possible API key found in source code!"
+            exit 1
+          fi
+          echo "No hardcoded API keys found. Good."

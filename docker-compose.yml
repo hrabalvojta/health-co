@@ -1,0 +1,15 @@
+services:
+  ai-helpdesk:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eurohealth-ai-helpdesk
+    env_file:
+      - .env.example
+    environment:
+      POLICIES_DIR: /app/policies
+    volumes:
+      - ./src:/app/src:ro
+      - ./governance/policies:/app/governance/policies:ro
+      #- ./data:/app/data:ro
+    command: ["python", "src/agent.py"]
